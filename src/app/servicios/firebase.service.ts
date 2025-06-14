@@ -19,4 +19,12 @@ export class FirebaseService {
     return this.auth.signOut();
   }
 
+   agregarDocumento(data: any, col: string) 
+  {
+    const dataRef = collection(this.firestore, col);
+    return addDoc(dataRef, data);
+  }
+
+  
+
 }
