@@ -12,6 +12,12 @@ const routes: Routes = [
     path: 'login',
     loadChildren: () => import('./componentes/login/login.module').then( m => m.LoginPageModule)
   },
+  {
+    path: 'alta-duenio',
+    loadChildren: () => import('./componentes/alta-duenio/alta-duenio.module').then( m => m.AltaDuenioPageModule)
+  },
+
+
 ];
 
 @NgModule({

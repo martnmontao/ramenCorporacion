@@ -1,0 +1,56 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Alta de Dueño</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <form #form="ngForm" (ngSubmit)="guardarDuenio()">
+
+    <ion-item>
+      <ion-label position="floating">Nombre</ion-label>
+      <ion-input type="text" name="nombre" required [(ngModel)]="duenio.nombre"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Apellido</ion-label>
+      <ion-input type="text" name="apellido" required [(ngModel)]="duenio.apellido"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">DNI</ion-label>
+      <ion-input type="number" name="dni" required [(ngModel)]="duenio.dni"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">CUIT</ion-label>
+      <ion-input type="number" name="cuit" required [(ngModel)]="duenio.cuit"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Perfil</ion-label>
+      <ion-select name="perfil" [(ngModel)]="duenio.perfil">
+        <ion-select-option value="duenio">Dueño</ion-select-option>
+        <ion-select-option value="supervisor">Supervisor</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <div class="ion-text-center ion-margin">
+      <ion-button color="medium" (click)="tomarFoto()">📸 Tomar Foto</ion-button>
+    </div>
+
+    <div class="ion-text-center ion-margin" *ngIf="photo">
+      <img [src]="photo" alt="Foto tomada" style="max-width: 200px; border-radius: 8px;" />
+    </div>
+
+    <div class="ion-text-center ion-margin">
+      <ion-button expand="block" type="submit" [disabled]="form.invalid">Guardar Dueño</ion-button>
+    </div>
+
+  </form>
+
+  <div class="ion-text-center">
+    <ion-button color="danger" (click)="cerrarSesion()">Cerrar Sesión</ion-button>
+    <ion-button (click)="irAhome()">Volver al Home</ion-button>
+  </div>
+</ion-content>
