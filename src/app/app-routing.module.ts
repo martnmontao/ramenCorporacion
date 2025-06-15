@@ -5,7 +5,7 @@ const routes: Routes = [
 
   {
     path: '',
-    redirectTo: 'login',
+    redirectTo: 'registro',
     pathMatch: 'full'
   },
   {
@@ -16,7 +16,10 @@ const routes: Routes = [
     path: 'alta-duenio',
     loadChildren: () => import('./componentes/alta-duenio/alta-duenio.module').then( m => m.AltaDuenioPageModule)
   },
-
+  {
+    path: 'registro',
+    loadChildren: () => import('./componentes/registro/registro.module').then( m => m.RegistroPageModule)
+  },
 
 ];
 

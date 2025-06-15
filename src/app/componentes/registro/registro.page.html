@@ -1,0 +1,43 @@
+<ion-content [fullscreen]="true">
+<div id = "principal-container">
+  <header>
+    <h1 class ="titulos">RamenGB🍜</h1>
+    <button id = "btn-mostrar-opciones" (click) = "mostrarContenedores('opciones')">≋</button>
+    <div id = "contenedor-opciones-inicio" class="contenedor-animado"[class.visible]="mostrarOpciones">
+      <button class="btn-opciones-inicio">Iniciar sesión</button>
+      <button class="btn-opciones-inicio">Registrarse</button>
+    </div>
+    
+
+  </header>
+  <section>
+    <form>
+      <h2 class ="titulos">REGÍSTRO</h2>
+      <input type="text" class="inputs-form" [(ngModel)] = "nombreUsuario" placeholder="Nombre" name = "nombre">
+      <input type="text" class="inputs-form" [(ngModel)] = "apellidoUsuario" placeholder="Apellido" name = "apellido">
+      <input type="text" class="inputs-form" [(ngModel)] = "documentoUsuario" placeholder="N° de documento" name = "documento">
+      <button class  = "btn-form" type="button" (click)="tomarFoto()">Tomar foto</button>
+      
+
+      <div id = "contenedor-btn-form">
+        <button class = "btn-form btn-registrarse" (click) = "registrarUsuario()">Registrarse</button>
+        <div id = "contenedor-btn-anonimo">
+          <p id = "p-registrarse-como">Regístrarse como:</p>
+          <button class = "btn-form  btn-anonimo" type="button" (click) = "mostrarContenedores('aviso')">Anónimo</button>
+        </div>
+      </div>
+    </form>
+
+    <div id ="contenedor-aviso-anonimo" *ngIf = "mostrarAvisoAnonimo">
+      <p>Aviso: <br>Al registrarse como anónimo se cargará solamente su nombre y la foto.</p>
+      <div id = "opciones-aviso-anonimo">
+        <button class="btn-anonimo-aviso btn-aceptar-aviso">ACEPTAR</button>
+        <button class="btn-anonimo-aviso" (click) = "mostrarContenedores('aviso')">CANCELAR</button>
+      </div>
+    </div>
+
+  </section>
+</div>
+
+
+</ion-content>

@@ -49,4 +49,12 @@ export class FirebaseService {
     return this.user$;
   }
 
+   agregarDocumento(data: any, col: string) 
+  {
+    const dataRef = collection(this.firestore, col);
+    return addDoc(dataRef, data);
+  }
+
+  
+
 }
