@@ -1,10 +1,10 @@
-<ion-content [fullscreen]="true">
-<div id = "principal-container">
+<ion-content [fullscreen]="true" *ngIf = "!qrService.scan">
+<div id = "principal-container" *ngIf = "!qrService.scan">
   <header>
     <h1 class ="titulos">RamenGB🍜</h1>
     <button id = "btn-mostrar-opciones" (click) = "mostrarContenedores('opciones')">≋</button>
     <div id = "contenedor-opciones-inicio" class="contenedor-animado"[class.visible]="mostrarOpciones">
-      <button class="btn-opciones-inicio">Iniciar sesión</button>
+      <button class="btn-opciones-inicio" (click) = "irA()">Iniciar sesión</button>
       <button class="btn-opciones-inicio">Registrarse</button>
     </div>
     
@@ -12,18 +12,44 @@
   </header>
   <section>
     <form>
-      <h2 class ="titulos">REGÍSTRO</h2>
-      <input type="text" class="inputs-form" [(ngModel)] = "nombreUsuario" placeholder="Nombre" name = "nombre">
-      <input type="text" class="inputs-form" [(ngModel)] = "apellidoUsuario" placeholder="Apellido" name = "apellido">
-      <input type="text" class="inputs-form" [(ngModel)] = "documentoUsuario" placeholder="N° de documento" name = "documento">
-      <button class  = "btn-form" type="button" (click)="tomarFoto()">Tomar foto</button>
-      
+      <h2 class ="titulos">REGISTRO</h2>
+      <div id = "contenedor-opciones-registro">
+        <button class = "btn-opciones-registro" type="button" (click) = "seleccionarOpcionesRegistro('cliente')"  [class.active]="opcionSeleccionada === 'cliente'">Cliente</button>
+        <button class = "btn-opciones-registro" type="button" (click) = "seleccionarOpcionesRegistro('empleado')"  [class.active]="opcionSeleccionada === 'empleado'">Empleado</button>
+        <button class = "btn-opciones-registro" type="button" (click) = "seleccionarOpcionesRegistro('gerencia')"  [class.active]="opcionSeleccionada === 'gerencia'">Gerencia</button>
+      </div>
+      <div class = "contenedor-inputs">
+        <input type="text" class="inputs-form inputs-nombres" [(ngModel)] = "nombreUsuario" placeholder="Nombre" name = "nombreUsuario">
+        <input type="text" class="inputs-form inputs-nombres" [(ngModel)] = "apellidoUsuario" placeholder="Apellido" name = "apellidoUsuario">
+      </div>
+      <div  class = "contenedor-inputs">
+        <input type="text" class="inputs-form inputs-nombres" [(ngModel)] = "documentoUsuario" placeholder="N° de documento" name = "documentoUsuario"   [ngClass]="mostrarInputs ? 'inputs-form inputs-nombres' : 'inputs-form inputs-nombres ancho-completo'">
+        
+        <input type="text" class="inputs-form inputs-nombres" [(ngModel)] = "cuilUsuario" placeholder="CUIL" name ="cuil" *ngIf = "mostrarInputs">
 
-      <div id = "contenedor-btn-form">
+      </div>
+       <div  class = "contenedor-inputs">
+         <input type="text" class="inputs-form inputs-nombres" [(ngModel)] = "perfilUsuario" placeholder="Perfil" *ngIf = "mostrarInputs" name = "perfilUsuario"> 
+         <button class  = "btn-tomar-foto btn-form inputs-nombres" type="button" (click)="tomarFoto()" [ngClass]="mostrarInputs ? 'inputs-form inputs-nombres' : 'inputs-form inputs-nombres ancho-completo'">Tomar foto 📷</button>
+        </div>
+      
+      <input type="text" class  = "btn-qr inputs-form inputs-nombres" [(ngModel)] = "emailUsuario" placeholder="Correo electrónico" name = "email">
+      <input type="password" class  = "btn-qr inputs-form inputs-nombres" [(ngModel)] = "claveUsuario" placeholder="Contraseña" name = "clave">
+      <button class  = "btn-qr" (click) = "scanearDocumento()">COMPLETAR CON QR</button>
+
+ 
+
+
+
+
+
+
+
+      <div id = "contenedor-btn-form"   [ngStyle]="{'justify-content': mostrarInputs ? 'center' : 'space-evenly'}">
         <button class = "btn-form btn-registrarse" (click) = "registrarUsuario()">Registrarse</button>
-        <div id = "contenedor-btn-anonimo">
-          <p id = "p-registrarse-como">Regístrarse como:</p>
-          <button class = "btn-form  btn-anonimo" type="button" (click) = "mostrarContenedores('aviso')">Anónimo</button>
+        <div id = "contenedor-btn-anonimo"  *ngIf = "!mostrarInputs">
+          
+          <button class = "btn-form  btn-anonimo" type="button" (click) = "mostrarContenedores('aviso')" *ngIf = "!mostrarInputs"><p id = "p-registrarse-como" *ngIf = "!mostrarInputs">Registrarse como:</p>Anónimo</button>
         </div>
       </div>
     </form>
@@ -31,7 +57,7 @@
     <div id ="contenedor-aviso-anonimo" *ngIf = "mostrarAvisoAnonimo">
       <p>Aviso: <br>Al registrarse como anónimo se cargará solamente su nombre y la foto.</p>
       <div id = "opciones-aviso-anonimo">
-        <button class="btn-anonimo-aviso btn-aceptar-aviso">ACEPTAR</button>
+        <button class="btn-anonimo-aviso btn-aceptar-aviso" (click) = "confirmarRegistroAnonimo()">ACEPTAR</button>
         <button class="btn-anonimo-aviso" (click) = "mostrarContenedores('aviso')">CANCELAR</button>
       </div>
     </div>
