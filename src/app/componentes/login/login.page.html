@@ -1,13 +1,48 @@
 
-<ion-content [fullscreen]="true">
+<ion-content [fullscreen]="true" >
+  <div id = "contenedor-principal">
+    <header>
+    <h1 class ="titulos">RamenGB🍜</h1>
+    <button id = "btn-mostrar-opciones" (click) = "mostrarContenedores('opciones')">≋</button>
+    <div id = "contenedor-opciones-inicio" class="contenedor-animado"[class.visible]="mostrarOpciones">
+      <button class="btn-opciones-inicio">Iniciar sesión</button>
+      <button class="btn-opciones-inicio" (click) = "irA()">Registrarse</button>
+    </div>
+  </header>
+    <section>
+      <form>
+        <h2 class ="titulos">INGRESO</h2>
+        
+        <input type="text" class="inputs-form" [(ngModel)] = "emailUsuario" placeholder="Correo electrónico" name = "email">
+        <input type="password" class="inputs-form" [(ngModel)] = "claveUsuario" placeholder="Contraseña" name = "clave">
 
-  <button (click) = "iniciarSesion()">INICIAR</button>
-  <p>{{iniciar}}</p>
+        
 
-  <div *ngIf="this.iniciar != ''">
-    <button (click)="irA('alta-duenio')">alta-dueño</button>
+        <button type = "button" id="btn-mostrar-opciones-ingresos" (click) = "mostrarContenedores('ingresos')">VER OPCIONES DE INGRESO 📋</button>
+        <div id = "contenedor-btn-ingresos" *ngIf = "mostrarOpcionesIngresos">
+          <button
+            *ngFor="let rol of roles"
+            type="button"
+            class="btn-ingresos"
+            [class.selected]="rol === rolSeleccionado"
+            (click)="seleccionarRol(rol)"
+          >
+            {{ rol }}
+          </button>
+          <div id = "contenedor-cerrar-ingresos">
+            <button type="button" class = "btn-opcion-ingreso-aceptar btn-cancelar-opciones-ingresos" >ACEPTAR</button>
+            <button type="button" class = "btn-cancelar-opciones-ingresos" (click) = "mostrarContenedores('ingresos')">CANCELAR</button> 
+          </div>
+        </div>
+        <button type="button" class = "btn-login" (click) = "iniciarSesion()">INGRESAR</button>
+        
+      </form>
+
+    
+
+    </section>
   </div>
-  
+
 </ion-content>
 
 

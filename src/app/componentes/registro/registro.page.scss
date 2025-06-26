@@ -42,6 +42,7 @@ form
     border: none;
     background-color: #10161e;
     border-radius: 5px;
+    color: #E5DCCD;
 }
 
 .inputs-form:focus
@@ -49,7 +50,10 @@ form
     outline: none;
 }
 
-
+p
+{
+    color: #E5DCCD;
+}
 
 #principal-container
 {
@@ -84,16 +88,12 @@ form
     width: 17%;
     font-size: 43px;
 
-    
-    padding-bottom: 10px;
-    font-weight: 800;
-    
 }
 
 button
 {
     background-color: transparent;
-    
+    color: #E5DCCD;
 }
 
 
@@ -109,7 +109,8 @@ button
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
-    width: 45%;
+    width: 50%;
+
     background-color: #10161e;
    
     border-radius: 0 0 10px 10px;
@@ -195,39 +196,101 @@ p
 #p-registrarse-como
 {
     margin: 0;
+    font-size: 15px;
 }
 
 #contenedor-btn-form
 {
     width: 100%;
     height: 30%;
-   
+
     display: flex;
-    justify-content: space-evenly;
+    
     align-items: center;
 }
 
 .btn-registrarse
 {
-    height: 35.5%;
+    height: 70.5%;
     width: 90%;
-    margin-left: 3%;
+    margin-left: 1%;
+    margin-bottom: 5.5%;
 }
 
 #contenedor-btn-anonimo
 {
     width: 100%;
-    
+
     display: flex;
     height: 100%;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+
 }
 
 .btn-anonimo
 {
-    height: 36.5%;
+   
+    height: 71.5%;
     width: 90%;
     margin-bottom: 9%;
+    margin-left: 5%;
+}
+
+#contenedor-opciones-registro
+{
+    width: 100%;
+    height: 13%;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.btn-opciones-registro
+{
+    width: 30%;
+    height: 100%;
+    background-color: #10161e;
+    font-size: 20px;
+    border-radius: 10px;
+}
+
+.inputs-nombres
+{
+    width: 49%;
+    height: 100%;
+}
+
+.contenedor-inputs
+{
+    width: 90%;
+    height: 13%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.ancho-completo {
+  flex: 1;
+  width: 100%; 
+}
+
+.btn-tomar-foto
+{
+    font-size: 20px;
+    letter-spacing: 1px;
+    text-align: center;
+    padding-right: 15px;
+}
+
+.btn-qr
+{
+    width: 90%;
+    height: 13%;
+    background-color: #10161e;
+    font-size: 20px;
+    border-radius: 10px;
+}
+.btn-opciones-registro.active {
+  background-color: #E5DCCD; /* Cambia este color al que prefieras */
+  color: #10161e;
 }

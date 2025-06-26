@@ -5,7 +5,7 @@ const routes: Routes = [
 
   {
     path: '',
-    redirectTo: 'registro',
+    redirectTo: 'login',
     pathMatch: 'full'
   },
   {
@@ -13,14 +13,15 @@ const routes: Routes = [
     loadChildren: () => import('./componentes/login/login.module').then( m => m.LoginPageModule)
   },
   {
-    path: 'alta-duenio',
-    loadChildren: () => import('./componentes/alta-duenio/alta-duenio.module').then( m => m.AltaDuenioPageModule)
-  },
-  {
     path: 'registro',
     loadChildren: () => import('./componentes/registro/registro.module').then( m => m.RegistroPageModule)
   },
+  {
+    path: 'home',
+    loadChildren: () => import('./componentes/home/home.module').then( m => m.HomePageModule)
+  }
 
+  
 ];
 
 @NgModule({
