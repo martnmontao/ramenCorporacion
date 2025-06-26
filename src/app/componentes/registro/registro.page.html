@@ -4,7 +4,7 @@
     <h1 class ="titulos">RamenGB🍜</h1>
     <button id = "btn-mostrar-opciones" (click) = "mostrarContenedores('opciones')">≋</button>
     <div id = "contenedor-opciones-inicio" class="contenedor-animado"[class.visible]="mostrarOpciones">
-      <button class="btn-opciones-inicio">Iniciar sesión</button>
+      <button class="btn-opciones-inicio" (click)="irA('login')">Iniciar sesión</button>
       <button class="btn-opciones-inicio">Registrarse</button>
     </div>
     

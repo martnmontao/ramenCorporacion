@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { FirebaseService } from 'src/app/servicios/firebase.service';
 @Component({
   selector: 'app-login',
@@ -9,7 +10,7 @@ import { FirebaseService } from 'src/app/servicios/firebase.service';
 export class LoginPage implements OnInit {
 
   iniciar: string = "";
-  constructor(private firebaseService: FirebaseService) { }
+  constructor(private firebaseService: FirebaseService, private router: Router) { }
 
   ngOnInit() {
   }
@@ -22,6 +23,10 @@ export class LoginPage implements OnInit {
       this.iniciar = "INICIADO";
     }
     );
+  }
+
+  irA(path: string) {
+    this.router.navigateByUrl(path);
   }
 
 

@@ -2,17 +2,17 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { LoadingController } from '@ionic/angular';
-import { DataService } from 'src/app/servicios/data.service';
 import { FirebaseService } from 'src/app/servicios/firebase.service';
 import Swal from 'sweetalert2';
 
 export interface Duenio{
+  email: string
   nombre: string,
   apellido: string,
   dni: number,
   cuit: number,
-  foto: string,
-  perfil: 'duenio' | 'supervisor'
+  imagenBase64: string,
+  perfil: 'duenio' | 'supervisor',
 }
 
 @Component({
@@ -22,23 +22,29 @@ export interface Duenio{
   standalone: false
 })
 export class AltaDuenioPage implements OnInit {
-
-fotos: any;
+  mostrarOpciones = false;
+  nombreUsuario: string = "";
+  apellidoUsuario: string = "";
+  documentoUsuario: string = "";
+  fotoUsuario: string | undefined;
+  mostrarAvisoAnonimo = false;
+  fotos: any;
   loading = false;
   photo: string | undefined;
 
   duenio: Duenio = {
+    email: '',
     nombre: '',
     apellido: '',
     dni: 0,
     cuit: 0,
-    foto: '',
-    perfil: 'duenio'
+    imagenBase64: '',
+    perfil: 'duenio',
+    
   };
 
 
   constructor(private firebaseService: FirebaseService,     
-    public dataService: DataService,
     private loadingController: LoadingController,
     private router:Router) { }
 
@@ -62,7 +68,7 @@ fotos: any;
         });
         await loading.present();
 
-        await this.dataService.subirFoto(fotoBase64);
+        await this.firebaseService.subirFoto(fotoBase64);
 
         await loading.dismiss();
         this.loading = false;
@@ -82,6 +88,19 @@ fotos: any;
                       });
     }
   }
+  mostrarContenedores(contenedor: string)
+  {
+    switch(contenedor)
+    {
+      case "opciones":
+        this.mostrarOpciones = !this.mostrarOpciones;
+        break;
+      case "aviso":
+        this.mostrarAvisoAnonimo = !this.mostrarAvisoAnonimo;
+        break;
+    }
+  }
+
 
   async guardarDuenio() {
   if (!this.photo) return;
@@ -92,8 +111,8 @@ fotos: any;
   await loading.present();
 
   try {
-    this.duenio.foto = this.photo!;
-    await this.dataService.guardarDuenio(this.duenio);
+    this.duenio.imagenBase64 = this.photo!;
+    await this.firebaseService.guardarDuenio(this.duenio);
 
     await loading.dismiss();
     Swal.fire({

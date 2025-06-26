@@ -1,56 +1,48 @@
-<ion-header>
-  <ion-toolbar color="primary">
-    <ion-title>Alta de Dueño</ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-content [fullscreen]="true">
+  <div id="principal-container">
+    <header>
+      <h1 class="titulos">RamenGB🍜</h1>
+      <button id="btn-mostrar-opciones" (click)="mostrarContenedores('opciones')">≋</button>
+      <div id="contenedor-opciones-inicio" class="contenedor-animado" [class.visible]="mostrarOpciones">
+        <button class="btn-opciones-inicio">Iniciar sesión</button>
+        <button class="btn-opciones-inicio">Registrarse</button>
+      </div>
+    </header>
 
-<ion-content class="ion-padding">
-  <form #form="ngForm" (ngSubmit)="guardarDuenio()">
+    <section>
+      <form #form="ngForm" (ngSubmit)="guardarDuenio()">
+        <h2 class="titulos">REGISTRO DUEÑO/SUPERVISOR</h2>
+        <input type="text" class="inputs-form" [(ngModel)]="duenio.email" placeholder="Correo electronico" name="email" required>
+        <input type="text" class="inputs-form" [(ngModel)]="duenio.nombre" placeholder="Nombre" name="nombre" required>
+        <input type="text" class="inputs-form" [(ngModel)]="duenio.apellido" placeholder="Apellido" name="apellido" required>
+        <input type="number" class="inputs-form" [(ngModel)]="duenio.dni" placeholder="DNI" name="dni" required>
+        <input type="number" class="inputs-form" [(ngModel)]="duenio.cuit" placeholder="CUIT" name="cuit" required>
+        
 
-    <ion-item>
-      <ion-label position="floating">Nombre</ion-label>
-      <ion-input type="text" name="nombre" required [(ngModel)]="duenio.nombre"></ion-input>
-    </ion-item>
+        <div id="custom-select-container">
+          <label for="perfil-select" class="select-label">Perfil</label>
+          <select id="perfil-select" class="inputs-form custom-select" name="perfil" [(ngModel)]="duenio.perfil">
+            <option value="duenio">Dueño</option>
+            <option value="supervisor">Supervisor</option>
+          </select>
+        </div>
 
-    <ion-item>
-      <ion-label position="floating">Apellido</ion-label>
-      <ion-input type="text" name="apellido" required [(ngModel)]="duenio.apellido"></ion-input>
-    </ion-item>
+        <button class="btn-form" type="button" (click)="tomarFoto()">Tomar foto 📸</button>
 
-    <ion-item>
-      <ion-label position="floating">DNI</ion-label>
-      <ion-input type="number" name="dni" required [(ngModel)]="duenio.dni"></ion-input>
-    </ion-item>
+        <div class="photo-preview-container" *ngIf="duenio.imagenBase64">
+          <img [src]="duenio.imagenBase64" alt="Foto tomada" class="photo-preview" />
+        </div>
 
-    <ion-item>
-      <ion-label position="floating">CUIT</ion-label>
-      <ion-input type="number" name="cuit" required [(ngModel)]="duenio.cuit"></ion-input>
-    </ion-item>
+        <div id="contenedor-btn-form">
+          <button class="btn-form btn-registrarse" type="submit"  (click)="guardarDuenio()">Guardar Dueño</button>
+        </div>
+        
+        <div class="bottom-buttons">
+          <button class="btn-form" (click)="cerrarSesion()">Cerrar Sesión</button>
+          <button class="btn-form" (click)="irAhome()">Volver al Home</button>
+        </div>
+      </form>
 
-    <ion-item>
-      <ion-label>Perfil</ion-label>
-      <ion-select name="perfil" [(ngModel)]="duenio.perfil">
-        <ion-select-option value="duenio">Dueño</ion-select-option>
-        <ion-select-option value="supervisor">Supervisor</ion-select-option>
-      </ion-select>
-    </ion-item>
-
-    <div class="ion-text-center ion-margin">
-      <ion-button color="medium" (click)="tomarFoto()">📸 Tomar Foto</ion-button>
-    </div>
-
-    <div class="ion-text-center ion-margin" *ngIf="photo">
-      <img [src]="photo" alt="Foto tomada" style="max-width: 200px; border-radius: 8px;" />
-    </div>
-
-    <div class="ion-text-center ion-margin">
-      <ion-button expand="block" type="submit" [disabled]="form.invalid">Guardar Dueño</ion-button>
-    </div>
-
-  </form>
-
-  <div class="ion-text-center">
-    <ion-button color="danger" (click)="cerrarSesion()">Cerrar Sesión</ion-button>
-    <ion-button (click)="irAhome()">Volver al Home</ion-button>
+      </section>
   </div>
 </ion-content>

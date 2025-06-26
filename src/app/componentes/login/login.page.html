@@ -3,4 +3,11 @@
 
   <button (click) = "iniciarSesion()">INICIAR</button>
   <p>{{iniciar}}</p>
+
+  <div *ngIf="this.iniciar != ''">
+    <button (click)="irA('alta-duenio')">alta-dueño</button>
+  </div>
+  
 </ion-content>
+
+
