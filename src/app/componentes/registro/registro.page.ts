@@ -99,12 +99,8 @@ export class RegistroPage implements OnInit {
           autorizado: false
 
         }
-
-
-      
     }
-   
-
+  
     try
     {
      this.firebaseService.agregarDocumento(data, "registro");
