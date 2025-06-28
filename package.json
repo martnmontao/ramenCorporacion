@@ -28,7 +28,7 @@
     "@capacitor/cli": "^7.3.0",
     "@capacitor/core": "^7.3.0",
     "@ionic/angular": "^8.0.0",
-
+    "@zxing/library": "^0.21.3",
     "firebase": "^10.14.1",
     "ionicons": "^7.0.0",
     "rxjs": "~7.8.0",

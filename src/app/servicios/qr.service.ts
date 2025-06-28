@@ -5,7 +5,6 @@ export interface DocumentoData {
   numero: string;
   apellido: string;
   nombre: string
- 
 }
 @Injectable({
   providedIn: 'root'

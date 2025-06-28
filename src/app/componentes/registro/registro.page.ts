@@ -28,6 +28,7 @@ export class RegistroPage implements OnInit {
   mostrarInputs = false;
   opcionSeleccionada = "cliente";
   datosDocumentoQrSub!: Subscription;
+  
 
   constructor(private firebaseService: FirebaseService, private router: Router, public qrService: QrService) { }
 
@@ -72,7 +73,9 @@ export class RegistroPage implements OnInit {
           tipo: this.perfilUsuario,
           cuil: this.cuilUsuario,
           imagenUsuario: this.fotoUsuario,
-          autorizado: false
+          autorizado: false,
+          correoUsuario: this.emailUsuario,
+          claveUsuario :this.claveUsuario,
         }
         break;
       case "gerencia":
@@ -84,7 +87,9 @@ export class RegistroPage implements OnInit {
           tipo: this.perfilUsuario,
           cuil: this.cuilUsuario,
           imagenUsuario: this.fotoUsuario,
-          autorizado: false
+          autorizado: false,
+          correoUsuario: this.emailUsuario,
+          claveUsuario :this.claveUsuario,
 
 
         }
@@ -96,7 +101,9 @@ export class RegistroPage implements OnInit {
           documentoUsuario: this.documentoUsuario,
           perfil: this.opcionSeleccionada,
           imagenUsuario: this.fotoUsuario,
-          autorizado: false
+          autorizado: false,
+          correoUsuario: this.emailUsuario,
+          claveUsuario :this.claveUsuario,
 
         }
 
@@ -127,9 +134,6 @@ export class RegistroPage implements OnInit {
     this.fotosUsuario.push(this.fotoUsuario);
 
   }
-  irA(path: string) {
-    this.router.navigateByUrl(path);
-  }
 
   confirmarRegistroAnonimo()
   {
@@ -143,7 +147,7 @@ export class RegistroPage implements OnInit {
     this.firebaseService.agregarDocumento(data, "registro");
   }
 
-   irA()
+irA()
   {
     this.router.navigateByUrl('login');
     this.mostrarOpciones = false;
@@ -160,6 +164,7 @@ export class RegistroPage implements OnInit {
       case "gerencia":
         this.mostrarInputs = true;
         this.opcionSeleccionada = "gerencia";
+        
         break;
       case "empleado":
         this.mostrarInputs = true;

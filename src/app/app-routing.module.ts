@@ -19,6 +19,10 @@ const routes: Routes = [
   {
     path: 'home',
     loadChildren: () => import('./componentes/home/home.module').then( m => m.HomePageModule)
+  },
+  {
+    path: 'lista-usuarios',
+    loadChildren: () => import('./componentes/lista-usuarios/lista-usuarios.module').then( m => m.ListaUsuariosPageModule)
   }
 
   

@@ -1,0 +1,47 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Usuarios Pendientes de Autorización</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <!-- Indicador de carga mientras se obtienen los usuarios -->
+  <div *ngIf="cargandoUsuarios" class="ion-text-center ion-padding">
+    Cargando usuarios...
+  </div>
+
+  <!-- Mensaje si el usuario no tiene permisos para ver esta lista -->
+  <div *ngIf="!cargandoUsuarios && !isGerencia && !isMaitre" class="ion-text-center ion-padding">
+    <p>No tiene permisos para ver usuarios pendientes de autorización.</p>
+    <p>Por favor, inicie sesión con una cuenta de gerencia o un empleado tipo Maitre.</p>
+  </div>
+
+  <!-- Lista de usuarios si no está cargando y hay usuarios para mostrar y el usuario tiene permisos -->
+  <ion-list>
+    <!-- Título específico según el rol del usuario logueado -->
+    <ion-list-header>
+      <ion-label *ngIf="isGerencia">Usuarios de Gerencia y Empleados (Pendientes)</ion-label>
+      <ion-label *ngIf="isMaitre">Clientes Pendientes de Autorización</ion-label>
+    </ion-list-header>
+
+    <ion-item *ngFor="let usuario of usuariosParaAutorizar">
+      <ion-label>
+        <h2>{{ usuario.nombreUsuario }} {{ usuario.apellidoUsuario }}</h2>
+        <p>Correo: {{ usuario.correoUsuario }}</p>
+        <p>Perfil: {{ usuario.perfil }}</p>
+        <!-- Mostrar 'Tipo' solo si existe (aplica a empleados y gerencia) -->
+        <p *ngIf="usuario.tipo">Tipo: {{ usuario.tipo }}</p>
+      </ion-label>
+      <!-- Botón de autorización que llama a la función en el componente -->
+    
+      <ion-button *ngIf="user.perfil == 'gerencia'" slot="end" color="success" (click)="onAutorizarUsuario(usuario)">
+        Autorizar
+      </ion-button>
+    </ion-item>
+  </ion-list>
+
+  <!-- Mensaje si no hay usuarios pendientes para el rol actual -->
+  <div *ngIf="!cargandoUsuarios && usuariosParaAutorizar.length === 0" class="ion-text-center ion-padding">
+    <p>No hay usuarios pendientes de autorización para su perfil.</p>
+  </div>
+</ion-content>

@@ -4,17 +4,17 @@ import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { AltaDuenioPageRoutingModule } from './alta-duenio-routing.module';
+import { ListaUsuariosPageRoutingModule } from './lista-usuarios-routing.module';
 
-import { AltaDuenioPage } from './alta-duenio.page';
+import { ListaUsuariosPage } from './lista-usuarios.page';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    AltaDuenioPageRoutingModule
+    ListaUsuariosPageRoutingModule
   ],
-  declarations: [AltaDuenioPage]
+  declarations: [ListaUsuariosPage]
 })
-export class AltaDuenioPageModule {}
+export class ListaUsuariosPageModule {}

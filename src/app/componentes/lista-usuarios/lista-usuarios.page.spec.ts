@@ -1,12 +1,12 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { AltaDuenioPage } from './alta-duenio.page';
+import { ListaUsuariosPage } from './lista-usuarios.page';
 
-describe('AltaDuenioPage', () => {
-  let component: AltaDuenioPage;
-  let fixture: ComponentFixture<AltaDuenioPage>;
+describe('ListaUsuariosPage', () => {
+  let component: ListaUsuariosPage;
+  let fixture: ComponentFixture<ListaUsuariosPage>;
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(AltaDuenioPage);
+    fixture = TestBed.createComponent(ListaUsuariosPage);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
