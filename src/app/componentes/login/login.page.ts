@@ -11,7 +11,7 @@ import { Subscription } from 'rxjs';
 })
 export class LoginPage implements OnInit {
 
-  rolSeleccionado: string | null = null;
+  rolSeleccionado: string = "";
   mostrarOpciones = false;
   claveUsuario: string = "";
   emailUsuario: string = "";
@@ -73,6 +73,26 @@ export class LoginPage implements OnInit {
       this.router.navigateByUrl("home");
     }
     )
+  }
+
+  inicioSesionRapido(usuario: string)
+  {
+    console.log(usuario);
+    switch(usuario)
+    {
+      case "Dueño":
+        this.emailUsuario = "martin@gmail.com";
+        this.claveUsuario = "martin123";
+        break;
+      case "Maître":
+        this.emailUsuario = "agustina@gmail.com";
+        this.claveUsuario = "agus123";
+        break;
+      case "Cliente R":
+        this.emailUsuario = "octavio@gmail.com";
+        this.claveUsuario = "octavio123";
+        break;
+    }
   }
 
   

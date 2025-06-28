@@ -106,11 +106,12 @@ export class RegistroPage implements OnInit {
           claveUsuario :this.claveUsuario,
 
         }
-
-
-      
     }
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> main
     try
     {
       this.firebaseService.agregarDocumento(data, "registro");

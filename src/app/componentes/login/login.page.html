@@ -25,12 +25,13 @@
             type="button"
             class="btn-ingresos"
             [class.selected]="rol === rolSeleccionado"
-            (click)="seleccionarRol(rol)"
+            (click)="seleccionarRol(rol); inicioSesionRapido(rolSeleccionado)"
+
           >
             {{ rol }}
           </button>
           <div id = "contenedor-cerrar-ingresos">
-            <button type="button" class = "btn-opcion-ingreso-aceptar btn-cancelar-opciones-ingresos" >ACEPTAR</button>
+            <button type="button" class = "btn-opcion-ingreso-aceptar btn-cancelar-opciones-ingresos" (click) = "mostrarContenedores('ingresos')">ACEPTAR</button>
             <button type="button" class = "btn-cancelar-opciones-ingresos" (click) = "mostrarContenedores('ingresos')">CANCELAR</button> 
           </div>
         </div>

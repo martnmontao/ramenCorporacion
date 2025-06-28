@@ -19,7 +19,7 @@ header{
     border: none;
     background-color: #10161e;
     border-radius: 5px;
-    color: #E5DCCD;
+    color: #F0CA91;
 
 }
 
@@ -49,15 +49,15 @@ button
 
 .titulos
 {
-    margin: 5px 5px;
-    color: #E5DCCD;
+    margin: 10px 10px;
+    color: #F0CA91;
     font-size: 35px;
     font-family: 'Poppins', sans-serif;
 }
 .btn-opciones-inicio
 {
     border: none;
-    color: white;
+    color: #F0CA91;
     font-size: 25px;
     font-family: 'Poppins', sans-serif;
     padding: 5px;
@@ -67,9 +67,7 @@ button
 {
     width: 17%;
     font-size: 43px;
-
-    
-   
+    color: #F0CA91;
     
 }
 
@@ -118,7 +116,7 @@ form
     height: 85%;
     display: flex;
     border-radius: 10px;
-    border: 2px solid #E5DCCD;
+    border: 2px solid #F0CA91;
     width: 90%;
     justify-content: space-evenly;
     align-items: center;
@@ -146,7 +144,7 @@ button
 {
     width: 100%;
    
-    border-top: 2px solid #E5DCCD;
+    border-top: 2px solid #F0CA91;
   
     align-items: center;
     display: flex;
@@ -172,7 +170,7 @@ label
 }
 
 .btn-ingresos.selected {
-  background-color: #E5DCCD;
+  background-color: #F0CA91;
   color: #080b0f;
 
 }
@@ -195,5 +193,10 @@ label
     padding: 10px;
     width: 80%;
  
+}
+
+button
+{
+    color: #F0CA91;
 }
 
