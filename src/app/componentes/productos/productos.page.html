@@ -1,0 +1,95 @@
+<ion-content [fullscreen]="true">
+
+<div id = "contenedor-principal">
+  <header>
+    <h1>PRODUCTOS</h1>
+    <button id = "btn-mostrar-opciones" (click) = "mostrarContenedor('mostrarOpciones')">≋</button>
+    <div id = "contenedor-opciones-inicio" class="contenedor-animado"[class.visible]="mostrarOpciones">
+      <button class="btn-opciones-inicio" (click) = "irA()">Inicio</button>
+      <button class="btn-opciones-inicio" (click) = "cerrarSesion()">Cerrar sesión</button>
+    </div>
+  </header>
+  <section>
+
+   
+
+
+
+    <div id = "contenedor-botones-filtrar">
+
+      <button class = "btn-filtrar-productos" (click) = "seleccionarFiltro('comida')" [ngClass]="{'activo': filtroSeleccionado === 'comida'}"><img class = "img-editar-agregar-producto"src="../../../assets/imagenes/comida-producto.png"></button>
+      <button class = "btn-filtrar-productos" (click) = "seleccionarFiltro('bebida')" [ngClass]="{'activo': filtroSeleccionado === 'bebida'}"><img class = "img-editar-agregar-producto"src="../../../assets/imagenes/bebida-producto.png"></button>
+      <button class = "btn-filtrar-productos" (click) = "seleccionarFiltro('postre')" [ngClass]="{'activo': filtroSeleccionado === 'postre'}"><img class = "img-editar-agregar-producto"src="../../../assets/imagenes/postre-producto.png"></button>
+    </div>
+    <div id = "contenedor-agregar-editar-productos">
+      <button class = "btn-crear-editar-producto btn-crear-producto" (click) = "mostrarContenedor('formAgregarProductos')"><img class = "img-editar-agregar-producto"src="../../../assets/imagenes/agregar-producto.png"></button>
+    </div>
+    
+
+    
+
+    <form id = "form-agregar-productos" *ngIf = "mostrarFormAgregarProducto">
+      <div class = "contenedor-inputs">
+        <input class = "input-agregar-producto inputs-cortos" [(ngModel)] = "nombreProducto" type="text" placeholder="Nombre" name = "nombreProducto">
+        <input class = "input-agregar-producto inputs-cortos" type="number" [(ngModel)] = "precioProducto" placeholder="Precio" name = "precioProducto">
+      </div>
+      <div class = "contenedor-inputs">
+        <input class = "input-agregar-producto  inputs-cortos" type="text" [(ngModel)] = "tiempoPreparacionProducto" placeholder="Tiempo estimado" name = "tiempoPreparacionProducto">
+        <input class = "input-agregar-producto  inputs-cortos" type="text" [(ngModel)] = "tipoProducto" placeholder="Tipo" name = "tipoProducto">
+      </div>
+      <input class = "input-agregar-producto" type="text" [(ngModel)] = "descripcionProducto" placeholder="Descripción" name = "descripcionProducto">
+      <button type = "button" class = "btn-agregar-producto btn-tomar-foto" (click) = "tomarFoto()">Tomar foto</button>
+      <div id = "contenedor-botones-agregar-producto">
+        <button class = "btn-agregar-producto" (click) = "mostrarContenedor('formAgregarProductos')">Cancelar</button>
+        <button class = "btn-agregar-producto" (click) = "agregarProducto(); mostrarContenedor('formAgregarProductos')">Agregar</button>
+      </div>
+
+    </form>
+
+    <form id = "form-editar-productos" *ngIf = "mostrarFormEditarProducto">
+      <div class = "contenedor-inputs">
+        <input class = "input-agregar-producto inputs-cortos" [(ngModel)] = "nombreProducto" type="text" placeholder="Nombre" name = "nombreProducto">
+        <input class = "input-agregar-producto inputs-cortos" type="number" [(ngModel)] = "precioProducto" placeholder="Precio" name = "precioProducto">
+      </div>
+      <div class = "contenedor-inputs">
+        <input class = "input-agregar-producto  inputs-cortos" type="text" [(ngModel)] = "tiempoPreparacionProducto" placeholder="Tiempo estimado" name = "tiempoPreparacionProducto">
+        <input class = "input-agregar-producto  inputs-cortos" type="text" [(ngModel)] = "tipoProducto" placeholder="Tipo" name = "tipoProducto">
+      </div>
+      <input class = "input-agregar-producto" type="text" [(ngModel)] = "descripcionProducto" placeholder="Descripción" name = "descripcionProducto">
+      <div id = "contenedor-botones-agregar-producto">
+        <button class = "btn-agregar-producto" (click) = "mostrarContenedor('formEditarProductos')">Cancelar</button>
+        <button class = "btn-agregar-producto" (click) = "editarProducto(); mostrarContenedor('formEditarProductos')">Editar</button>
+      </div>
+
+    </form>
+
+
+
+    <div id = "contenedor-seccion-productos" *ngIf="!isLoading">
+      <div class = "contenedor-producto" *ngFor = "let producto of listaProductos">
+        <p class = "p-nombre-producto">{{ producto.nombreProducto }}</p>
+        <div class = "contenedor-imagenes-producto">
+          <img class = "img-producto" [src] = "producto.fotosProducto[0]">
+          <img class = "img-producto" [src] = "producto.fotosProducto[1]">
+          <img class = "img-producto" [src] = "producto.fotosProducto[2]">
+          
+        </div>
+        <p class = "p-informacion-producto">
+          Precio: ${{ producto.precioProducto }}.<br>
+          Tiempo de preparación: {{ producto.tiempoPreparacionProducto }}.<br>
+          Descripción: {{ producto.descripcionProducto }}.
+        </p>
+          <button class = "btn-crear-editar-producto btn-editar-producto" (click) = "mostrarContenedor('formEditarProductos', producto)"><img class = "img-editar-agregar-producto"src="../../../assets/imagenes/editar-producto.png"></button>  
+        </div>
+      </div>
+      
+      <div *ngIf="isLoading" class="spinner-container">
+        <div class="spinner"></div>
+      </div>
+      
+      
+      
+    </section>
+    
+</div>
+</ion-content>

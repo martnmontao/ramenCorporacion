@@ -42,7 +42,7 @@ form
     border: none;
     background-color: #10161e;
     border-radius: 5px;
-    color: #E5DCCD;
+    color: #F0CA91;
 }
 
 .inputs-form:focus
@@ -52,7 +52,7 @@ form
 
 p
 {
-    color: #E5DCCD;
+    color: #F0CA91;
 }
 
 #principal-container
@@ -76,7 +76,7 @@ p
 .btn-opciones-inicio
 {
     border: none;
-    color: white;
+    color: #F0CA91;
     font-size: 25px;
     font-family: 'Poppins', sans-serif;
     padding: 5px;
@@ -87,13 +87,14 @@ p
 {
     width: 17%;
     font-size: 43px;
+    color: #F0CA91;
 
 }
 
 button
 {
     background-color: transparent;
-    color: #E5DCCD;
+    color: #F0CA91;
 }
 
 
@@ -127,8 +128,9 @@ button
 }
 .titulos
 {
-    margin: 10px 5px;
-    color: #E5DCCD;
+    margin: 10px 10px;
+
+    color: #F0CA91;
     font-size: 35px;
     font-family: 'Poppins', sans-serif;
 }
@@ -291,6 +293,6 @@ p
     border-radius: 10px;
 }
 .btn-opciones-registro.active {
-  background-color: #E5DCCD; /* Cambia este color al que prefieras */
+  background-color: #F0CA91; /* Cambia este color al que prefieras */
   color: #10161e;
 }

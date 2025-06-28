@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Auth, authState, createUserWithEmailAndPassword, onAuthStateChanged, sendEmailVerification, signInWithEmailAndPassword, signOut, User, UserCredential } from '@angular/fire/auth';
-import { Firestore, collection, addDoc, query, orderBy, limit, getDocs, where } from '@angular/fire/firestore';
+import { Firestore, collection, addDoc, query, orderBy, limit, getDocs, where, collectionData, updateDoc, doc } from '@angular/fire/firestore';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import Swal from 'sweetalert2';
@@ -78,4 +78,19 @@ export class FirebaseService {
     const dataRef = collection(this.firestore, col);
     return addDoc(dataRef, data);
   }
+
+  getCollection<T>(nombreColeccion: string,campo?: string,valor?: any): Observable<T[]> 
+  {
+    const ref = collection(this.firestore, nombreColeccion);
+    const refFinal = campo && valor !== undefined? query(ref, where(campo, '==', valor)) : ref;
+
+    return collectionData(refFinal, { idField: 'id' }) as Observable<T[]>;
+  }
+  
+  updateDocumento(nombreColeccion: string, id: string, data: any): Promise<void> 
+  {
+    const ref = doc(this.firestore, `${nombreColeccion}/${id}`);
+    return updateDoc(ref, data);
+  }
+
 }
