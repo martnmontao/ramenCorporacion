@@ -107,11 +107,7 @@ export class RegistroPage implements OnInit {
 
         }
     }
-<<<<<<< HEAD
-
-=======
   
->>>>>>> main
     try
     {
       this.firebaseService.agregarDocumento(data, "registro");
@@ -140,12 +136,21 @@ export class RegistroPage implements OnInit {
   {
     let data = 
     {
-      imagen: this.fotoUsuario,
-      nombre: this.nombreUsuario,
+      imagenUsuario: this.fotoUsuario,
+      nombreUsuario: this.nombreUsuario,
       perfil: "cliente"
     }
 
-    this.firebaseService.agregarDocumento(data, "registro");
+    this.firebaseService.agregarDocumento(data, "usuarios").then(respuesta => 
+    {
+      this.emailUsuario = "";
+      this.nombreUsuario = "";
+      this.claveUsuario = "";
+      this.apellidoUsuario = "";
+      this.documentoUsuario = "";
+      this.router.navigateByUrl("home");
+    }
+    )
   }
 
 irA()

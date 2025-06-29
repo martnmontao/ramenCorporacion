@@ -10,6 +10,7 @@ import { FirebaseService } from 'src/app/servicios/firebase.service';
 })
 export class HomePage implements OnInit {
 
+  mostrarOpciones = false;
   constructor(private router: Router, private firebaseService: FirebaseService) { }
 
   ngOnInit() {
@@ -22,5 +23,16 @@ export class HomePage implements OnInit {
 
   cerrarSesion(){
   this.firebaseService.cerrarSesion();
+  }
+
+  mostrarContenedores(contenedor: string)
+  {
+    switch(contenedor)
+    {
+      case "opciones":
+        this.mostrarOpciones = !this.mostrarOpciones;
+        break;
+     
+    }
   }
 }

@@ -1,0 +1,253 @@
+#contenedor-principal
+{
+    height: 100%;
+      overflow-y: auto;
+      background-image: url("../../../assets/imagenes/fondoRamen.jpg");
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+
+}
+header{
+    height: 60px;
+    background-color: #10161e;
+    display: flex;
+    justify-content: space-between;
+  
+}
+section
+{
+    
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    overflow-y: auto;
+    flex: 1;
+    height: auto; 
+
+    padding-bottom: 2rem;
+}
+
+#contenedor-opciones-inicio
+{
+    position: absolute;
+    top: 57px;
+    right: 0;
+    height: 200px;
+    box-shadow: 0px 18px 17px 4px rgba(0,0,0,0.75);
+    -webkit-box-shadow: 0px 18px 17px 4px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 18px 17px 4px rgba(0,0,0,0.75);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    width: 50%;
+    background-color: #10161e;
+   
+    border-radius: 0 0 10px 10px;
+}
+
+.titulos
+{
+    margin: 10px 10px;
+    color: #F0CA91;
+    font-size: 35px;
+    font-family: 'Poppins', sans-serif;
+}
+.btn-opciones-inicio
+{
+    border: none;
+    color: #F0CA91;
+    font-size: 20px;
+    font-family: 'Poppins', sans-serif;
+    padding: 5px;
+    
+}
+#btn-mostrar-opciones
+{
+    width: 17%;
+    font-size: 43px;
+    color: #F0CA91;
+    
+}
+
+.contenedor-animado {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height 0.3s ease, opacity 0.3s ease;
+  z-index: 9999;
+}
+
+.contenedor-animado.visible {
+  max-height: 200px; 
+  opacity: 1;
+}
+
+button
+{
+    background-color: transparent;
+    color: #F0CA91;
+}
+
+.ion-list
+{
+     margin-top: 3%;
+  width: 90%;
+  background-color: #10161e;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 1%;
+  margin-bottom: 5%;
+}
+
+.scrollable-list
+{
+  max-height: 80vh; 
+  overflow-y: auto;
+  padding-bottom: 1rem;
+}
+.ion-list.scollable-list {
+  width: 100%;
+  max-height: unset;
+  overflow: visible;
+}
+
+.spinner-container {
+ width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 2rem;
+ 
+ 
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 6px solid #F0CA91;
+
+  border-top: 6px solid transparent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.fondo-custom
+{
+    --background: #0A1924;
+  width: 100%;
+  border-top: 1px solid #F0CA91;
+  border-bottom: 1px solid #F0CA91;
+  margin-bottom: 10px;
+  --min-height: 80px;
+  align-items: center;
+   
+}
+
+.img-usuario
+{
+   width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-left: 1rem;
+}
+
+.contenedor-opciones-filtro
+{
+  height: 30vh;
+ 
+  width: 100%;
+  display: flex;
+  justify-content: space-evenly;
+  flex-direction: column;
+  margin-top: 3%;
+  gap: 3%;
+  align-items: center;
+  
+}
+
+.btn-filtrar
+{
+  background-color: #10161e;
+  height: 70px;
+  width: 70%;
+  font-size: 25px;
+  border-radius: 10px;
+  transition: 0.2s background ease;
+}
+
+.contenedor-filtrar-empleado
+{
+  width: 100%;
+  height: 10%;
+  display: flex;
+  justify-content: space-evenly;
+}
+.btn-filtrar.active {
+  background-color: #F0CA91; /* Cambia este color al que prefieras */
+  color: #10161e;
+}
+
+
+.contenedor-opciones-clientes
+{
+  height: 10%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+
+}
+
+.contenedor-opciones-clientes button
+{
+  width: 45%;
+  font-size: 20px;
+}
+
+
+#contenedor-listas-usuarios
+{
+  width: 100%;
+  max-width: 100%;
+  overflow: visible;
+  min-height: 500px;
+  max-height: none;
+
+  padding: 1rem;
+  background-color: #10161e;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center; /* Antes estaba en center, que evitaba el scroll hacia arriba */
+  gap: 1.5rem; /* Para separar títulos y listas */
+  box-sizing: border-box;
+}
+
+#loading-container
+{
+   width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  overflow-y: visible;
+}
+
+.titulos-listas
+{
+  font-size: 23px;
+  color: #F0CA91;
+  margin-top: 1rem;
+  text-align: center;
+}

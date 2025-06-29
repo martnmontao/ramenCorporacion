@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import Swal from 'sweetalert2';
 import { BehaviorSubject } from 'rxjs';
-
+import { firstValueFrom } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -190,13 +190,6 @@ export class FirebaseService {
         await this.registroUsuario(userData.correoUsuario, userData.claveUsuario, userData);
 
         console.log(`Usuario ${userData.correoUsuario} autorizado y procesado con éxito.`);
-        Swal.fire({
-          icon: 'success',
-          title: '¡Autorizado!',
-          text: `El usuario ${userData.correoUsuario} ha sido autorizado y su cuenta ha sido creada.`,
-          confirmButtonText: 'Aceptar',
-          heightAuto: false
-        });
         return true;
       } catch (error: any) {
         console.error('Error al autorizar usuario:', error);
@@ -256,18 +249,35 @@ export class FirebaseService {
   }
   
   getCollection<T>(nombreColeccion: string,campo?: string,valor?: any): Observable<T[]> 
-    {
+  {
       const ref = collection(this.firestore, nombreColeccion);
       const refFinal = campo && valor !== undefined? query(ref, where(campo, '==', valor)) : ref;
 
       return collectionData(refFinal, { idField: 'id' }) as Observable<T[]>;
-    }
+  }
+
     
     updateDocumento(nombreColeccion: string, id: string, data: any): Promise<void> 
     {
       const ref = doc(this.firestore, `${nombreColeccion}/${id}`);
       return updateDoc(ref, data);
-    }
+  }
+
+
+   async getCollectionMultipleFilters(
+    coleccion: string,
+    filtros: { campo: string, condicion: any, valor: any }[]
+  ): Promise<any[]> {
+    const ref = collection(this.firestore, coleccion);
+
+    const constraints = filtros.map(filtro =>
+      where(filtro.campo, filtro.condicion, filtro.valor)
+    );
+
+    const q = query(ref, ...constraints);
+
+    return await firstValueFrom(collectionData(q, { idField: 'id' }));
+  }
 
 }
 

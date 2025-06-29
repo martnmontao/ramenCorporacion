@@ -72,6 +72,10 @@ export class LoginPage implements OnInit {
     {
       this.router.navigateByUrl("home");
     }
+    ).catch(error => 
+    {
+      console.log(error);
+    }
     )
   }
 

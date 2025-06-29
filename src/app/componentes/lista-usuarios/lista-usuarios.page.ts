@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { FirebaseService } from 'src/app/servicios/firebase.service';
 import Swal from 'sweetalert2';
@@ -10,34 +11,49 @@ import Swal from 'sweetalert2';
   standalone: false
 })
 export class ListaUsuariosPage implements OnInit {
-
-  usuariosParaAutorizar: any[] = []; 
-  cargandoUsuarios: boolean = true; // Para mostrar un indicador de carga
+  mostrarOpciones = false;
+  
+  isLoading: boolean = true; // Para mostrar un indicador de carga
   currentUserProfile: any | null = null; // Almacena el perfil del usuario logueado
   private profileSubscription: Subscription | undefined; // Para desuscribirse del Observable del perfil
   uid: string = '';
   user: any;
-  
+  hayUsuarios: boolean = true;
   // Variables para controlar la visibilidad del contenido y los permisos
   isGerencia: boolean = false;
   isMaitre: boolean = false; // true si es empleado tipo 'maitre'
+  // Variable para controlar el filtro de usuarios
+  filtroSeleccionado: string = 'cliente'; 
+  filtroSeleccionadoCliente: boolean = true;
 
-  constructor(private firebaseService: FirebaseService) {}
+  usuariosParaAutorizar: any = [];
+  usuariosParaNoAutorizar: any = [];
+
+  constructor(private firebaseService: FirebaseService, private router: Router) {}
 
   async ngOnInit() {
+ 
+    this.isLoading = true;
+
+  try {
     this.user = await this.firebaseService.obtenerUsuarioLogueado();
 
-    if(this.user.perfil == 'gerencia'){
-      this.usuariosParaAutorizar = await this.firebaseService.getUsuariosNoAutorizados();
-    }
-    if(this.user.tipo == 'maitre'){
-
-      this.usuariosParaAutorizar = await this.firebaseService.getClientesAutorizados();
+    if (this.user.perfil === 'gerencia' || this.user.tipo === 'maitre') {
       
-    }
-    console.log('esta es la lista de usuarios',this.usuariosParaAutorizar)
+      
+       await this.cargarUsuariosPorPerfil('cliente');
 
-    console.log(this.user)
+
+    } else {
+      this.hayUsuarios = false;
+    }
+  } catch (error) {
+    console.error('Error al obtener el usuario logueado:', error);
+    this.hayUsuarios = false;
+  } finally {
+    this.isLoading = false;
+  }
+
 
   }
 
@@ -72,18 +88,23 @@ export class ListaUsuariosPage implements OnInit {
       heightAuto: false
     });
 
-    if (result.isConfirmed) {
+    if (result.isConfirmed) 
+    {
       try {
-        // Llama a la función del servicio para autorizar al usuario
+        this.isLoading = true;
         const autorizadoExitoso = await this.firebaseService.autorizarUsuario(usuario, usuario.id);
+        if(this.filtroSeleccionado == 'cliente')
+          {
+          await this.cargarUsuariosPorPerfil('cliente');
 
-        if (autorizadoExitoso) {
-          // Si la autorización fue exitosa, actualiza la lista de usuarios pendientes.
-          // Esto elimina al usuario recién autorizado de la vista.
-          this.usuariosParaAutorizar = this.usuariosParaAutorizar.filter(
-            (u: any) => u.id !== usuario.id
-          );
         }
+        else
+        {
+          await this.cargarUsuariosPorPerfil('empleado');
+
+        }
+
+
       } catch (error) {
         // Los errores ya se manejan con SweetAlert en el servicio, aquí solo logueamos.
         console.error('Error en el componente al intentar autorizar:', error);
@@ -91,6 +112,55 @@ export class ListaUsuariosPage implements OnInit {
     }
   }
 
+   mostrarContenedores(contenedor: string)
+  {
+    switch(contenedor)
+    {
+      case "opciones":
+        this.mostrarOpciones = !this.mostrarOpciones;
+        break;
+     
+    }
+  }
 
+  irA(path:string)
+  {
+    this.router.navigateByUrl(path);
+  }
 
+  cerrarSesion()
+  {
+    this.firebaseService.cerrarSesion();
+  }
+
+ 
+  async cargarUsuariosPorPerfil(perfil: 'cliente' | 'empleado') {
+  this.isLoading = true;
+    this.filtroSeleccionado = perfil;
+  try {
+    // Usuarios autorizados (colección 'usuarios')
+    this.usuariosParaNoAutorizar = await this.firebaseService.getCollectionMultipleFilters('usuarios', [
+      { campo: 'perfil', condicion: '==', valor: perfil }
+    ]);
+    
+    // Usuarios no autorizados (colección 'registro')
+    this.usuariosParaAutorizar = await this.firebaseService.getCollectionMultipleFilters('registro', [
+      { campo: 'perfil', condicion: '==', valor: perfil },
+      { campo: 'autorizado', condicion: '==', valor: false }
+    ]);
+    
+
+    // Ajustamos la variable para mostrar mensaje si no hay usuarios
+    this.hayUsuarios = this.usuariosParaAutorizar.length > 0 || this.usuariosParaNoAutorizar.length > 0;
+
+  } catch (error) {
+    console.error('Error cargando usuarios:', error);
+    this.usuariosParaAutorizar = [];
+    this.usuariosParaNoAutorizar = [];
+    this.hayUsuarios = false;
+  }finally
+  {
+    this.isLoading = false;
+  }
+}
 }

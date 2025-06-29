@@ -1,47 +1,92 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>Usuarios Pendientes de Autorización</ion-title>
-  </ion-toolbar>
-</ion-header>
 
-<ion-content class="ion-padding">
-  <!-- Indicador de carga mientras se obtienen los usuarios -->
-  <div *ngIf="cargandoUsuarios" class="ion-text-center ion-padding">
-    Cargando usuarios...
-  </div>
 
-  <!-- Mensaje si el usuario no tiene permisos para ver esta lista -->
-  <div *ngIf="!cargandoUsuarios && !isGerencia && !isMaitre" class="ion-text-center ion-padding">
-    <p>No tiene permisos para ver usuarios pendientes de autorización.</p>
-    <p>Por favor, inicie sesión con una cuenta de gerencia o un empleado tipo Maitre.</p>
-  </div>
-
-  <!-- Lista de usuarios si no está cargando y hay usuarios para mostrar y el usuario tiene permisos -->
-  <ion-list>
-    <!-- Título específico según el rol del usuario logueado -->
-    <ion-list-header>
-      <ion-label *ngIf="isGerencia">Usuarios de Gerencia y Empleados (Pendientes)</ion-label>
-      <ion-label *ngIf="isMaitre">Clientes Pendientes de Autorización</ion-label>
-    </ion-list-header>
-
-    <ion-item *ngFor="let usuario of usuariosParaAutorizar">
-      <ion-label>
-        <h2>{{ usuario.nombreUsuario }} {{ usuario.apellidoUsuario }}</h2>
-        <p>Correo: {{ usuario.correoUsuario }}</p>
-        <p>Perfil: {{ usuario.perfil }}</p>
-        <!-- Mostrar 'Tipo' solo si existe (aplica a empleados y gerencia) -->
-        <p *ngIf="usuario.tipo">Tipo: {{ usuario.tipo }}</p>
-      </ion-label>
-      <!-- Botón de autorización que llama a la función en el componente -->
+<ion-content>
+  <div id = "contenedor-principal">
+    <header>
+      <h1 class ="titulos">RamenGB🍜</h1>
+      <button id = "btn-mostrar-opciones" (click) = "mostrarContenedores('opciones')">≋</button>
+      <div id = "contenedor-opciones-inicio" class="contenedor-animado"[class.visible]="mostrarOpciones">
+        <button class="btn-opciones-inicio" (click) = "irA('home')">INICIO</button>
+        <button class="btn-opciones-inicio" (click) = "cerrarSesion()">CERRAR SESIÓN</button>
+      </div>
+    </header>
+    <section>
     
-      <ion-button *ngIf="user.perfil == 'gerencia'" slot="end" color="success" (click)="onAutorizarUsuario(usuario)">
-        Autorizar
-      </ion-button>
-    </ion-item>
-  </ion-list>
+    
+      <!-- Mensaje si el usuario no tiene permisos para ver esta lista --> 
+      <!-- Lista de usuarios si no está cargando y hay usuarios para mostrar y el usuario tiene permisos -->
+    <div class="contenedor-opciones-filtro">                    
+  <button class="btn-filtrar" type="button"
+          [class.active]="filtroSeleccionado === 'cliente'"
+          (click)="cargarUsuariosPorPerfil('cliente')">CLIENTES</button>
 
-  <!-- Mensaje si no hay usuarios pendientes para el rol actual -->
-  <div *ngIf="!cargandoUsuarios && usuariosParaAutorizar.length === 0" class="ion-text-center ion-padding">
-    <p>No hay usuarios pendientes de autorización para su perfil.</p>
+  <button class="btn-filtrar" type="button"
+          [class.active]="filtroSeleccionado === 'empleado'"
+          (click)="cargarUsuariosPorPerfil('empleado')" *ngIf = "user?.perfil == 'gerencia'">EMPLEADOS</button>
+
+  <button class="btn-filtrar" type="button"
+          [class.active]="filtroSeleccionado === 'mesas'"
+         >MESAS</button>
+</div>
+
+<!-- Lista Usuarios NO autorizados -->
+
+  <div id = "contenedor-listas-usuarios">
+        
+    <div *ngIf="!isLoading" id = "loading-container">
+        <h2 class = "titulos-listas">USUARIOS AUTORIZADOS</h2>
+        <ion-list class="ion-list scollable-list"  *ngIf="usuariosParaNoAutorizar?.length > 0">
+          <ion-item *ngFor="let usuario of usuariosParaNoAutorizar" class="fondo-custom">
+            <ion-label>
+              <h2>{{ usuario.nombreUsuario }} {{ usuario.apellidoUsuario }}</h2>
+              <ng-container *ngIf="user?.perfil === 'gerencia'">
+                <p>Correo: {{ usuario.correoUsuario ? usuario.correoUsuario : 'Anónimo' }}</p>
+                <p *ngIf="usuario.tipo">Tipo: {{ usuario.tipo }}</p>
+              </ng-container>
+            </ion-label>
+            <img [src]="usuario.imagenUsuario" class="img-usuario" />
+          </ion-item>
+        </ion-list>
+        <h2 class = "titulos-listas">USUARIOS NO AUTORIZADOS</h2>
+        
+        <ion-list class="ion-list scollable-list" *ngIf="usuariosParaAutorizar?.length > 0">
+          <ion-item *ngFor="let usuario of usuariosParaAutorizar" class="fondo-custom">
+            <ion-label>
+              <h2>{{ usuario.nombreUsuario }} {{ usuario.apellidoUsuario }}</h2>
+              <ng-container *ngIf="user?.perfil === 'gerencia'">
+                <p>Correo: {{ usuario.correoUsuario ? usuario.correoUsuario : 'Anónimo' }}</p>
+                <p *ngIf="usuario.tipo">Tipo: {{ usuario.tipo }}</p>
+              </ng-container>
+            </ion-label>
+            <img [src]="usuario.imagenUsuario" class="img-usuario" />
+            <!-- No botón autorizar aquí -->
+            <ion-button *ngIf="user?.perfil === 'gerencia' && !usuario.autorizado && usuario.correoUsuario"
+                        slot="end" color="success" (click)="onAutorizarUsuario(usuario)">
+              Autorizar
+            </ion-button>
+          </ion-item>
+        </ion-list>
+        
+        <!-- Mensaje si no hay usuarios en ambas listas y no está cargando -->
+        <div *ngIf="!isLoading && !hayUsuarios" class="ion-text-center ion-padding">
+          <p>No hay usuarios para mostrar.</p>
+        </div>
+        
+        <!-- Spinner de carga -->
+      </div>
+      <div *ngIf="isLoading" class="spinner-container">
+        <div class="spinner"></div>
+      </div>
+      </div>
+
+    
+    
+     
+    
+    </section>
+    
+
+
   </div>
+
 </ion-content>
