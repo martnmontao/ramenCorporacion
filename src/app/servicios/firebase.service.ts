@@ -325,7 +325,16 @@ export class FirebaseService {
     return collectionData(qRef, { idField: 'mesaId' }) as Observable<Mesa[]>;
   }
 
-
+obtenerClientesEnEspera(estadoFiltro?: ClienteEnEspera['estado']): Observable<ClienteEnEspera[]> {
+    let qRef: any = this.listaEsperaCollection;
+   
+    if (estadoFiltro) {
+      
+      qRef = query(this.listaEsperaCollection, where('estado', '==', estadoFiltro), orderBy('horaLlegada', 'asc')); // Ordenar por llegada
+    } 
+   
+    return collectionData(qRef, { idField: 'id' }) as Observable<ClienteEnEspera[]>;
+  }
   /**
    * Obtiene una mesa específica por su ID.
    * @param idMesa El ID de la mesa a buscar.
@@ -457,13 +466,7 @@ export class FirebaseService {
    * @param estadoFiltro (Opcional) El estado por el cual filtrar (e.g., 'esperando', 'asignado').
    * @returns Un Observable que emite un array de clientes en espera.
    */
-  obtenerClientesEnEspera(estadoFiltro?: ClienteEnEspera['estado']): Observable<ClienteEnEspera[]> {
-    let qRef: any = this.listaEsperaCollection;
-    if (estadoFiltro) {
-      qRef = query(this.listaEsperaCollection, where('estado', '==', estadoFiltro), orderBy('horaLlegada', 'asc')); // Ordenar por llegada
-    } 
-    return collectionData(qRef, { idField: 'id' }) as Observable<ClienteEnEspera[]>;
-  }
+  
 
   /**
    * Actualiza el estado o datos de un cliente en la lista de espera.

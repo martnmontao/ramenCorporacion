@@ -26,15 +26,15 @@ mesasDisponibles$: Observable<Mesa[]>;
   constructor(private firebaseService: FirebaseService) {
     // Inicializamos los observables aquí.
     // Usamos el método obtenerMesas con el filtro 'disponible'.
-    this.mesasDisponibles$ = this.firebaseService.obtenerMesas('disponible');
     // Usamos el método obtenerClientesEnEspera con el filtro 'esperando'.
-
+    this.mesasDisponibles$ = this.firebaseService.obtenerMesas('disponible');
     this.clientesEnEspera$ = this.firebaseService.obtenerClientesEnEspera('esperando');
-    console.log("clientes en espera: ", this.clientesEnEspera$)
+    
   }
-
+  
   ngOnInit() {
-
+    
+    console.log("clientes en espera: ", this.clientesEnEspera$)
     this.mesaSubscription = this.mesasDisponibles$.subscribe(mesas => {
       console.log('Mesas disponibles:', mesas);
     });

@@ -14,9 +14,12 @@ export class HomePage implements OnInit {
   private sub?: Subscription;
   scanning = false;
   mostrarOpciones = false;
+  user:any;
+
   constructor(private router: Router, private firebaseService: FirebaseService, private qrService: QrService) { }
 
-  ngOnInit() {
+  async ngOnInit() {
+    this.user = await this.firebaseService.obtenerUsuarioLogueado();
   }
 
   irConQR() {

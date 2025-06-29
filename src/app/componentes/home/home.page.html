@@ -13,10 +13,11 @@
       </div>
     </header>
     <section>
-      //dar alta mesa
-      <ion-button (click)="irA('alta-mesa')">dar de alta mesa</ion-button>
-      <ion-button (click)="irConQR()">ESCANEAR QR</ion-button>
-      <ion-button (click)="cerrarSesion()">cerrar sesion</ion-button>
+      <div id = "contenedor-opciones-cliente">
+        <button class = "btn-opciones-cliente" (click)="irA('alta-mesa')">dar de alta mesa</button>
+        <button class = "btn-opciones-cliente" (click)="irConQR()">ESCANEAR QR</button>
+
+      </div>
     </section>
 
   </div>
