@@ -1,17 +1,25 @@
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">home</ion-title>
-    </ion-toolbar>
-  </ion-header>
 
-  <ion-button (click)="irA('lista-usuarios')">IR A TODOS LOS USUARIOS</ion-button>
-  <ion-button (click)="irA('alta-mesa')">dar de alta mesa</ion-button>
-  <ion-button (click)="irConQR()">ESCANEAR QR</ion-button>
+  
+  
+  <div id = "contenedor-principal">
+    <header>
+      <h1 class ="titulos">RamenGB🍜</h1>
+      <button id = "btn-mostrar-opciones" (click) = "mostrarContenedores('opciones')">≋</button>
+      <div id = "contenedor-opciones-inicio" class="contenedor-animado"[class.visible]="mostrarOpciones">
+        <button (click)="irA('lista-usuarios')"class="btn-opciones-inicio">ADMINISTRACIÓN</button>
+        <button (click)="cerrarSesion()"class="btn-opciones-inicio">CERRAR SESIÓN</button>
+      </div>
+    </header>
+    <section>
+      //dar alta mesa
+      <ion-button (click)="irA('alta-mesa')">dar de alta mesa</ion-button>
+      <ion-button (click)="irConQR()">ESCANEAR QR</ion-button>
+      <ion-button (click)="cerrarSesion()">cerrar sesion</ion-button>
+    </section>
 
-  <ion-button (click)="cerrarSesion()">cerrar sesion</ion-button>
-
+  </div>
 </ion-content>
 
 

@@ -13,6 +13,7 @@ import { QrService } from 'src/app/servicios/qr.service';
 export class HomePage implements OnInit {
   private sub?: Subscription;
   scanning = false;
+  mostrarOpciones = false;
   constructor(private router: Router, private firebaseService: FirebaseService, private qrService: QrService) { }
 
   ngOnInit() {
@@ -35,5 +36,16 @@ export class HomePage implements OnInit {
 
   cerrarSesion(){
   this.firebaseService.cerrarSesion();
+  }
+
+  mostrarContenedores(contenedor: string)
+  {
+    switch(contenedor)
+    {
+      case "opciones":
+        this.mostrarOpciones = !this.mostrarOpciones;
+        break;
+     
+    }
   }
 }
