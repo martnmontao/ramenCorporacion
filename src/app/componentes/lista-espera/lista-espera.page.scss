@@ -1,0 +1,7 @@
+    .selected-item {
+        --background: var(--ion-color-primary-tint);
+        border-left: 5px solid var(--ion-color-primary);
+    }
+    ion-card {
+        height: 100%; /* Asegura que las tarjetas tengan la misma altura */
+    }

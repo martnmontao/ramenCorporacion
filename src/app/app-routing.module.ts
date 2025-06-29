@@ -21,14 +21,32 @@ const routes: Routes = [
     loadChildren: () => import('./componentes/home/home.module').then( m => m.HomePageModule)
   },
   {
-<<<<<<< HEAD
+
     path: 'lista-usuarios',
     loadChildren: () => import('./componentes/lista-usuarios/lista-usuarios.module').then( m => m.ListaUsuariosPageModule)
-=======
+},
+{
     path: 'productos',
     loadChildren: () => import('./componentes/productos/productos.module').then( m => m.ProductosPageModule)
->>>>>>> main
+
+  },
+  {
+    path: 'alta-mesa',
+    loadChildren: () => import('./componentes/alta-mesa/alta-mesa.module').then( m => m.AltaMesaPageModule)
+  },  {
+    path: 'lista-espera',
+    loadChildren: () => import('./componentes/lista-espera/lista-espera.module').then( m => m.ListaEsperaPageModule)
+  },
+  {
+    path: 'solicitar-mesa',
+    loadChildren: () => import('./componentes/solicitar-mesa/solicitar-mesa.module').then( m => m.SolicitarMesaPageModule)
+  },
+  {
+    path: 'home-cliente',
+    loadChildren: () => import('./componentes/home-cliente/home-cliente.module').then( m => m.HomeClientePageModule)
   }
+
+
 
   
 ];

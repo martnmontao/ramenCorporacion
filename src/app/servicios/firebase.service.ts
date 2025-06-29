@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
-
 import { Auth, authState, createUserWithEmailAndPassword, getAuth, onAuthStateChanged, sendEmailVerification, signInWithEmailAndPassword, signOut, User, UserCredential } from '@angular/fire/auth';
-import { Firestore, collection, addDoc, query, orderBy, limit, getDocs, where, CollectionReference, collectionData, updateDoc, doc } from '@angular/fire/firestore';
+import { Firestore, collection, addDoc, query, orderBy, limit, getDocs, where, CollectionReference, collectionData, updateDoc, doc, deleteDoc } from '@angular/fire/firestore';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import Swal from 'sweetalert2';
 import { BehaviorSubject } from 'rxjs';
+import { Mesa } from '../interfaces/mesa';
+import { ClienteEnEspera } from '../interfaces/clienteEnEspera';
 
 
 @Injectable({
@@ -24,6 +25,8 @@ export class FirebaseService {
   public currentUserProfile$: Observable<any | null> = this.userObj.asObservable();
   private registroCollection: CollectionReference;
   private usuariosCollection: CollectionReference;
+  private mesasCollection: CollectionReference;
+  private listaEsperaCollection: CollectionReference;
 
   constructor(private auth: Auth, private firestore: Firestore, private router: Router) {
     onAuthStateChanged(this.auth, (user) => {
@@ -39,6 +42,8 @@ export class FirebaseService {
   
     this.registroCollection = collection(this.firestore, 'registro');
     this.usuariosCollection = collection(this.firestore, 'usuarios');
+    this.mesasCollection = collection(this.firestore, 'mesas');
+    this.listaEsperaCollection = collection(this.firestore, 'lista-espera');
   }
 
   async acceder(correo: string, clave: string): Promise<void> {
@@ -268,6 +273,242 @@ export class FirebaseService {
       const ref = doc(this.firestore, `${nombreColeccion}/${id}`);
       return updateDoc(ref, data);
     }
+
+  /**
+   * Agrega una nueva mesa a la colección 'mesas'.
+   * @param datosMesa Los datos de la mesa a agregar.
+   * @returns Una promesa que resuelve cuando la mesa ha sido agregada.
+   */
+  async agregarMesa(datosMesa: Omit<Mesa, 'mesaId'>): Promise<void> {
+    try {
+      // tableId se generará automáticamente por Firestore, o puedes pre-generarlo si es necesario
+      // Aquí usamos addDoc para que Firestore genere el ID del documento
+      await addDoc(this.mesasCollection, {
+        ...datosMesa,
+        assignedAt: datosMesa.assignedAt ? datosMesa.assignedAt.getTime() : null // Almacenar como timestamp de Unix
+      });
+      Swal.fire({
+        icon: 'success',
+        title: '¡Mesa Agregada!',
+        text: `La mesa ${datosMesa.numeroMesa} ha sido agregada con éxito.`,
+        confirmButtonText: 'Aceptar',
+        heightAuto: false
+      });
+    } catch (error) {
+      console.error('Error al agregar mesa:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'No se pudo agregar la mesa. Inténtelo de nuevo.',
+        confirmButtonText: 'Aceptar',
+        heightAuto: false
+      });
+      throw error;
+    }
+  }
+  obtenerMesas(estadoFiltro?: Mesa['estado']): Observable<Mesa[]> {
+    let qRef: any = this.mesasCollection;
+    if (estadoFiltro) {
+      qRef = query(this.mesasCollection, where('estado', '==', estadoFiltro));
+    }
+    return collectionData(qRef, { idField: 'mesaId' }) as Observable<Mesa[]>;
+  }
+
+
+  /**
+   * Obtiene una mesa específica por su ID.
+   * @param idMesa El ID de la mesa a buscar.
+   * @returns Una promesa que resuelve con los datos de la mesa o null si no se encuentra.
+   */
+  async obtenerMesaPorId(idMesa: string): Promise<Mesa | null> {
+    try {
+      const q = query(this.mesasCollection, where('mesaId', '==', idMesa), limit(1));
+      const querySnapshot = await getDocs(q);
+      if (!querySnapshot.empty) {
+        const data = querySnapshot.docs[0].data();
+        return {
+          mesaId: querySnapshot.docs[0].id, // Aseguramos que tableId sea el ID del documento
+          numeroMesa: data['numeroMesa'],
+          capacidad: data['capacidad'],
+          estado: data['estado'],
+          qrCodeUrl: data['qrCodeUrl'],
+          currentClientId: data['currentClientId'] || null,
+          assignedAt: data['assignedAt'] ? new Date(data['assignedAt']) : null
+        } as Mesa;
+      } else {
+        return null;
+      }
+    } catch (error) {
+      console.error('Error al obtener mesa por ID:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Actualiza los datos de una mesa existente.
+   * @param idMesa El ID de la mesa a actualizar.
+   * @param datos Un objeto con los campos a actualizar.
+   * @returns Una promesa que resuelve cuando la mesa ha sido actualizada.
+   */
+  async actualizarMesa(idMesa: string, datos: Partial<Mesa>): Promise<void> {
+    try {
+      const docRefMesa = doc(this.firestore, 'mesas', idMesa);
+      // Convertir assignedAt a timestamp si está presente
+      if (datos.assignedAt instanceof Date) {
+        datos.assignedAt = datos.assignedAt.getTime() as any; // Almacenar como timestamp de Unix
+      }
+      await updateDoc(docRefMesa, datos);
+      Swal.fire({
+        icon: 'success',
+        title: '¡Mesa Actualizada!',
+        text: `La mesa ${idMesa} ha sido actualizada con éxito.`,
+        confirmButtonText: 'Aceptar',
+        heightAuto: false
+      });
+    } catch (error) {
+      console.error('Error al actualizar mesa:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'No se pudo actualizar la mesa. Inténtelo de nuevo.',
+        confirmButtonText: 'Aceptar',
+        heightAuto: false
+      });
+      throw error;
+    }
+  }
+
+  /**
+   * Elimina una mesa de la colección 'mesas'.
+   * @param idMesa El ID de la mesa a eliminar.
+   * @returns Una promesa que resuelve cuando la mesa ha sido eliminada.
+   */
+  async eliminarMesa(idMesa: string): Promise<void> {
+    try {
+      const docRefMesa = doc(this.firestore, 'mesas', idMesa);
+      await deleteDoc(docRefMesa);
+      Swal.fire({
+        icon: 'success',
+        title: '¡Mesa Eliminada!',
+        text: `La mesa ${idMesa} ha sido eliminada con éxito.`,
+        confirmButtonText: 'Aceptar',
+        heightAuto: false
+      });
+    } catch (error) {
+      console.error('Error al eliminar mesa:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'No se pudo eliminar la mesa. Inténtelo de nuevo.',
+        confirmButtonText: 'Aceptar',
+        heightAuto: false
+      });
+      throw error;
+    }
+  }
+
+
+   // --- Métodos para Clientes en Espera ---
+
+  /**
+   * Agrega un nuevo cliente a la lista de espera.
+   * @param cliente Los datos del cliente a agregar.
+   * @returns Una promesa que resuelve cuando el cliente ha sido agregado.
+   */
+  async agregarClienteEnEspera(cliente: Omit<ClienteEnEspera, 'id'>): Promise<void> {
+    try {
+      await addDoc(this.listaEsperaCollection, {
+        ...cliente,
+        horaLlegada: cliente.horaLlegada.getTime() // Almacenar como timestamp de Unix
+      });
+      Swal.fire({
+        icon: 'success',
+        title: '¡Cliente en Espera!',
+        text: `El cliente ${cliente.nombre} ha sido añadido a la lista de espera.`,
+        confirmButtonText: 'Aceptar',
+        heightAuto: false
+      });
+    } catch (error) {
+      console.error('Error al agregar cliente en espera:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'No se pudo agregar el cliente a la lista de espera. Inténtelo de nuevo.',
+        confirmButtonText: 'Aceptar',
+        heightAuto: false
+      });
+      throw error;
+    }
+  }
+
+  /**
+   * Obtiene los clientes de la lista de espera, opcionalmente filtrados por estado.
+   * @param estadoFiltro (Opcional) El estado por el cual filtrar (e.g., 'esperando', 'asignado').
+   * @returns Un Observable que emite un array de clientes en espera.
+   */
+  obtenerClientesEnEspera(estadoFiltro?: ClienteEnEspera['estado']): Observable<ClienteEnEspera[]> {
+    let qRef: any = this.listaEsperaCollection;
+    if (estadoFiltro) {
+      qRef = query(this.listaEsperaCollection, where('estado', '==', estadoFiltro), orderBy('horaLlegada', 'asc')); // Ordenar por llegada
+    } 
+    return collectionData(qRef, { idField: 'id' }) as Observable<ClienteEnEspera[]>;
+  }
+
+  /**
+   * Actualiza el estado o datos de un cliente en la lista de espera.
+   * @param clienteId El ID del cliente a actualizar.
+   * @param datos Un objeto con los campos a actualizar.
+   * @returns Una promesa que resuelve cuando el cliente ha sido actualizado.
+   */
+  async actualizarClienteEnEspera(clienteId: string, datos: Partial<ClienteEnEspera>): Promise<void> {
+    try {
+      const docRefCliente = doc(this.firestore, 'lista-espera', clienteId);
+      if (datos.horaLlegada instanceof Date) {
+        datos.horaLlegada = datos.horaLlegada.getTime() as any;
+      }
+      await updateDoc(docRefCliente, datos);
+      // No mostrar Swal aquí para cada actualización de estado, el componente lo manejará si es necesario.
+    } catch (error) {
+      console.error('Error al actualizar cliente en espera:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'No se pudo actualizar el cliente en espera. Inténtelo de nuevo.',
+        confirmButtonText: 'Aceptar',
+        heightAuto: false
+      });
+      throw error;
+    }
+  }
+
+  /**
+   * Elimina un cliente de la lista de espera.
+   * @param clienteId El ID del cliente a eliminar.
+   * @returns Una promesa que resuelve cuando el cliente ha sido eliminado.
+   */
+  async eliminarClienteEnEspera(clienteId: string): Promise<void> {
+    try {
+      const docRefCliente = doc(this.firestore, 'lista-espera', clienteId);
+      await deleteDoc(docRefCliente);
+      Swal.fire({
+        icon: 'success',
+        title: '¡Cliente Removido!',
+        text: `El cliente ha sido removido de la lista de espera.`,
+        confirmButtonText: 'Aceptar',
+        heightAuto: false
+      });
+    } catch (error) {
+      console.error('Error al eliminar cliente en espera:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'No se pudo eliminar el cliente de la lista de espera. Inténtelo de nuevo.',
+        confirmButtonText: 'Aceptar',
+        heightAuto: false
+      });
+      throw error;
+    }
+  }
 
 }
 

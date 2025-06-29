@@ -1,0 +1,57 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Alta de Nueva Mesa</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <form [formGroup]="mesaForm" (ngSubmit)="onSubmit()">
+
+    <ion-item>
+      <ion-label position="floating">Número de Mesa</ion-label>
+      <ion-input type="text" formControlName="numeroMesa" placeholder="Ej: A1, Mesa VIP 5"></ion-input>
+    </ion-item>
+    <div *ngIf="formControls['numeroMesa'].invalid && formControls['numeroMesa'].touched" class="error-message">
+      <p *ngIf="formControls['numeroMesa'].errors?.['required']">El número de mesa es requerido.</p>
+      <p *ngIf="formControls['numeroMesa'].errors?.['pattern']">Solo se permiten letras y números.</p>
+    </div>
+
+    <ion-item>
+      <ion-label position="floating">Capacidad (personas)</ion-label>
+      <ion-input type="number" formControlName="capacidad" placeholder="Ej: 4"></ion-input>
+    </ion-item>
+    <div *ngIf="formControls['capacidad'].invalid && formControls['capacidad'].touched" class="error-message">
+      <p *ngIf="formControls['capacidad'].errors?.['required']">La capacidad es requerida.</p>
+      <p *ngIf="formControls['capacidad'].errors?.['min']">La capacidad mínima es 1.</p>
+      <p *ngIf="formControls['capacidad'].errors?.['max']">La capacidad máxima es 20.</p>
+    </div>
+
+    <ion-item>
+      <ion-label>Tipo de Mesa</ion-label>
+      <ion-select formControlName="tipo" placeholder="Selecciona un tipo">
+        <ion-select-option *ngFor="let tipo of tiposMesa" [value]="tipo">{{ tipo | titlecase }}</ion-select-option>
+      </ion-select>
+    </ion-item>
+    <div *ngIf="formControls['tipo'].invalid && formControls['tipo'].touched" class="error-message">
+      <p *ngIf="formControls['tipo'].errors?.['required']">El tipo de mesa es requerido.</p>
+    </div>
+
+  <!--  <ion-item>
+      <ion-label position="floating">URL de Código QR</ion-label>
+      <ion-input type="url" formControlName="qrCodeUrl" placeholder="https://ejemplo.com/qr/mesaA1.png"></ion-input>
+    </ion-item>
+    <div *ngIf="formControls['qrCodeUrl'].invalid && formControls['qrCodeUrl'].touched" class="error-message">
+      <p *ngIf="formControls['qrCodeUrl'].errors?.['required']">La URL del QR es requerida.</p>
+      <p *ngIf="formControls['qrCodeUrl'].errors?.['pattern']">Formato de URL inválido (debe terminar en .png, .jpg, etc.).</p>
+    </div>
+-->
+    <ion-button expand="block" type="submit" [disabled]="mesaForm.invalid">
+      Agregar Mesa
+    </ion-button>
+
+  </form>
+</ion-content>
+

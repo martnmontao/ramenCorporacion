@@ -107,11 +107,7 @@ export class RegistroPage implements OnInit {
 
         }
     }
-<<<<<<< HEAD
-
-=======
   
->>>>>>> main
     try
     {
       this.firebaseService.agregarDocumento(data, "registro");
