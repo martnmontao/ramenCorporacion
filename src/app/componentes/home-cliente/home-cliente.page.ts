@@ -10,16 +10,30 @@ import { FirebaseService } from 'src/app/servicios/firebase.service';
 })
 export class HomeClientePage implements OnInit {
 
+  mostrarOpciones = false;
+
   constructor(private router: Router, private firebaseService: FirebaseService) { }
 
   ngOnInit() {
   }
-    irA(path:string)
+  
+  
+  irA(path:string)
   {
     this.router.navigateByUrl(path);
   }
 
   
+  mostrarContenedores(contenedor: string)
+  {
+    switch(contenedor)
+    {
+      case "opciones":
+        this.mostrarOpciones = !this.mostrarOpciones;
+        break;
+     
+    }
+  }
 
   cerrarSesion(){
   this.firebaseService.cerrarSesion();

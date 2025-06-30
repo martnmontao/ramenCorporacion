@@ -83,6 +83,11 @@ mesasDisponibles$: Observable<Mesa[]>;
     if (confirmacion.isConfirmed) {
       try {
         // 1. Actualizar el estado de la mesa a 'ocupada' y asignar el cliente
+
+        
+
+
+
         await this.firebaseService.actualizarMesa(this.selectedMesa.mesaId, {
           estado: 'ocupada',
           currentClientId: this.selectedClient.id,

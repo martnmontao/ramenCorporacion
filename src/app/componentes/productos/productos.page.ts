@@ -3,6 +3,7 @@ import { FirebaseService } from 'src/app/servicios/firebase.service';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera'; 
 import { Producto } from 'src/app/interfaces/producto.';
 import { Router } from '@angular/router';
+
 @Component({
   selector: 'app-productos',
   templateUrl: './productos.page.html',
@@ -26,6 +27,11 @@ export class ProductosPage implements OnInit {
   isLoading: boolean = false;
   mostrarOpciones = false;
   user: any;
+  mostrarPedido = false;
+  importeTotalPedido = 0;
+  listaPedido: { nombreProducto: string, tipoProducto: string, precioProducto: number }[] = [];
+
+
 
   constructor(private firebaseService: FirebaseService, private router: Router) { }
 
@@ -47,9 +53,9 @@ export class ProductosPage implements OnInit {
 
   }
 
-  irA()
+  irA(path: string)
   { 
-    this.router.navigateByUrl('home');
+    this.router.navigateByUrl(path);
   }
 
   cerrarSesion()
@@ -86,6 +92,9 @@ export class ProductosPage implements OnInit {
         break;
       case "mostrarOpciones":
         this.mostrarOpciones = !this.mostrarOpciones;
+        break;
+      case "mostrarPedido":
+        this.mostrarPedido = !this.mostrarPedido;
         break;
     }
   }
@@ -183,9 +192,37 @@ export class ProductosPage implements OnInit {
   }
 
 
-  realizarPedido(producto: Producto)
+  agregarPedido(producto: Producto)
   {
+    this.importeTotalPedido = 0;
+    this.listaPedido.push({  
+    nombreProducto: producto.nombreProducto,
+    tipoProducto: producto.tipoProducto,
+    precioProducto: producto.precioProducto})
+      
+    this.listaPedido.forEach(element => {
+      this.importeTotalPedido += element.precioProducto
+    });
+
+
+
+    console.log(this.listaPedido);
 
   }
+
+  eliminarPedido(nombreProducto: string, precioProducto: number)
+  {
+    const index = this.listaPedido.findIndex(
+      pedido => pedido.nombreProducto === nombreProducto
+    );
+
+    if (index !== -1) {
+      this.listaPedido.splice(index, 1);
+    }
+
+    this.importeTotalPedido -= precioProducto;
+  }
+
+  
 
 }

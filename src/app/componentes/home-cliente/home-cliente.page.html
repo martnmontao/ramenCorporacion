@@ -1,11 +1,34 @@
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">home-cliente</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <div id = "contenedor-principal">
+    <header>
+      <h1 class ="titulos">RamenGB🍜</h1>
+      <button id = "btn-mostrar-opciones" (click) = "mostrarContenedores('opciones')">≋</button>
+      <div id = "contenedor-opciones-inicio" class="contenedor-animado"[class.visible]="mostrarOpciones">
+        <button (click)="irA('lista-usuarios')"class="btn-opciones-inicio">ADMINISTRACIÓN</button>
+        <button (click)="cerrarSesion()"class="btn-opciones-inicio">CERRAR SESIÓN</button>
+      </div>
+    </header>
+    <section>
+    
+        <div id = "contenedor-opciones-cliente">
+          <!--
+            <button class = "btn-opciones-cliente" (click)="irA('alta-mesa')">dar de alta mesa</button>
+            <button class = "btn-opciones-cliente" (click)="irConQR()">ESCANEAR QR</button>
+          -->
+         
+          <button class = "btn-opciones-cliente" (click)="irA('solicitar-mesa')">Ingresar a la lista de espera</button>
+          <button class = "btn-opciones-cliente">ENCUESTAS ANTERIORES (esta en proceso)</button>
+          <button class = "btn-opciones-cliente" (click)="irA('productos')">MENÚ</button>
+          <button class = "btn-opciones-cliente">Consulta al mozo</button>
+            
+          
+        
+          
+        </div>
+      
+    
+    </section>
 
-  <ion-button (click)="irA('solicitar-mesa')">Lista de espera para solicitar mesa</ion-button>
-  <ion-button>ENCUESTAS ANTERIORES (esta en proceso)</ion-button>
-  <ion-button (click)="cerrarSesion()">cerrar sesion</ion-button>
+  </div>
+
 </ion-content>
