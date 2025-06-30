@@ -5,7 +5,15 @@
     <h1>PRODUCTOS</h1>
     <button id = "btn-mostrar-opciones" (click) = "mostrarContenedor('mostrarOpciones')">≋</button>
     <div id = "contenedor-opciones-inicio" class="contenedor-animado"[class.visible]="mostrarOpciones">
-      <button class="btn-opciones-inicio" (click) = "irA()">Inicio</button>
+      @if(user && user.perfil == 'cliente'){
+        <button class="btn-opciones-inicio" (click) = "irA('home-cliente')">Inicio</button>
+
+      }
+      @if(user && user.perfil != 'cliente')
+      {
+        <button class="btn-opciones-inicio" (click) = "irA('home')">Inicio</button>
+
+      }
       <button class="btn-opciones-inicio" (click) = "cerrarSesion()">Cerrar sesión</button>
     </div>
   </header>
@@ -19,8 +27,35 @@
       <button class = "btn-filtrar-productos" (click) = "seleccionarFiltro('bebida')" [ngClass]="{'activo': filtroSeleccionado === 'bebida'}"><img class = "img-editar-agregar-producto"src="../../../assets/imagenes/bebida-producto.png"></button>
       <button class = "btn-filtrar-productos" (click) = "seleccionarFiltro('postre')" [ngClass]="{'activo': filtroSeleccionado === 'postre'}"><img class = "img-editar-agregar-producto"src="../../../assets/imagenes/postre-producto.png"></button>
     </div>
-    <div id = "contenedor-agregar-editar-productos">
-      <button class = "btn-crear-editar-producto btn-crear-producto" (click) = "mostrarContenedor('formAgregarProductos')"><img class = "img-editar-agregar-producto"src="../../../assets/imagenes/agregar-producto.png"></button>
+    <div id = "contenedor-agregar-editar-productos" >
+        <button class = "btn-crear-editar-producto btn-crear-producto" (click) = "mostrarContenedor('formAgregarProductos')" *ngIf = "user && user.perfil == 'empleado' && (user.tipo == 'bartender' || user.tipo == 'cocinero')"><img class = "img-editar-agregar-producto"src="../../../assets/imagenes/agregar-producto.png" ></button> 
+        <button class = "btn-crear-editar-producto btn-ver-carta" (click) = "mostrarContenedor('mostrarPedido')">VER PEDIDO 🍽️</button>
+    </div>
+
+    <div id = "contenedor-confirmar-pedido" *ngIf = "mostrarPedido">
+      <div id = "contenedor-header-pedido">
+        <h2>TU PEDIDO</h2>
+        <button id = "btn-cerrar-pedido" (click) = "mostrarContenedor('mostrarPedido')">X</button>
+      </div>
+      <div id = "contenedor-pedidos">
+        <div class = "contenedor-pedido" *ngFor = "let pedido of listaPedido">
+          <p class = "p-pedido">
+            Pedido: {{pedido.nombreProducto}}<br>
+            Precio: ${{pedido.precioProducto}}<br>
+            
+          </p>
+          <button class = "btn-cancelar-pedido" (click) = "eliminarPedido(pedido.nombreProducto, pedido.precioProducto)"><img class = "img-editar-agregar-producto"src="../../../assets/imagenes/producto-eliminar.png"></button>
+        </div>
+
+      </div>
+      <div id = "contenedor-importe">
+        <p id = "p-importe-total">IMPORTE TOTAL <br>${{importeTotalPedido}}</p>
+        
+        <button id = "btn-realizar-pedido">REALIZAR PEDIDO</button>
+      </div>
+
+
+
     </div>
     
 
@@ -77,7 +112,9 @@
           Tiempo de preparación: {{ producto.tiempoPreparacionProducto }}.<br>
           Descripción: {{ producto.descripcionProducto }}.
         </p>
-          <button class = "btn-crear-editar-producto btn-editar-producto" (click) = "mostrarContenedor('formEditarProductos', producto)"><img class = "img-editar-agregar-producto"src="../../../assets/imagenes/editar-producto.png"></button>  
+          <button class = "btn-crear-editar-producto btn-editar-producto" (click) = "mostrarContenedor('formEditarProductos', producto)" *ngIf = "user && user.perfil == 'empleado' && (user.tipo == 'bartender' || user.tipo == 'cocinero')"><img class = "img-editar-agregar-producto" src="../../../assets/imagenes/editar-producto.png"></button>  
+          <button class = "btn-crear-editar-producto btn-editar-producto" (click) = "agregarPedido(producto)" *ngIf = "user && user.perfil == 'cliente'"><img class = "img-editar-agregar-producto" src="../../../assets/imagenes/agregar-producto.png"></button>  
+
         </div>
       </div>
       

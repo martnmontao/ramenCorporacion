@@ -170,7 +170,7 @@ input
     height: 65px;
     width: 45%;
     font-size: 25px;
-    background-color: #12222E;
+    background-color: #0A1924;
     color: #E5DCCD;
     border-radius: 10px;
   
@@ -332,4 +332,134 @@ p
   to {
     transform: rotate(360deg);
   }
+}
+
+.btn-ver-carta
+{
+    text-align: center;
+    font-size: 25px;
+    color: #F0CA91;
+    
+}
+
+#contenedor-confirmar-pedido
+{
+    background-color:#10161E;
+    height: 550px;
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    
+    border-radius: 10px;
+    border: 1px solid #F0CA91;
+    
+ 
+    position: absolute;
+    top: 60%;          
+    left: 50%;          
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+}
+
+
+h2
+{
+    font-size: 25px;
+    color: #F0CA91;
+    text-align: center;
+    width: 90%;
+   
+    padding: 10px 0 0 20px;
+    margin: 0;
+}
+
+.p-pedido
+{
+    color: #F0CA91;
+    font-size: 20px;
+    text-align: center;
+    
+    width: 100%;
+ 
+    padding-top: 10px;
+}
+
+.contenedor-pedido
+{
+    width: 100%;
+    height: 100px;
+    display: flex;
+    justify-content: space-evenly;
+    border-bottom: 1px solid #F0CA91;
+}
+
+#contenedor-pedidos
+{
+    width: 100%;
+    height: 70%;
+    overflow-y: auto;
+   
+}
+
+#contenedor-importe
+{
+    height: 30%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    
+}
+
+#btn-realizar-pedido
+{
+    width: 80%;
+    height: 100%;
+    background-color: #0A1A24;
+    border-radius: 10px;
+    font-size: 25px;
+    color: #F0CA91;
+    margin: 10px 0;
+}
+
+#p-importe-total
+{
+    border-top: 2px solid #F0CA91;
+    padding: 5px;
+    width: 100%;
+    font-size: 20px;
+    color: #F0CA91;
+    text-align: center;
+    margin: 0;
+    border-bottom: 1px solid #F0CA91;
+    
+}
+
+
+
+
+
+.btn-cancelar-pedido
+{
+    background-color: transparent;
+    
+}
+
+#contenedor-header-pedido
+{
+    width: 100%;
+    height: 10%;
+    border-bottom: 1px solid #F0CA91;
+
+    display: flex;
+}
+
+#btn-cerrar-pedido
+{
+   background-color: transparent;
+    color: #F0CA91;
+    font-size: 25px;
+    width: 10%;
 }
