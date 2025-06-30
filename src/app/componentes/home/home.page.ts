@@ -11,9 +11,13 @@ import { FirebaseService } from 'src/app/servicios/firebase.service';
 export class HomePage implements OnInit {
 
   mostrarOpciones = false;
+  user:any;
+
   constructor(private router: Router, private firebaseService: FirebaseService) { }
 
-  ngOnInit() {
+  async ngOnInit() {
+    this.user = await this.firebaseService.obtenerUsuarioLogueado();
+
   }
 
   irA(path:string)

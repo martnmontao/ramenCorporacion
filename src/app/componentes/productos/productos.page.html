@@ -21,8 +21,8 @@
       <button class = "btn-filtrar-productos" (click) = "seleccionarFiltro('bebida')" [ngClass]="{'activo': filtroSeleccionado === 'bebida'}"><img class = "img-editar-agregar-producto"src="../../../assets/imagenes/bebida-producto.png"></button>
       <button class = "btn-filtrar-productos" (click) = "seleccionarFiltro('postre')" [ngClass]="{'activo': filtroSeleccionado === 'postre'}"><img class = "img-editar-agregar-producto"src="../../../assets/imagenes/postre-producto.png"></button>
     </div>
-    <div id = "contenedor-agregar-editar-productos">
-      <button class = "btn-crear-editar-producto btn-crear-producto" (click) = "mostrarContenedor('formAgregarProductos')"><img class = "img-editar-agregar-producto"src="../../../assets/imagenes/agregar-producto.png"></button>
+    <div id = "contenedor-agregar-editar-productos" *ngIf = "user && user.perfil == 'empleado' && (user.tipo == 'bartender' || user.tipo == 'cocinero')">
+      <button class = "btn-crear-editar-producto btn-crear-producto" (click) = "mostrarContenedor('formAgregarProductos')"><img class = "img-editar-agregar-producto"src="../../../assets/imagenes/agregar-producto.png" ></button>
     </div>
     
 
@@ -79,7 +79,9 @@
           Tiempo de preparación: {{ producto.tiempoPreparacionProducto }}.<br>
           Descripción: {{ producto.descripcionProducto }}.
         </p>
-          <button class = "btn-crear-editar-producto btn-editar-producto" (click) = "mostrarContenedor('formEditarProductos', producto)"><img class = "img-editar-agregar-producto"src="../../../assets/imagenes/editar-producto.png"></button>  
+          <button class = "btn-crear-editar-producto btn-editar-producto" (click) = "mostrarContenedor('formEditarProductos', producto)" *ngIf = "user && user.perfil == 'empleado' && (user.tipo == 'bartender' || user.tipo == 'cocinero')"><img class = "img-editar-agregar-producto" src="../../../assets/imagenes/editar-producto.png"></button>  
+          <button class = "btn-crear-editar-producto btn-editar-producto" (click) = "realizarPedido(producto)" *ngIf = "user && user.perfil == 'cliente'"><img class = "img-editar-agregar-producto" src="../../../assets/imagenes/agregar-producto.png"></button>  
+
         </div>
       </div>
       

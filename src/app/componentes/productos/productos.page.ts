@@ -25,16 +25,20 @@ export class ProductosPage implements OnInit {
   productoEditandoId?: string;
   isLoading: boolean = false;
   mostrarOpciones = false;
+  user: any;
 
   constructor(private firebaseService: FirebaseService, private router: Router) { }
 
-  ngOnInit() {
+  async ngOnInit() {
+    this.user = await this.firebaseService.obtenerUsuarioLogueado();
+    
       this.isLoading = true;
       this.firebaseService
       .getCollection<Producto>('productos', 'tipoProducto', this.filtroSeleccionado)
       .subscribe(productos => {
        
         this.listaProductos = productos;
+        console.log
         setTimeout(() => {
           this.isLoading = false;
           
@@ -179,6 +183,9 @@ export class ProductosPage implements OnInit {
   }
 
 
+  realizarPedido(producto: Producto)
+  {
 
+  }
 
 }

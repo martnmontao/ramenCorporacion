@@ -9,17 +9,17 @@ header{
 {
     height: 100%;
     overflow-y: hidden;
-}
-section
-{
-    height: 100%;
     background-image: url("../../../assets/imagenes/fondoRamen.jpg");
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
+}
+section
+{
+    height: 100%;
     display: flex;
-   
-    justify-content: center;
+    
+    flex-direction: column;
     
 }
 
@@ -81,4 +81,24 @@ button
 {
     background-color: transparent;
     color: #F0CA91;
+}
+
+
+.btn-opciones-cliente
+{
+    background-color: #10161e;
+    height: 40%;
+    width: 70%;
+    border-radius: 10px;
+    font-size: 25px;
+}
+
+#contenedor-opciones-cliente
+{
+    background-color: red;
+    height: 30%;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    flex-direction: column;
 }
