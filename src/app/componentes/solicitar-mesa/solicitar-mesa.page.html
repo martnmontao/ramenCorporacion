@@ -1,0 +1,62 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Solicitar Mesa</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div *ngIf="!solicitudEnviada">
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title class="ion-text-center">¡Bienvenido!</ion-card-title>
+        <ion-card-subtitle class="ion-text-center">Ingresa tus datos para unirte a la lista de espera.</ion-card-subtitle>
+      </ion-card-header>
+      <ion-card-content>
+        <form [formGroup]="solicitudMesaForm" (ngSubmit)="onSubmit()">
+
+          <ion-item>
+            <ion-label position="floating">Tu Nombre</ion-label>
+            <ion-input type="text" formControlName="nombre"></ion-input>
+          </ion-item>
+          <div *ngIf="formControls['nombre'].invalid && formControls['nombre'].touched" class="error-message">
+            <p *ngIf="formControls['nombre'].errors?.['required']">Tu nombre es requerido.</p>
+          </div>
+
+          <ion-item>
+            <ion-label position="floating">Cantidad de Personas</ion-label>
+            <ion-input type="number" formControlName="cantidadPersonas" min="1"></ion-input>
+          </ion-item>
+          <div *ngIf="formControls['cantidadPersonas'].invalid && formControls['cantidadPersonas'].touched" class="error-message">
+            <p *ngIf="formControls['cantidadPersonas'].errors?.['required']">La cantidad de personas es requerida.</p>
+            <p *ngIf="formControls['cantidadPersonas'].errors?.['min']">Debe ser al menos 1 persona.</p>
+            <p *ngIf="formControls['cantidadPersonas'].errors?.['max']">La capacidad máxima es de 10 personas.</p>
+          </div>
+
+          <ion-item>
+            <ion-label position="floating">Teléfono (opcional)</ion-label>
+            <ion-input type="tel" formControlName="telefono" placeholder="Ej: 1123456789"></ion-input>
+          </ion-item>
+          <div *ngIf="formControls['telefono'].invalid && formControls['telefono'].touched" class="error-message">
+            <p *ngIf="formControls['telefono'].errors?.['pattern']">Formato de teléfono inválido (solo números, 8-15 dígitos).</p>
+          </div>
+
+          <ion-button expand="block" type="submit" [disabled]="solicitudMesaForm.invalid" class="ion-margin-top">
+            Unirme a la Lista de Espera
+          </ion-button>
+
+        </form>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+  <div *ngIf="solicitudEnviada" class="ion-text-center ion-padding">
+    <ion-icon name="checkmark-circle-outline" color="success" style="font-size: 8em;"></ion-icon>
+    <h2>¡Solicitud Recibida!</h2>
+    <p>Estamos procesando tu solicitud. Te notificaremos a través de la aplicación (o por tu teléfono si lo brindaste) cuando tu mesa esté lista.</p>
+    <p>¡Gracias por tu paciencia!</p>
+    <ion-button expand="block" fill="outline" (click)="nuevaSolicitud()">
+      Hacer otra solicitud
+    </ion-button>
+  </div>
+
+</ion-content>
