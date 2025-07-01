@@ -15,6 +15,7 @@ export class SolicitarMesaPage implements OnInit {
   solicitudMesaForm: FormGroup;
   solicitudEnviada: boolean = false;
   usuarioLogueadoNombre: string | null = null; // Para guardar el nombre del usuario logueado
+  usuarioLogueadoUid: string = "";
 
   constructor(
     private fb: FormBuilder,
@@ -34,7 +35,7 @@ export class SolicitarMesaPage implements OnInit {
         const usuarioData = await this.firebaseService.obtenerUsuarioLogueado() as any;
         if (usuarioData?.nombreUsuario) {
           this.usuarioLogueadoNombre = usuarioData.nombreUsuario;
-
+          this.usuarioLogueadoUid = usuarioData.uid;
           if (usuarioData.apellidoUsuario) {
             this.usuarioLogueadoNombre += ' ' + usuarioData.apellidoUsuario;
           }
@@ -60,6 +61,7 @@ export class SolicitarMesaPage implements OnInit {
         telefono: datosFormulario.telefono || '',
         horaLlegada: new Date(),
         estado: 'esperando',
+        usuarioUid: this.usuarioLogueadoUid
       };
 
       try {

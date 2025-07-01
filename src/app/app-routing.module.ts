@@ -45,7 +45,11 @@ const routes: Routes = [
   {
     path: 'home-cliente',
     loadChildren: () => import('./componentes/home-cliente/home-cliente.module').then( m => m.HomeClientePageModule)
+  },  {
+    path: 'lista-pedidos',
+    loadChildren: () => import('./componentes/lista-pedidos/lista-pedidos.module').then( m => m.ListaPedidosPageModule)
   }
+
 
 
 

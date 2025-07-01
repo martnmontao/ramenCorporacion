@@ -1,0 +1,63 @@
+<ion-content [fullscreen]="true">
+ <div id = "contenedor-principal">
+    <header>
+    <h1 class ="titulos">RamenGB🍜</h1>
+    <button id = "btn-mostrar-opciones" (click) = "mostrarContenedores('opciones')">≋</button>
+    <div id = "contenedor-opciones-inicio" class="contenedor-animado"[class.visible]="mostrarOpciones">
+      <button class="btn-opciones-inicio" (click) = "irA('home')">INICIO</button>
+      <button class="btn-opciones-inicio" (click) = "cerrarSesion()">CERRAR SESIÓN</button>
+    </div>
+    </header>
+    <h2 class = "titulos-listas">LISTA DE PEDIDOS</h2>
+    <div id = "contenedor-listas-pedidos" *ngIf = "listaPedidos.length > 0">
+      <ion-list class="ion-list scollable-list" >
+          <div *ngFor="let pedido of listaPedidos" class="fondo-custom">
+           
+              <div class="contenido-flex">
+                <div class="contenedor-informacion-pedido">
+                  <div class = "contenedor-informacion-cliente">
+                    <h2>{{ pedido.nombreUsuario }}</h2>
+                    <p>Mesa: {{ pedido.numeroMesa }}</p>
+                    <p>Importe total: ${{ pedido.importeTotal }}</p>
+                    <p>Estado: {{ pedido.estadoPedido }}</p>
+  
+                  </div>
+                  <img [src]="pedido.imagenUsuario" class="img-usuario" />
+                </div>
+  
+                <div class="contenedor-tomar-pedido">
+                  <button class="btn-ver-productos" (click)="mostrarProductos(pedido)">VER PRODUCTOS</button>
+  
+                  <div class="contenedor-pedidos" *ngIf="pedido.verPedido">
+                    <div class = "contenedor-informacion-completa-producto"*ngFor="let producto of pedido.productosSolicitados">
+                      <div class = "contenedor-informacion-producto">
+                        <p class = "p-informacion-producto">Nombre: {{ producto.nombreProducto }}</p>
+                        <p class = "p-informacion-producto">Precio: ${{ producto.precioProducto }}</p>
+  
+                      </div>
+                      <div class = "contenedor-informacion-producto">
+                        <p class = "p-informacion-producto">Tipo: {{ producto.tipoProducto }}</p>
+                        <p class = "p-informacion-producto">Estado: {{ producto.estadoPreparacion }}</p>
+  
+                      </div>
+                    </div>
+                  </div>
+                  <button class ="btn-tomar-pedido" *ngIf = "user && user.tipo == 'cocinero' || user.tipo == 'bartender'" (click) = "prepararPedido(pedido)">PREPARAR PEDIDO</button>
+                  <button class="btn-tomar-pedido" (click) = "tomarPedido(pedido)" *ngIf = "user && user.tipo == 'mozo' && pedido.estadoPedido == 'Pendiente'">TOMAR PEDIDO</button>
+                  <button class="btn-tomar-pedido" (click) = "terminarPedido(pedido)" *ngIf = "user && user.tipo == 'cocinero' || user.tipo == 'bartender'">TERMINAR PEDIDO</button>
+                   <button class="btn-tomar-pedido" (click) = "entregarPedido(pedido)" *ngIf = "user && user.tipo == 'mozo' && pedido.estadoPedido == 'Para entregar'">ENTREGAR PEDIDO</button>
+                   <button class="btn-tomar-pedido" (click) = "entregarPedido(pedido)" *ngIf = "user && user.tipo == 'mozo' && pedido.estadoPedido == 'Para entregar'">CONFIRMAR RECEPCIÓN DE PEDIDO</button>
+
+                </div>
+              </div>
+            
+
+      
+
+
+          </div>
+        </ion-list>
+    
+    </div>
+  </div>
+</ion-content>

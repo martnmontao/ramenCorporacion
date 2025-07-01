@@ -22,14 +22,15 @@
 
 
     <div id = "contenedor-botones-filtrar">
-
+  
+     
       <button class = "btn-filtrar-productos" (click) = "seleccionarFiltro('comida')" [ngClass]="{'activo': filtroSeleccionado === 'comida'}"><img class = "img-editar-agregar-producto"src="../../../assets/imagenes/comida-producto.png"></button>
       <button class = "btn-filtrar-productos" (click) = "seleccionarFiltro('bebida')" [ngClass]="{'activo': filtroSeleccionado === 'bebida'}"><img class = "img-editar-agregar-producto"src="../../../assets/imagenes/bebida-producto.png"></button>
       <button class = "btn-filtrar-productos" (click) = "seleccionarFiltro('postre')" [ngClass]="{'activo': filtroSeleccionado === 'postre'}"><img class = "img-editar-agregar-producto"src="../../../assets/imagenes/postre-producto.png"></button>
     </div>
     <div id = "contenedor-agregar-editar-productos" >
         <button class = "btn-crear-editar-producto btn-crear-producto" (click) = "mostrarContenedor('formAgregarProductos')" *ngIf = "user && user.perfil == 'empleado' && (user.tipo == 'bartender' || user.tipo == 'cocinero')"><img class = "img-editar-agregar-producto"src="../../../assets/imagenes/agregar-producto.png" ></button> 
-        <button class = "btn-crear-editar-producto btn-ver-carta" (click) = "mostrarContenedor('mostrarPedido')">VER PEDIDO 🍽️</button>
+
     </div>
 
     <div id = "contenedor-confirmar-pedido" *ngIf = "mostrarPedido">
@@ -42,6 +43,7 @@
           <p class = "p-pedido">
             Pedido: {{pedido.nombreProducto}}<br>
             Precio: ${{pedido.precioProducto}}<br>
+            tipo: {{pedido.tipoProducto}}
             
           </p>
           <button class = "btn-cancelar-pedido" (click) = "eliminarPedido(pedido.nombreProducto, pedido.precioProducto)"><img class = "img-editar-agregar-producto"src="../../../assets/imagenes/producto-eliminar.png"></button>
@@ -51,7 +53,7 @@
       <div id = "contenedor-importe">
         <p id = "p-importe-total">IMPORTE TOTAL <br>${{importeTotalPedido}}</p>
         
-        <button id = "btn-realizar-pedido">REALIZAR PEDIDO</button>
+        <button id = "btn-realizar-pedido" (click) = "finalizarPedido()">REALIZAR PEDIDO</button>
       </div>
 
 
@@ -123,8 +125,16 @@
       </div>
       
       
-      
+      <!-- *ngIf = "user && user.perfil == 'cliente'"-->
     </section>
+
+    <footer>
+      <p id = "p-importe-total-footer">
+        ${{importeTotalPedido}}
+      </p>
+        <button class = "btn-crear-editar-producto btn-ver-carta" (click) = "mostrarContenedor('mostrarPedido')">VER PEDIDO 🍽️</button>
+
+    </footer>
     
 </div>
 </ion-content>

@@ -5,4 +5,5 @@ export interface ClienteEnEspera {
     telefono?: string; // Opcional, para contacto
     horaLlegada: Date;
     estado: 'esperando' | 'asignado' | 'cancelado';
+    usuarioUid: string;
 }

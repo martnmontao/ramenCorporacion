@@ -29,7 +29,7 @@ export class ProductosPage implements OnInit {
   user: any;
   mostrarPedido = false;
   importeTotalPedido = 0;
-  listaPedido: { nombreProducto: string, tipoProducto: string, precioProducto: number }[] = [];
+  listaPedido: {nombreProducto: string, tipoProducto: string, precioProducto: number, tiempoPreparacion: string, estadoPreparacion: string}[] = [];
 
 
 
@@ -198,7 +198,10 @@ export class ProductosPage implements OnInit {
     this.listaPedido.push({  
     nombreProducto: producto.nombreProducto,
     tipoProducto: producto.tipoProducto,
-    precioProducto: producto.precioProducto})
+    precioProducto: producto.precioProducto,
+    tiempoPreparacion: producto.tiempoPreparacionProducto,
+    estadoPreparacion: 'en espera'
+  })
       
     this.listaPedido.forEach(element => {
       this.importeTotalPedido += element.precioProducto
@@ -223,6 +226,28 @@ export class ProductosPage implements OnInit {
     this.importeTotalPedido -= precioProducto;
   }
 
-  
+  async finalizarPedido()
+  {
 
+    const mesa = await this.firebaseService.obtenerMesaPorUidUsuario(this.user.uid);
+
+    let data =
+    {
+      nombreUsuario: this.user.nombreUsuario,
+      numeroMesa: mesa?.numeroMesa,
+      clienteUid: this.user.uid,
+      productosSolicitados: this.listaPedido,
+      estadoPedido: 'Pendiente',
+      importeTotal: this.importeTotalPedido,
+      pagado: 'No pagado',
+      imagenUsuario: this.user.imagenUsuario,
+      verPedido: false
+      
+    }
+
+    this.firebaseService.agregarDocumento(data, 'pedidos');
+  }
+
+
+  
 }

@@ -100,6 +100,14 @@ export class LoginPage implements OnInit {
         this.emailUsuario = "martizzzzzzzn@gmail.com";
         this.claveUsuario = "martin";
         break;
+      case "Bartender":
+        this.emailUsuario = "jazmin@gmail.com";
+        this.claveUsuario = "jazmin"
+        break;
+      case "Mozo":
+        this.emailUsuario = "tobias@gmail.com";
+        this.claveUsuario = "tobias";
+        break;
     }
   }
 

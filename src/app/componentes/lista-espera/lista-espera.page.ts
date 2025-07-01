@@ -90,7 +90,7 @@ mesasDisponibles$: Observable<Mesa[]>;
 
         await this.firebaseService.actualizarMesa(this.selectedMesa.mesaId, {
           estado: 'ocupada',
-          currentClientId: this.selectedClient.id,
+          currentClientId: this.selectedClient.usuarioUid,
           assignedAt: new Date() // Registrar el momento de la asignación
         });
 

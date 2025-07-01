@@ -7,8 +7,9 @@ import Swal from 'sweetalert2';
 import { BehaviorSubject } from 'rxjs';
 import { Mesa } from '../interfaces/mesa';
 import { ClienteEnEspera } from '../interfaces/clienteEnEspera';
-
+import { Pedido } from '../interfaces/pedido';
 import { firstValueFrom } from 'rxjs';
+
 
 @Injectable({
   providedIn: 'root'
@@ -523,6 +524,173 @@ obtenerClientesEnEspera(estadoFiltro?: ClienteEnEspera['estado']): Observable<Cl
       throw error;
     }
   }
+
+  async obtenerMesaPorUidUsuario(uid: string): Promise<Mesa | null> {
+    try {
+      const mesasRef = collection(this.firestore, 'mesas');
+      const q = query(mesasRef, where('currentClientId', '==', uid));
+      const querySnapshot = await getDocs(q);
+
+      if (querySnapshot.empty) {
+        console.log('No se encontró ninguna mesa para este UID.');
+        return null;
+      }
+
+      const mesaDoc = querySnapshot.docs[0];
+      const data = mesaDoc.data();
+
+      return {
+        mesaId: mesaDoc.id,
+        ...data
+      } as Mesa;
+    } catch (error) {
+      console.error('Error obteniendo la mesa:', error);
+      throw error;
+    }
+  }
+
+  async getListaPedidos()
+  {
+    try {
+    const pedidosRef = collection(this.firestore, 'pedidos');
+    const querySnapshot = await getDocs(pedidosRef);
+
+    const listaPedidos = querySnapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }));
+
+    return listaPedidos;
+  } catch (error) {
+    console.error('Error al obtener la lista de pedidos:', error);
+    throw error;
+  }
+  }
+
+
+ async modificarEstadoPedido(campo: string, nuevoValor: any, pedido: any) {
+  try {
+    if (!pedido.id) {
+      console.error('El pedido no tiene un ID válido');
+      return;
+    }
+
+    const pedidoDocRef = doc(this.firestore, 'pedidos', pedido.id);
+
+    const updateData: any = {};
+    updateData[campo] = nuevoValor;
+
+    await updateDoc(pedidoDocRef, updateData);
+
+    console.log(`Campo '${campo}' actualizado correctamente.`);
+  } catch (error) {
+    console.error('Error al modificar el pedido:', error);
+    throw error;
+  }
+}
+
+async obtenerPedidosParaUsuario(rol: 'cocinero' | 'bartender'): Promise<Pedido[]> {
+  try {
+    console.log(rol)
+    const pedidosRef = collection(this.firestore, 'pedidos');
+    const q = query(pedidosRef, where('estadoPedido', '==', 'Esperando confirmación')); // asumí 'En proceso' porque no hay 'En preparacion'
+
+    const querySnapshot = await getDocs(q);
+
+    const pedidosFiltrados: Pedido[] = querySnapshot.docs
+      .map(doc => {
+        const data = doc.data() as unknown;
+        return { id: doc.id, ...(data as Pedido) };
+      }).filter(pedido => {
+        if (!Array.isArray(pedido.productosSolicitados)) return false;
+
+        if (rol === 'cocinero') {
+          return pedido.productosSolicitados.some(
+            producto => producto.tipoProducto === 'comida' || producto.tipoProducto === 'postre'
+          );
+        }
+
+        if (rol === 'bartender') {
+          return pedido.productosSolicitados.some(
+            producto => producto.tipoProducto === 'bebida'
+          );
+        }
+
+        return false;
+      });
+      console.log("PEDIDOS FILTRADOS",pedidosFiltrados);
+    return pedidosFiltrados;
+
+  } catch (error) {
+    console.error('Error al obtener pedidos filtrados:', error);
+    throw error;
+  }
+}
+
+
+async modificarEstadoProductos(pedido: any, rol: string, estadoProducto: string) {
+  try {
+    const tiposCocinero = ['comida', 'postre'];
+    const tiposBartender = ['bebida'];
+    const tiposPermitidos = rol === 'cocinero' ? tiposCocinero : tiposBartender;
+
+    // 1. Actualizar productos según el rol
+    const productosActualizados = pedido.productosSolicitados.map((producto: any) => {
+      if (tiposPermitidos.includes(producto.tipoProducto)) {
+        return {
+          ...producto,
+          estadoPreparacion: estadoProducto
+        };
+      }
+      return producto;
+    });
+
+    const pedidoRef = doc(this.firestore, 'pedidos', pedido.id);
+
+    // 2. Subir los productos actualizados
+    await updateDoc(pedidoRef, {
+      productosSolicitados: productosActualizados
+    });
+
+    console.log('Productos actualizados con éxito');
+
+    // 3. Verificar si todos están terminados
+    const todosTerminados = productosActualizados.every(
+      (producto: any) => producto.estadoPreparacion === 'Terminado'
+    );
+
+    if (todosTerminados) {
+      // 4. Si todos están terminados, cambiar estado del pedido
+      await updateDoc(pedidoRef, {
+        estadoPedido: 'Para entregar'
+      });
+
+      console.log('Pedido marcado como "Para entregar"');
+    }
+
+  } catch (error) {
+    console.error('Error al preparar el pedido:', error);
+  }
+}
+
+
+async getListaPedidosPorCliente(uid: string): Promise<Pedido[]> {
+  try {
+    const pedidosRef = collection(this.firestore, 'pedidos');
+    const q = query(pedidosRef, where('clienteUid', '==', uid));
+    const querySnapshot = await getDocs(q);
+
+    const pedidos: Pedido[] = querySnapshot.docs.map(doc => ({
+      id: doc.id,
+      ...(doc.data() as Pedido)
+    }));
+
+    return pedidos;
+  } catch (error) {
+    console.error('Error al obtener los pedidos por cliente:', error);
+    throw error;
+  }
+}
 
 }
 

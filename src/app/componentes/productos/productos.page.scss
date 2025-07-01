@@ -337,9 +337,15 @@ p
 .btn-ver-carta
 {
     text-align: center;
-    font-size: 25px;
-    color: #F0CA91;
-    
+    font-size: 20px;
+    color: #10161E;
+    width: 40%;
+    height: 60%;
+    border-radius: 20px;
+    background-color: #F0CA91;
+    font-family: 'Poppins', sans-serif;
+
+
 }
 
 #contenedor-confirmar-pedido
@@ -462,4 +468,16 @@ h2
     color: #F0CA91;
     font-size: 25px;
     width: 10%;
+}
+
+footer
+{
+    margin-top: 5px;
+    height: 20%;
+    background-color: #10161E;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    font-size: 40px;
+    color: #F0CA91;
 }
