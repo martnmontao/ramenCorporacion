@@ -1,0 +1,65 @@
+<ion-content [fullscreen]="true">
+  <div id="principal-container">
+    <div id="head-container">
+      <button class="btn-back" (click)="goTo()"><img src="../../../assets/volverBoton.png"></button>
+      <p>
+        @if (isClient && mesaIdActual) {
+          Chat con Mozo (Mesa {{mesaIdActual}})
+        } @else if (isMozo && selectedMozoChat) {
+          Chat de Mesa {{selectedMozoChat.mesaId}} (Cliente: {{selectedMozoChat.clienteNombre || 'Desconocido'}})
+        } @else {
+          no esta cargando bien el perfil de mozoo?? }
+      </p>
+      <button class="btn-back" (click)="showLogOutContainer()">VOLVER</button>
+    </div>
+
+    @if (isMozo) {
+      <div id="mozo-chat-selector">
+        <p>Seleccionar chat de mesa:</p>
+        <button
+          *ngFor="let session of mozoActiveSessions"
+          (click)="selectMozoChat(session)"
+          [ngClass]="{'selected-chat-button': selectedMozoChat?.sesionId === session.sesionId}"
+        >
+          Mesa {{session.mesaId}} ({{session.clienteNombre || 'Cliente'}})
+        </button>
+        @if (mozoActiveSessions.length === 0) {
+          <p>No hay chats de mesa activos.</p>
+        }
+      </div>
+    }
+
+    @if (isClient || (isMozo && selectedMozoChat)) {
+      <div id="chat-container" #chatContainer>
+        <div class="message-container" *ngFor="let message of messages"
+          [ngClass]="{'own-message': message.userEmail === user?.email, 'other-message': message.userEmail !== user?.email}">
+          @if (message.userEmail !== user?.email) {
+            <p class="p-user-name">{{ message.userName || message.userEmail?.split('@')[0] }}</p>
+          } @else {
+            <p class="p-user-name">Tú</p>
+          }
+          <p class="p-message">{{ message.message }}</p>
+          <p class="p-date">{{ message.date?.toDate() | date: 'dd/MM/yyyy hh:mm a' }}</p>
+        </div>
+      </div>
+      <div id="send-message-container">
+        <input type="text" id="input-message" placeholder="Mensaje" [(ngModel)]="message"> 
+        <button id="btn-send-message" (click)="sendMessage()">ENVIAR!!!!!</button>
+      </div>
+    } @else if (isMozo && !selectedMozoChat) {
+        <div id="no-chat-selected-message">
+            <p>Selecciona un chat de mesa para empezar.</p>
+        </div>
+    }
+
+
+    <div id="logout-container" *ngIf="showLogOut">
+      <button (click)="logOut()">CERRAR SESIÓN</button>
+    </div>
+
+    <div id="verify-message" *ngIf="showVerifyMessage">
+      <button id="btn-close-message" (click)="showVerifyMessageContainer()">X</button>
+      <p id="p-message-error">{{verifyMessage}}</p>
+    </div>
+  </div>
+</ion-content>

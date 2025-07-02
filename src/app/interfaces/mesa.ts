@@ -1,6 +1,6 @@
 export interface Mesa {
     mesaId: string;
-    numeroMesa: string;
+    numeroMesa: number;
     capacidad: number;
     tipo: 'estandar' | 'VIP' | 'apta-movilidad-reducida'
     estado: 'disponible' | 'ocupada' ; // O los estados que definas

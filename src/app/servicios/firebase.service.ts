@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Auth, authState, createUserWithEmailAndPassword, getAuth, onAuthStateChanged, sendEmailVerification, signInWithEmailAndPassword, signOut, User, UserCredential } from '@angular/fire/auth';
-import { Firestore, collection, addDoc, query, orderBy, limit, getDocs, where, CollectionReference, collectionData, updateDoc, doc, deleteDoc } from '@angular/fire/firestore';
+import { Firestore, collection, addDoc, query, orderBy, limit, getDocs, where, CollectionReference, collectionData, updateDoc, doc, deleteDoc, onSnapshot, getDoc, arrayUnion, setDoc } from '@angular/fire/firestore';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import Swal from 'sweetalert2';
@@ -692,6 +692,105 @@ async getListaPedidosPorCliente(uid: string): Promise<Pedido[]> {
   }
 }
 
+/**LOGICA PARA EL CHAAAAT */
+
+  async iniciarNuevaSesionChatMesa(mesaId: string, clienteUid: string, clienteNombre: string): Promise<string> {
+    const historialSesionesRef = collection(this.firestore, 'chats_mesas', mesaId, 'historial_sesiones');
+    // Crea un nuevo documento de sesión con un timestamp y el estado activa
+    const nuevaSesionDocRef = await addDoc(historialSesionesRef, {
+      fechaInicio: new Date(),
+      activa: true,
+      clienteUid: clienteUid,
+      clienteNombre: clienteNombre,
+      messages: [] // Inicializa el array de mensajes vacío
+    });
+    return nuevaSesionDocRef.id;
+  }
+
+    async appendChatMessageToTableSession(mesaId: string, sesionId: string, newMessage: any) {
+    const chatDocRef = doc(this.firestore, 'chats_mesas', mesaId, 'historial_sesiones', sesionId);
+
+    // Usa arrayUnion para agregar el nuevo mensaje al array 'messages'
+    await updateDoc(chatDocRef, {
+      messages: arrayUnion(newMessage)
+    });
+  }
+
+  getAllMessagesFromTableSession(mesaId: string, sesionId: string, callback: (messages: any[]) => void) {
+    const chatDocRef = doc(this.firestore, 'chats_mesas', mesaId, 'historial_sesiones', sesionId);
+
+    // onSnapshot es parte del SDK modular de Firestore, y emite snapshots.
+    return onSnapshot(chatDocRef, (snapshot) => {
+      if (snapshot.exists()) {
+        const data = snapshot.data();
+        callback(data?.['messages'] || []);
+      } else {
+        callback([]); // Si la sesión o el documento no existe, no hay mensajes.
+      }
+    });
+  }
+  async obtenerNombreDeUsuario(uid: string): Promise<string | null> {
+    const userDocRef = doc(this.firestore, 'usuarios', uid);
+    const docSnap = await getDoc(userDocRef);
+    if (docSnap.exists() && docSnap.data()['nombre']) {
+      return docSnap.data()['nombre'];
+    }
+    return null;
+  }
+
+  async archivarSesionChatMesa(mesaId: string, sesionId: string) {
+    const sesionDocRef = doc(this.firestore, 'chats_mesas', mesaId, 'historial_sesiones', sesionId);
+    await updateDoc(sesionDocRef, {
+      activa: false, // Marca la sesión como inactiva
+      fechaFin: new Date()
+    });
+  }
+
+  async getActiveTableSessionsForMozo(): Promise<{ mesaId: string, sesionId: string, clienteNombre?: string }[]> {
+    const tables = ['mesa1', 'mesa2', 'mesa3', 'mesa4']; // Define los IDs de tus mesas
+    const activeSessions: { mesaId: string, sesionId: string, clienteNombre?: string }[] = [];
+
+    for (const tableId of tables) {
+      const historialSesionesRef = collection(this.firestore, 'chats_mesas', tableId, 'historial_sesiones');
+      // Consulta para obtener la última sesión activa (asumiendo que 'activa: true' se usa para la sesión actual)
+      const q = query(
+        historialSesionesRef,
+        where('activa', '==', true), // Filtra por sesiones activas
+        orderBy('fechaInicio', 'desc'), // Ordena para obtener la más reciente
+        limit(1) // Limita a 1 resultado
+      );
+      const querySnapshot = await getDocs(q);
+
+      if (!querySnapshot.empty) {
+        const sesionDoc = querySnapshot.docs[0];
+        const sesionData = sesionDoc.data();
+        activeSessions.push({
+          mesaId: tableId,
+          sesionId: sesionDoc.id,
+          clienteNombre: sesionData['clienteNombre'] // Recupera el nombre del cliente si está almacenado en la sesión
+        });
+      }
+    }
+    return activeSessions;
+  }
+
+  async getClientActiveChatSessionId(mesaId: string, clientUid: string): Promise<string | null> {
+    const historialSesionesRef = collection(this.firestore, 'chats_mesas', mesaId, 'historial_sesiones');
+    const q = query(
+      historialSesionesRef,
+      where('activa', '==', true),
+      where('clienteUid', '==', clientUid), // Filtra por el cliente específico
+      orderBy('fechaInicio', 'desc'),
+      limit(1)
+    );
+
+    const querySnapshot = await getDocs(q);
+
+    if (!querySnapshot.empty) {
+      return querySnapshot.docs[0].id;
+    }
+    return null;
+  }
 }
 
 

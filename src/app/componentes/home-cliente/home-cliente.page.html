@@ -1,39 +1,23 @@
 <ion-content [fullscreen]="true">
-  <div id = "contenedor-principal">
+  <div id="contenedor-principal">
     <header>
-      <h1 class ="titulos">RamenGB🍜</h1>
-      <button id = "btn-mostrar-opciones" (click) = "mostrarContenedores('opciones')">≋</button>
-      <div id = "contenedor-opciones-inicio" class="contenedor-animado"[class.visible]="mostrarOpciones">
-        <button (click)="irA('lista-usuarios')"class="btn-opciones-inicio">ADMINISTRACIÓN</button>
-        <button (click)="cerrarSesion()"class="btn-opciones-inicio">CERRAR SESIÓN</button>
+      <h1 class="titulos">RamenGB🍜</h1>
+      <button id="btn-mostrar-opciones" (click)="mostrarContenedores('opciones')">≋</button>
+      <div id="contenedor-opciones-inicio" class="contenedor-animado" [class.visible]="mostrarOpciones">
+        <button (click)="irA('lista-usuarios')" class="btn-opciones-inicio">ADMINISTRACIÓN</button>
+        <button (click)="cerrarSesion()" class="btn-opciones-inicio">CERRAR SESIÓN</button>
       </div>
     </header>
     <section>
-    
-        <div id = "contenedor-opciones-cliente">
-          <!--
-            <button class = "btn-opciones-cliente" (click)="irA('alta-mesa')">dar de alta mesa</button>
-            <button class = "btn-opciones-cliente" (click)="irConQR()">ESCANEAR QR</button>
-          -->
-         
-          <button class = "btn-opciones-cliente" (click)="irA('solicitar-mesa')" *ngIf = "!verificarCliente">Ingresar a la lista de espera</button>
-          <button class = "btn-opciones-cliente">ENCUESTAS(esta en proceso)</button>
-          <button class = "btn-opciones-cliente" (click)="irA('productos')" *ngIf = "verificarQr">MENÚ</button><!--POR QR-->
-          <button class = "btn-opciones-cliente" *ngIf = "verificarCliente">Consulta al mozo</button>
-          <button class = "btn-opciones-cliente" *ngIf = "verificarCliente">ESCANEAR CÓDIGO DE MESA</button>
-          <button class = "btn-opciones-cliente" *ngIf = "verificarQr">JUEGOS</button>
-          <button class = "btn-opciones-cliente" (click)="irA('lista-pedidos')">VER PEDIDO</button><!--POR QR-->
-          
-          <button class = "btn-opciones-cliente" (click)="irA('lista-pedidos')">PEDIR CUENTA</button><!--POR QR-->
-          <button class = "btn-opciones-cliente" (click)="irA('lista-pedidos')">PEDIR CUENTA</button><!--POR QR-->
-          
-        
-          
-        </div>
-      
-    
+      <div id="contenedor-opciones-cliente">
+        <button class="btn-opciones-cliente" (click)="irA('solicitar-mesa')" *ngIf="!verificarCliente">Ingresar a la lista de espera</button>
+        <button class="btn-opciones-cliente">ENCUESTAS(esta en proceso)</button>
+        <button class="btn-opciones-cliente" (click)="irA('productos')" *ngIf="verificarQr">MENÚ</button>
+        <button class="btn-opciones-cliente" *ngIf="verificarCliente" (click)="irA('chat-mozo')">Consulta al mozo</button>
+        <button class="btn-opciones-cliente" *ngIf="verificarCliente" (click)="iniciarEscaneoQR()">ESCANEAR CÓDIGO DE MESA</button>
+        <button class="btn-opciones-cliente" *ngIf="verificarCliente">JUEGOS</button>
+        <button class="btn-opciones-cliente" *ngIf="verificarCliente" (click)="irA('lista-pedidos')">VER PEDIDO</button>
+        <button class="btn-opciones-cliente" *ngIf="verificarCliente" (click)="irA('lista-pedidos')">PEDIR CUENTA</button></div>
     </section>
-
   </div>
-
 </ion-content>

@@ -20,6 +20,11 @@ export class QrService {
   private datosEscaneadosSubject = new BehaviorSubject<DocumentoData | null>(null);
   datosEscaneados$ = this.datosEscaneadosSubject.asObservable();
 
+    // NUEVA FUNCIÓN: Sujeto para emitir cualquier resultado de escaneo (incluyendo las mesas)
+  private qrContentScannedSubject = new BehaviorSubject<string | null>(null);
+  // NUEVA FUNCIÓN: Observable para que otros componentes puedan suscribirse a los resultados de QR.
+  qrContentScanned$ = this.qrContentScannedSubject.asObservable();
+
   constructor(private router: Router) { }
 
   async CheckPermission()
@@ -89,7 +94,7 @@ export class QrService {
   StopScan()
   {
     BarcodeScanner.showBackground();
-    BarcodeScanner.startScan();
+    BarcodeScanner.stopScan();
     document.querySelector('body')?.classList.remove('scanner-active');
     this.scan = false;
     this.scanResult = "";
@@ -129,42 +134,49 @@ export class QrService {
 
 
   async StartScanYRedireccionar() {
-  if (this.scan) return;
+    if (this.scan) return;
 
-  this.scan = true;
+    this.scan = true;
 
-  try {
-    const permission = await this.CheckPermission();
-    if (!permission) {
-      this.scan = false;
-      this.scanResult = 'Error. No hay permisos';
-      return;
-    }
-
-    await BarcodeScanner.hideBackground();
-    document.querySelector('body')?.classList.add('scanner-active');
-
-    const result = await BarcodeScanner.startScan();
-
-    BarcodeScanner.showBackground();
-    document.querySelector('body')?.classList.remove('scanner-active');
-    this.scan = false;
-
-    if (result?.hasContent) {
-      this.scanResult = result.content;
-
-      // Si el QR contiene una ruta válida de tu app, navegá
-      const rutasValidas = ['home-cliente', 'home-admin', 'home-empleado'];
-      if (rutasValidas.includes(this.scanResult)) {
-        this.router.navigate(['/' + this.scanResult]);
-      } else {
-        console.log('Contenido escaneado no reconocido:', this.scanResult);
+    try {
+      const permission = await this.CheckPermission();
+      if (!permission) {
+        this.scan = false;
+        this.scanResult = 'Error. No hay permisos';
+        return;
       }
+
+      await BarcodeScanner.hideBackground();
+      document.querySelector('body')?.classList.add('scanner-active');
+
+      const result = await BarcodeScanner.startScan();
+
+      BarcodeScanner.showBackground();
+      document.querySelector('body')?.classList.remove('scanner-active');
+      this.scan = false;
+
+      if (result?.hasContent) {
+        this.scanResult = result.content;
+        // NUEVA LÍNEA: Emite el contenido escaneado a través del nuevo BehaviorSubject
+        this.qrContentScannedSubject.next(this.scanResult);
+
+        // Ya no necesitas la lógica de redirección aquí para 'home-cliente', 'home-admin', etc.
+        // Esa lógica la manejará el componente que se suscribe (HomeClientePage).
+        // Si necesitas que este método también maneje otras redirecciones que no sean de mesas,
+        // puedes mantenerlas aquí, pero la lógica de mesas la haremos en el componente.
+        const rutasValidasIniciales = ['home-admin', 'home-empleado']; // Excluye 'home-cliente' de esta parte
+        if (rutasValidasIniciales.includes(this.scanResult)) {
+          this.router.navigate(['/' + this.scanResult]);
+        } else {
+           // Si no es una ruta de admin/empleado, o una mesa (que será manejada en el componente),
+           // simplemente loguea el contenido o haz algo más por defecto.
+          console.log('Contenido escaneado emitido para procesamiento externo:', this.scanResult);
+        }
+      }
+    } catch (e) {
+      console.error('Error durante escaneo y emisión de resultado', e);
+      this.scan = false;
     }
-  } catch (e) {
-    console.error('Error durante escaneo y redirección', e);
-    this.scan = false;
   }
-}
 
 }
