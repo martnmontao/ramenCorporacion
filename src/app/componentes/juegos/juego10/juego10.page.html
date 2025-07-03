@@ -1,0 +1,14 @@
+<ion-content class="ion-padding" [fullscreen]="true">
+  <div class="ollas-container">
+    <div class="fila">
+      <button *ngFor="let item of [0,1]; let i = index" [class.seleccionada]="i === seleccion" (click)="elegirOlla(i)" [disabled]="juegoTerminado">
+        <img [src]="mostrarContenido(i)" alt="Olla" />
+      </button>
+    </div>
+    <div class="fila">
+      <button *ngFor="let item of [2,3]; let i = index " [class.seleccionada]="(i + 2) === seleccion" (click)="elegirOlla(i + 2)" [disabled]="juegoTerminado">
+        <img [src]="mostrarContenido(i + 2)" alt="Olla" />
+      </button>
+    </div>
+  </div>
+</ion-content>

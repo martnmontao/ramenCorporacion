@@ -1,0 +1,15 @@
+<ion-content [fullscreen]="true" class="ion-padding">
+    <div class="juego-memo-layout">
+        <h1>Tiempo: {{tiempo}} segundos</h1>
+        <div class="memo-container">
+            <ion-button 
+                color="medium" class="botones-vista" *ngFor="let carta of cartas; let i = index" 
+                fill="clear" 
+                (click)="voltearCarta(i)">
+                <img [src]="carta.descubierta ? carta.imagen : imagenReverso" />
+            </ion-button>
+        </div>
+    </div>
+    
+
+</ion-content>

@@ -11,41 +11,34 @@
 
   </header>
   <section>
-    <form>
+    <form [formGroup]="registroForm">
       <h2 class ="titulos">REGISTRO</h2>
       <div id = "contenedor-opciones-registro">
         <button class = "btn-opciones-registro" type="button" (click) = "seleccionarOpcionesRegistro('cliente')"  [class.active]="opcionSeleccionada === 'cliente'">Cliente</button>
         <button class = "btn-opciones-registro" type="button" (click) = "seleccionarOpcionesRegistro('empleado')"  [class.active]="opcionSeleccionada === 'empleado'">Empleado</button>
         <button class = "btn-opciones-registro" type="button" (click) = "seleccionarOpcionesRegistro('gerencia')"  [class.active]="opcionSeleccionada === 'gerencia'">Gerencia</button>
       </div>
-      <div class = "contenedor-inputs">
-        <input type="text" class="inputs-form inputs-nombres" [(ngModel)] = "nombreUsuario" placeholder="Nombre" name = "nombreUsuario">
-        <input type="text" class="inputs-form inputs-nombres" [(ngModel)] = "apellidoUsuario" placeholder="Apellido" name = "apellidoUsuario">
-      </div>
-      <div  class = "contenedor-inputs">
-        <input type="text" class="inputs-form inputs-nombres" [(ngModel)] = "documentoUsuario" placeholder="N° de documento" name = "documentoUsuario"   [ngClass]="mostrarInputs ? 'inputs-form inputs-nombres' : 'inputs-form inputs-nombres ancho-completo'">
-        
-        <input type="text" class="inputs-form inputs-nombres" [(ngModel)] = "cuilUsuario" placeholder="CUIL" name ="cuil" *ngIf = "mostrarInputs">
-
-      </div>
-      <div  class = "contenedor-inputs">
-         <input type="text" class="inputs-form inputs-nombres" [(ngModel)] = "perfilUsuario" placeholder="Perfil" *ngIf = "mostrarInputs" name = "perfilUsuario"> 
-        <button class  = "btn-tomar-foto btn-form inputs-nombres" type="button" (click)="tomarFoto()" [ngClass]="mostrarInputs ? 'inputs-form inputs-nombres' : 'inputs-form inputs-nombres ancho-completo'">Tomar foto 📷</button>
-        </div>
       
-      <input type="text" class  = "btn-qr inputs-form inputs-nombres" [(ngModel)] = "emailUsuario" placeholder="Correo electrónico" name = "email">
-      <input type="password" class  = "btn-qr inputs-form inputs-nombres" [(ngModel)] = "claveUsuario" placeholder="Contraseña" name = "clave">
+      <div class = "contenedor-inputs">
+          <input type="text" class="inputs-form inputs-nombres" formControlName = "nombre" placeholder="Nombre" required><br>
+          <input type="text" class="inputs-form inputs-nombres" formControlName = "apellido" placeholder="Apellido" required>
+      </div>
+
+      <div  class = "contenedor-inputs">
+          <input type="text" class="inputs-form inputs-nombres" formControlName = "documento" placeholder="N° de documento"  [ngClass]="mostrarInputs ? 'inputs-form inputs-nombres' : 'inputs-form inputs-nombres ancho-completo'" required>
+          <input type="text" class="inputs-form inputs-nombres" formControlName = "cuil" placeholder="CUIL" (input)="formatearCuil()" *ngIf = "mostrarInputs" required>
+      </div>
+
+      <div  class = "contenedor-inputs">
+          <input type="text" class="inputs-form inputs-nombres" formControlName = "perfil" placeholder="Perfil" *ngIf = "mostrarInputs" required> 
+        <button class  = "btn-tomar-foto btn-form inputs-nombres" type="button" (click)="tomarFoto()" [ngClass]="mostrarInputs ? 'inputs-form inputs-nombres' : 'inputs-form inputs-nombres ancho-completo'">Tomar foto 📷</button>
+      </div>
+      
+      <input type="text" class  = "btn-qr inputs-form inputs-nombres" formControlName = "email" placeholder="Correo electrónico" required>
+      <input type="password" class = "btn-qr inputs-form inputs-nombres" formControlName = "clave" placeholder="Contraseña" required>
       <button class  = "btn-qr" (click) = "scanearDocumento()">COMPLETAR CON QR</button>
 
-
-
-
-
-
-
-
-
-      <div id = "contenedor-btn-form"   [ngStyle]="{'justify-content': mostrarInputs ? 'center' : 'space-evenly'}">
+      <div id = "contenedor-btn-form" [ngStyle]="{'justify-content': mostrarInputs ? 'center' : 'space-evenly'}">
         <button class = "btn-form btn-registrarse" (click) = "registrarUsuario()">Registrarse</button>
         <div id = "contenedor-btn-anonimo"  *ngIf = "!mostrarInputs">
           
@@ -61,9 +54,7 @@
         <button class="btn-anonimo-aviso" (click) = "mostrarContenedores('aviso')">CANCELAR</button>
       </div>
     </div>
-
   </section>
 </div>
-
 
 </ion-content>
