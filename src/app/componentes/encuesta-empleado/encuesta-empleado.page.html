@@ -1,0 +1,83 @@
+<ion-content [fullscreen]="true" *ngIf="mostrarEncuesta">
+  <div id="div-encuesta">
+    <form [formGroup] = "encuestaEmpleadoForm" (ngSubmit)="enviarEncuesta()">
+      <h1 style="text-align: center;margin-top: 10%;">Encuesta</h1>
+      <div id="div-usuario">
+        <input type="text" placeholder="Nombre" class="input-usuario" formControlName="nombre" required>
+        <input type="text" placeholder="Apellido" class="input-usuario" formControlName="apellido" required>
+      </div>
+      
+      <div id="div-preguntas">
+        <!-- 1ra Pregunta -->
+        <p>☛ ¿Qué turno estás comenzando o finalizando?</p>
+        <select id="turno" formControlName="preguntaSelect" required>
+          <option value="turno-mañana">Mañana</option>
+          <option value="turno-tarde">Tarde</option>
+          <option value="turno-noche">Noche</option>
+        </select>
+
+        <!--2da Pregunta -->
+        <p>☛ ¿Cómo encontraste el estado general del espacio de trabajo?</p>
+        <input type="radio" id="rdo-MS" formControlName="preguntaRdo" value="muy-sucio">
+        <label for="rdo-MS">Muy sucio 💣</label><br>
+
+        <input type="radio" id="rdo-AD" formControlName="preguntaRdo" value="algo-desordenado">
+        <label for="rdo-AD">Algo desordenado</label><br>
+
+        <input type="radio" id="rdo-A" formControlName="preguntaRdo" value="aceptable">
+        <label for="rdo-A">Aceptable</label><br>
+
+        <input type="radio" id="rdo-L" formControlName="preguntaRdo" value="limpio">
+        <label for="rdo-L">Limpio</label><br>
+
+        <input type="radio" id="rdo-ML" formControlName="preguntaRdo" value="muy-limpio">
+        <label for="rdo-ML">Muy limpio ✨</label><br>
+
+        <!--3ra Pregunta -->
+        <p>☛ ¿Había algún riesgo visible?</p>
+        <div formGroupName="preguntaChk"  id="div-chk" multiple required>
+          <input type="checkbox" id="cables-chk" formControlName="cables">
+          <label for="cables-chk">Cables</label><br>
+
+          <input type="checkbox" id="liquidos-chk" formControlName="liquidos">
+          <label for="liquidos-chk">Líquidos</label><br>
+
+          <input type="checkbox" id="objetos-chk" formControlName="objetos">
+          <label for="objetos-chk">Objetos sueltos</label><br>
+
+          <input type="checkbox" id="maquinas-chk" formControlName="maquinas">
+          <label for="maquinas-chk">Otro</label><br>
+
+          <input type="checkbox" id="ninguno-chk" formControlName="ninguno" >
+          <label for="ninguno-chk">Ninguno</label><br>
+        </div>
+
+        <!--4ta Pregunta -->
+        <p>☛ Del 1 al 10 ¿Qué tan colaborativo estuvo tu equipo?</p>
+        <input type="range" id="colaboracion" formControlName="preguntaRange" min="1" max="10" step="1" value="5" required>
+        <div class="etiquetas">
+          <span>Nada Colaborativo</span>
+          <span>Muy colaborativo</span>
+        </div>
+
+        <!--5ta Pregunta -->
+        <p>☛ ¿Querés dejar algún comentario o detalle sobre el espacio de trabajo?</p>
+          <input type="text" placeholder="..." class="input-usuario" formControlName="preguntaInput" required>
+      </div>
+      <p>Subí una imagen (obligatoria)</p>
+      <input type="file" accept="image/*" (change)="onFileChange($event)" required>
+      <div *ngIf="imagenBase64">
+        <p>Imagen seleccionada:</p>
+        <img [src]="imagenBase64" alt="Imagen seleccionada" width="150">
+      </div>
+
+      <div id="div-submit">
+        <button type="Submit" class="btn-encuesta" >Enviar encuesta</button><br>
+        <button (click)="omitirEncuesta()" class="btn-encuesta">Omitir encuesta</button>
+      </div>
+
+    </form>
+    <hr>
+    <app-estadisticas-encuesta [tipoEncuesta]="'empleado'"></app-estadisticas-encuesta>
+  </div>
+</ion-content>

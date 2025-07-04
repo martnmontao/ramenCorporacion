@@ -1,0 +1,36 @@
+<div class="estadisticas-container">
+
+  <h2>Estadísticas de la encuesta</h2>
+
+<div>
+  <h3>Promedio de satisfacción (rango):</h3>
+  <ng-container *ngIf="!rangoEsTexto; else textoRango">
+    <p>{{ rangoPromedio | number:'1.1-1' }} / 10</p>
+  </ng-container>
+  <ng-template #textoRango>
+    <ul>
+      <li *ngFor="let key of rangoFrecuencias | keyvalue">
+        {{ key.key }}: {{ key.value }} votos
+      </li>
+    </ul>
+  </ng-template>
+</div>
+
+  <div style="max-width: 500px; margin: auto">
+    <h3>Respuestas seleccionadas (Select)</h3>
+    <canvas baseChart
+            [data]="selectData"
+            [options]="selectOptions"
+            chartType="pie">
+    </canvas>
+  </div>
+
+  <div style="max-width: 500px; margin: auto">
+    <h3>Opiniones marcadas (Checkbox)</h3>
+    <canvas baseChart
+            [data]="checkboxData"
+            chartType="pie">
+    </canvas>
+  </div>
+
+</div>
