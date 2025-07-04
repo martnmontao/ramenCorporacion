@@ -60,6 +60,11 @@
                         slot="end" color="success" (click)="onAutorizarUsuario(usuario)">
               Autorizar
             </ion-button>
+
+            <ion-button *ngIf="user?.perfil === 'gerencia' && !usuario.autorizado && usuario.correoUsuario" 
+                        slot="end" color="danger" (click)="offAutorizarUsuario(usuario)">
+              No autorizar
+            </ion-button>
           </ion-item>
         </ion-list>
         

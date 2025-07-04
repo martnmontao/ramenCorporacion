@@ -58,21 +58,42 @@ export class FirebaseService {
       }
     } catch (error: any) {
       let mensaje = 'Error al iniciar sesión';
-      if (error.code === 'auth/user-not-found') {
+      if (error.code === 'auth/user-not-found') 
+        {
         mensaje = 'El correo electrónico no está registrado.';
-      } else if (error.code === 'auth/wrong-password') {
+      } else if (error.code === 'auth/wrong-password') 
+      {
         mensaje = 'La contraseña es incorrecta.';
       }
+      else if(error.code === 'auth/invalid-email' || error.code === 'auth/invalid-credential')
+      {
+        mensaje = 'Verifique las credenciales.';
+
+      }
+      else if( error.code === 'auth/missing-password')
+      {
+        mensaje = 'Ingrese una contraseña.';
+
+      }
+      else
+      {
+        mensaje = "Usuario no autorizado. Espere a ser notificado vía correo electrónico."
+      }
+
+      console.log(error.code);
+
       Swal.fire({
             icon: 'error', 
-            title: 'Error de inicio de sesión',
-            text: error.mensaje,
+            title: 'Error',
+            text: mensaje,
             confirmButtonText: 'Aceptar',
             heightAuto: false 
           });
       throw error;
     }
   }
+
+  
 
   async cerrarSesion() {
     try {
@@ -130,6 +151,9 @@ export class FirebaseService {
       
     }
   }
+
+
+  
 
   agregarDocumento(data: any, col: string) {
     const dataRef = collection(this.firestore, col);
@@ -311,6 +335,48 @@ export class FirebaseService {
       throw new Error('Error al verificar datos duplicados')
     }
   }
+
+  async eliminarUsuarioRegistro(correoUsuario: string): Promise<void> {
+   try {
+    const registrosRef = collection(this.firestore, 'registro');
+    const q = query(registrosRef, where('correoUsuario', '==', correoUsuario));
+    const querySnapshot = await getDocs(q);
+
+    if (querySnapshot.empty) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Usuario no encontrado',
+        text: `No se encontró ningún usuario con el correo ${correoUsuario}`,
+        confirmButtonText: 'Aceptar',
+        heightAuto: false
+      });
+      return;
+    }
+
+    // Eliminar solo la primera coincidencia
+    const docToDelete = querySnapshot.docs[0];
+    await deleteDoc(doc(this.firestore, 'registro', docToDelete.id));
+
+    Swal.fire({
+      icon: 'success',
+      title: '¡Usuario Rechazado!',
+      text: `El usuario ${correoUsuario} fue eliminado correctamente.`,
+      confirmButtonText: 'Aceptar',
+      heightAuto: false
+    });
+
+  } catch (error) {
+    console.error('Error al eliminar usuario:', error);
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'No se pudo eliminar el usuario. Inténtelo de nuevo.',
+      confirmButtonText: 'Aceptar',
+      heightAuto: false
+    });
+    throw error;
+  }
+  }
   
   getCollection<T>(nombreColeccion: string,campo?: string,valor?: any): Observable<T[]> 
   {
@@ -328,7 +394,7 @@ export class FirebaseService {
   }
 
 
-   async getCollectionMultipleFilters(
+  async getCollectionMultipleFilters(
     coleccion: string,
     filtros: { campo: string, condicion: any, valor: any }[]
   ): Promise<any[]> {

@@ -112,6 +112,55 @@ export class ListaUsuariosPage implements OnInit {
     }
   }
 
+   async offAutorizarUsuario(usuario: any) {
+    // usuario debe contener al menos: { id: string (docId), correoUsuario: string, claveUsuario: string, ...otrosDatos }
+    if (!usuario || !usuario.id) {
+      console.error('Datos de usuario incompletos para la autorización:', usuario);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error de datos',
+        text: 'No se pudo obtener la información completa del usuario para autorizar.',
+        confirmButtonText: 'Aceptar',
+        heightAuto: false
+      });
+      return;
+    }
+
+    // Confirmación opcional antes de autorizar
+    const result = await Swal.fire({
+      icon: 'question',
+      title: '¿Confirmar rechazo?',
+      text: `¿Estás seguro de que quieres rechazar a ${usuario.nombreUsuario || 'este usuario'}?`,
+      showCancelButton: true,
+      confirmButtonText: 'Sí, rechazar',
+      cancelButtonText: 'No, cancelar',
+      heightAuto: false
+    });
+
+    if (result.isConfirmed) 
+    {
+      try {
+        this.isLoading = true;
+        const autorizadoExitoso = await this.firebaseService.eliminarUsuarioRegistro(usuario.correoUsuario);
+        if(this.filtroSeleccionado == 'cliente')
+          {
+          await this.cargarUsuariosPorPerfil('cliente');
+
+        }
+        else
+        {
+          await this.cargarUsuariosPorPerfil('empleado');
+
+        }
+
+
+      } catch (error) {
+        // Los errores ya se manejan con SweetAlert en el servicio, aquí solo logueamos.
+        console.error('Error en el componente al intentar autorizar:', error);
+      }
+    }
+  }
+
   mostrarContenedores(contenedor: string)
   {
     switch(contenedor)
@@ -122,6 +171,8 @@ export class ListaUsuariosPage implements OnInit {
 
     }
   }
+
+  
 
   irA(path:string)
   {
