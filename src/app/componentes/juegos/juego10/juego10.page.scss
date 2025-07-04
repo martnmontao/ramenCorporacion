@@ -1,0 +1,32 @@
+.ollas-container {
+    height: 80%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    margin-top: 40px;
+}
+
+.fila {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+button {
+    background: transparent;
+    border: none;
+    padding: 0;
+}
+
+button img {
+    width: 130px;
+    height: 130px;
+    object-fit: contain;
+}
+
+.seleccionada {
+    box-shadow: 0 0 10px 3px #ffc107;
+    border-radius: 10px;
+}

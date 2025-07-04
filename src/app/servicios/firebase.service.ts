@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Auth, authState, createUserWithEmailAndPassword, getAuth, onAuthStateChanged, sendEmailVerification, signInWithEmailAndPassword, signOut, User, UserCredential } from '@angular/fire/auth';
-import { Firestore, collection, addDoc, query, orderBy, limit, getDocs, where, CollectionReference, collectionData, updateDoc, doc, deleteDoc, onSnapshot, getDoc, arrayUnion, setDoc } from '@angular/fire/firestore';
+
+import { Firestore, collection, addDoc, query, orderBy, limit, getDocs, where, CollectionReference, collectionData, updateDoc, doc, Timestamp, deleteDoc, onSnapshot, getDoc, arrayUnion, setDoc } from '@angular/fire/firestore';
+
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import Swal from 'sweetalert2';
@@ -84,9 +86,34 @@ export class FirebaseService {
     }
   }
 
+    getUsuarioActual(): User | null
+  {
+    return this.auth.currentUser;
+  }
+
+  async guardarEncuesta(datosEncuesta: any):Promise<void>{
+    //const usuario = this.getUsuarioActual();
+    const encuestasRef = collection(this.firestore,'encuestas');
+    //if(!usuario) throw new Error('Usuario no encontrado');
+
+    const datos = {
+      //uid: usuario.uid,
+      ...datosEncuesta,
+      fecha: Timestamp.now()
+    };
+    
+    await addDoc(encuestasRef,datos);
+  }
+
+  getEncuestas(): Observable<any[]>{
+    const encuestasRef = collection(this.firestore,'encuestas');
+    return collectionData(encuestasRef, {idField: 'id'}) as Observable<any[]>;
+  }
+
   getCurrentUserProfile(): Observable<any | null> {
     return this.currentUserProfile$;
   }
+
 
   async obtenerUsuarioLogueado() {
     const usersRef = collection(this.firestore, 'usuarios');
@@ -252,6 +279,36 @@ export class FirebaseService {
       }
       // Se propaga el error para que autorizarUsuario lo capture y muestre la alerta.
       throw error;
+    }
+  }
+
+  async verificarExistentesRegistro(email: string, documento: string, cuil?: string): Promise<string | null>{
+    /*verifico que no haya datos duplicados de identificación en otro registro */
+    try{
+      const ref = this.registroCollection;
+
+      // Query para consultar si ya no me registré con un CORREO ELECTRÓNICO
+      const qEmail = query(ref, where('correoUsuario', '==', email));
+      const rEmail = await getDocs(qEmail);
+      if (!rEmail.empty) return '¡Ya existe un registro con este correo!';
+
+      // Query para consultar si ya no me registré con un DOCUMENTO
+      const qDoc = query(ref,where('documentoUsuario','==', documento));
+      const rDoc = await getDocs(qDoc);
+      if (!rDoc.empty) return '¡Ya existe un registro con este número de documento!';
+
+      // Query para consultar si ya no me registré con un CUIL
+      if(cuil !== undefined){
+        const qCuil = query(ref,where('cuil','==', cuil));
+        const rCuil = await getDocs(qCuil);
+        if (!rCuil.empty) return '¡Ya existe un registro con este número de CUIL!';
+      }
+
+
+      return null;
+    }catch(error){
+      console.error('Error al verificar duplicados: ', error);
+      throw new Error('Error al verificar datos duplicados')
     }
   }
   

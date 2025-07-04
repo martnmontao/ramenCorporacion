@@ -41,8 +41,8 @@
             class="message-container"
             *ngFor="let message of messages"
             [ngClass]="{
-              'own-message': message.userEmail === user?.email,
-              'other-message': message.userEmail !== user?.email
+              'own-message': message.userName === user?.userName,
+              'other-message': message.userName !== user?.userName
             }"
           >
             <p class="p-user-name">

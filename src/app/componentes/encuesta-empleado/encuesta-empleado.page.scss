@@ -1,0 +1,99 @@
+.etiquetas {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 5px;
+    font-size: 0.9em;
+    padding: 0 5px;
+}
+
+ion-content{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: large;
+}
+
+#div-encuesta{
+    height: auto;
+    background-color: #10161e;
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color:#F0CA91;
+}
+
+#div-usuario{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 5%;
+    gap:10px;
+}
+
+.input-usuario{
+    height:40px;
+    width: 90%;
+    border: none;
+    border-radius: 10px;
+    text-align: justify;
+}
+
+.input-usuario::placeholder{
+    text-align: justify;
+}
+
+#div-preguntas{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    padding: 10px;
+}
+
+#div-chk{
+    display:flex;
+    flex-direction: column;
+    justify-content: left;
+    align-items: center;
+}
+
+#div-submit{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    margin-top: 10px;
+    width: 100%;
+}
+
+.btn-encuesta{
+    height: 40px;
+    width:80%;
+    font-size: large;
+    width: auto;
+    border-radius: 20px;
+}
+
+input[type="checkbox"] {
+    transform: scale(1.2); 
+    margin-right: 15px; 
+}
+
+input[type="radio"]{
+    width: 25px;
+    height: 25px;
+    margin-bottom: 10px;
+}
+
+input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    margin-bottom: 10px;
+}
+
+input[type="radio"],
+input[type="checkbox"],
+input[type="text"],
+input[type="select"]{
+    background-color: rgba(240, 202, 145,0.3);
+}

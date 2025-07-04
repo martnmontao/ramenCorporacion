@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 
+
 const routes: Routes = [
 
   {
@@ -48,15 +49,42 @@ const routes: Routes = [
   },
   {
     path: 'lista-pedidos',
-    loadChildren: () => import('./componentes/lista-pedidos/lista-pedidos.module').then( m => m.ListaPedidosPageModule)
+    loadChildren: () => import('./componentes/lista-pedidos/lista-pedidos.module').then( m => m.ListaPedidosPageModule)},
+  {path: 'lista-usuarios',
+    loadChildren: () => import('./componentes/lista-usuarios/lista-usuarios.module').then( m => m.ListaUsuariosPageModule)
   },
-    {
+  {
+    path: 'productos',
+    loadChildren: () => import('./componentes/productos/productos.module').then( m => m.ProductosPageModule)
+  },
+  {
+    path: 'encuesta-cliente',
+    loadChildren: () => import('./componentes/encuesta-cliente/encuesta-cliente.module').then( m => m.EncuestaClientePageModule)
+  },
+  {
+    path: 'encuesta-empleado',
+    loadChildren: () => import('./componentes/encuesta-empleado/encuesta-empleado.module').then( m => m.EncuestaEmpleadoPageModule)
+  },
+  {
+    path: 'juego10',
+    loadChildren: () => import('./componentes/juegos/juego10/juego10.module').then( m => m.Juego10PageModule)
+  },
+  {
+    path: 'juego15',
+    loadChildren: () => import('./componentes/juegos/juego15/juego15.module').then( m => m.Juego15PageModule)
+  },
+  {
+    path: 'juego20',
+    loadChildren: () => import('./componentes/juegos/juego20/juego20.module').then( m => m.Juego20PageModule)
+  },
+  {
+    path: 'estadisticas-encuesta',
+    loadChildren: () => import('./componentes/estadisticas-encuesta/estadisticas-encuesta.module').then( m => m.EstadisticasEncuestaPageModule)
+  },
+      {
     path: 'chat-mozo',
     loadChildren: () => import('./componentes/chat-mozo/chat-mozo.module').then( m => m.ChatMozoPageModule)
   }
-
-
-
 
   
 ];

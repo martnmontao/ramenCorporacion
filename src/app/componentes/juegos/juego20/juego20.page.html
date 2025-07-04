@@ -1,0 +1,17 @@
+<ion-content [fullscreen]="true" class="ion-padding">
+    <div class="juego20-container">
+        <h2>Elegí tu jugada: </h2>
+        <div class="opciones">
+            <button *ngFor="let opcion of opciones"
+                    [class.seleccionada]="jugadaJugador === opcion"
+                    (click)="elegir(opcion)">
+                <img [src]="'assets/imagenes/juegos/' + opcion + '.png'" />
+            </button>
+        </div>
+
+        <div class="resultado" *ngIf="jugadaRamen">
+            <p>Ramen eligió: </p>
+            <img [src]="'assets/imagenes/juegos/' + jugadaRamen + '.png'" class="ramen-img" />
+        </div>
+    </div>
+</ion-content>
