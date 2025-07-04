@@ -247,11 +247,15 @@ export class RegistroPage implements OnInit {
 
   confirmarRegistroAnonimo()
   {
+    const valores = this.registroForm.value;
+
+    const token = this.notificacionesService.getToken();
     let data = 
     {
       imagenUsuario: this.fotoUsuario,
-      nombreUsuario: this.nombreUsuario,
-      perfil: "cliente"
+      nombreUsuario: valores.nombre,
+      perfil: "cliente",
+      token : token
     }
 
     this.firebaseService.agregarDocumento(data, "usuarios").then(respuesta => 

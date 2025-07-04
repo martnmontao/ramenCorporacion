@@ -14,7 +14,7 @@ import Swal from 'sweetalert2';
 })
 export class ChatMozoPage implements OnInit {
 @ViewChild('chatContainer') chatContainer!: ElementRef;
-
+  verChats = false;
   message: string = "";
   messages: any[] = [];
   showLogOut: boolean = false;
@@ -22,15 +22,15 @@ export class ChatMozoPage implements OnInit {
   userName: string = "";
   showVerifyMessage: boolean = false;
   verifyMessage: string = "";
-
+  isLoading = true;
   isClient: boolean = false;
   isMozo: boolean = false;
   mesaIdActual: string | null = null;
-  numeroMesa:number|null=null;
+  numeroMesa:any;
   sesionChatIdActual: string | null = null;
 
-  mozoActiveSessions: { mesaId: string, sesionId: string, clienteNombre?: string }[] = [];
-  selectedMozoChat: { mesaId: string, sesionId: string, clienteNombre?: string } | null = null;
+  mozoActiveSessions: { mesaId: string, sesionId: string, numeroMesa: string ,clienteNombre?: string }[] = [];
+  selectedMozoChat: { mesaId: string, sesionId: string, numeroMesa: string ,clienteNombre?: string } | null = null;
 
   private chatSubscription: (() => void) | undefined; 
   private userRoleSubscription: Subscription | undefined; 
@@ -38,8 +38,8 @@ export class ChatMozoPage implements OnInit {
   constructor(private router: Router, private firebase: FirebaseService) { }
 
   async ngOnInit() {
-    const auth = getAuth();
     this.user = await this.firebase.obtenerUsuarioLogueado();
+   
 
     if (this.user) {
 
@@ -52,7 +52,11 @@ export class ChatMozoPage implements OnInit {
           await this.loadClientChatSession();
         } else if (this.isMozo) {
           await this.loadMozoChatSessions();
-        } else {
+          
+          this.numeroMesa = await this.firebase.obtenerNumeroMesaPorDocId(this.mesaIdActual as string);
+          console.log(this.numeroMesa)
+
+          } else {
 
           Swal.fire({
             icon: 'error',
@@ -78,7 +82,11 @@ export class ChatMozoPage implements OnInit {
       }
     } else {
       this.router.navigateByUrl('login'); 
-    }
+    } 
+   
+    setTimeout(() => {
+      this.isLoading = false;
+    }, 500);
   }
 
   ngOnDestroy() {
@@ -91,6 +99,13 @@ export class ChatMozoPage implements OnInit {
     }
   }
 
+
+  verContenedorChats()
+  {
+    this.verChats = !this.verChats;
+  }
+
+
   async loadClientChatSession() {
     
     const mesaAsignada = await this.firebase.obtenerMesaPorUidUsuario(this.user!.uid);
@@ -101,6 +116,7 @@ export class ChatMozoPage implements OnInit {
 
     if (mesaAsignada && mesaAsignada.mesaId) {
       this.mesaIdActual = mesaAsignada.mesaId;
+      this.numeroMesa = mesaAsignada.numeroMesa;
       const activeSesionId = await this.firebase.getClientActiveChatSessionId(this.mesaIdActual, this.user!.uid);
 
       if (activeSesionId) {
@@ -149,15 +165,19 @@ export class ChatMozoPage implements OnInit {
     }
   }
 
-  selectMozoChat(session: { mesaId: string, sesionId: string, clienteNombre?: string }) {
+  async selectMozoChat(session: { mesaId: string, sesionId: string, numeroMesa: string,clienteNombre?: string }) {
+    
+ 
+    this.isLoading = true;
     this.selectedMozoChat = session;
     this.mesaIdActual = session.mesaId;
     this.sesionChatIdActual = session.sesionId;
-
+    this.numeroMesa = session.numeroMesa;
+    
     if (this.chatSubscription) {
       this.chatSubscription(); 
     }
-
+    
     this.chatSubscription = this.firebase.getAllMessagesFromTableSession(
       this.mesaIdActual,
       this.sesionChatIdActual,
@@ -166,6 +186,12 @@ export class ChatMozoPage implements OnInit {
         setTimeout(() => this.scrollToBottom(), 100);
       }
     );
+
+    this.verChats = false;
+    
+    setTimeout(() => {
+      this.isLoading = false;
+    }, 500);
   }
 
   scrollToBottom() {
@@ -201,12 +227,18 @@ export class ChatMozoPage implements OnInit {
       this.verifyMessage = "No puedes enviar un mensaje vacío.";
       this.showVerifyMessage = true;
     } else {
-      let message = {
+      
+      let message;
+    
+      message = {
         message: this.message,
         userEmail: this.user.correoUsuario,
         userName: this.user.nombreUsuario,
+        userTipo: this.user.perfil,
         date: new Date()
       };
+      
+    
       await this.firebase.appendChatMessageToTableSession(this.mesaIdActual, this.sesionChatIdActual, message);
       this.message = "";
     }

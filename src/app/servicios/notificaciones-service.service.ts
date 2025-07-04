@@ -29,7 +29,7 @@ export class NotificacionesServiceService {
     PushNotifications.addListener('registration',
       (token: Token) => {
         this.token = token.value;
-        console.log('Token guardado', this.token);
+        alert('Token guardado' + this.token);
       }
     );
 
@@ -55,4 +55,10 @@ export class NotificacionesServiceService {
   getToken(): string | null{
     return this.token;
   }
+
+  
+
+
+
+
 }

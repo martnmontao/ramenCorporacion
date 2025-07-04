@@ -860,13 +860,13 @@ async getListaPedidosPorCliente(uid: string): Promise<Pedido[]> {
     });
   }
 
-async getActiveTableSessionsForMozo(): Promise<{ mesaId: string, sesionId: string, clienteNombre?: string }[]> {
+async getActiveTableSessionsForMozo(){
   const mesasSnapshot = await getDocs(collection(this.firestore, 'mesas'));
-  const activeSessions: { mesaId: string, sesionId: string, clienteNombre?: string }[] = [];
+  const activeSessions: { mesaId: string, sesionId: string, clienteNombre?: string, numeroMesa: string }[] = [];
 
   for (const mesaDoc of mesasSnapshot.docs) {
     const mesaId = mesaDoc.id;
-
+    const numeroMesa = await this.obtenerNumeroMesaPorDocId(mesaId) as string;
     const historialSesionesRef = collection(this.firestore, 'chats_mesas', mesaId, 'historial_sesiones');
     const q = query(
       historialSesionesRef,
@@ -883,7 +883,8 @@ async getActiveTableSessionsForMozo(): Promise<{ mesaId: string, sesionId: strin
       activeSessions.push({
         mesaId: mesaId,
         sesionId: sesionDoc.id,
-        clienteNombre: sesionData['clienteNombre']
+        clienteNombre: sesionData['clienteNombre'],
+        numeroMesa: numeroMesa
       });
     }
   }
@@ -909,6 +910,23 @@ async getActiveTableSessionsForMozo(): Promise<{ mesaId: string, sesionId: strin
     }
     return null;
   }
+  async obtenerNumeroMesaPorDocId(docId: string): Promise<string | null> {
+  try {
+    const docRef = doc(this.firestore, `mesas/${docId}`);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      const data = docSnap.data();
+      return data['numeroMesa'] || null;
+    } else {
+      console.warn('No se encontró la mesa con ese ID');
+      return null;
+    }
+  } catch (error) {
+    console.error('Error al obtener número de mesa:', error);
+    return null;
+  }
+}
 }
 
 

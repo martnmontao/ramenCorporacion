@@ -1,13 +1,9 @@
     #contenedor-principal {
     height: 100%;
-    overflow-y: auto;
-    background-image: url("../../../assets/imagenes/fondoRamen.jpg");
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
     display: flex;
     flex-direction: column;
-    }
+      overflow-y: hidden;
+  }
 
     header {
     height: 60px;
@@ -16,19 +12,24 @@
     justify-content: space-between;
     align-items: center; /* Align items vertically */
     padding: 0 10px; /* Add some padding */
-    }
+      
+  }
 
     section {
     display: flex;
     flex-direction: column;
     align-items: center;
     width: 100%;
-    overflow-y: auto;
+      overflow-y: hidden;
+      
     flex: 1;
     height: auto;
-    padding-bottom: 2rem;
-    box-sizing: border-box; /* Include padding in the element's total width and height */
-    }
+
+    box-sizing: border-box;
+    height: 100%; /* Include padding in the element's total width and height */
+    background-color: #0A1924;
+
+}
 
     #contenedor-opciones-inicio {
     position: absolute;
@@ -61,6 +62,7 @@
     font-size: 20px;
     font-family: 'Poppins', sans-serif;
     padding: 5px;
+ 
     }
 
     #btn-mostrar-opciones {
@@ -90,36 +92,56 @@
 
     /* Chat Specific Styles */
     #head-container-chat {
-    width: 90%;
+     width: 100%;
+    min-height: 120px;
     background-color: #10161e;
-    border-radius: 10px;
-    padding: 15px;
-    margin-top: 20px;
-    text-align: center;
-    }
-
-    #head-container-chat p {
-    color: #F0CA91;
-    font-size: 20px;
+    padding: 10px;
     margin: 0;
+    flex-direction: column;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 2px solid #F0CA91;
+    border-top: 2px solid #F0CA91;
+    font-size: 20px;
+    box-sizing: border-box;
+}
+
+#btn-ver-chats{
+  height: 55px;
+  width: 55px;
+  position: absolute;      /* o relative, según el caso */
+  left: 2%;
+  
+  font-size: 30px;
+  background-color: #F0CA91;
+  color: #0A1924;
+  border-radius: 10px;
+}
+
+  
+
+    .p-encabezado-chat {
+        color: #F0CA91;
+        font-size: 25px;
+        margin: 0;
+        text-align: center;
     }
 
     #mozo-chat-selector {
-    width: 90%;
-    background-color: #10161e;
-    border-radius: 10px;
-    padding: 15px;
-    margin-top: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
+        
+        background-color: #10161e;
+        border-radius: 10px;
+        height: 100%;
+        width: 100%;
+    
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        border-radius: 10px;
     }
 
-    #mozo-chat-selector .titulos-listas {
-    margin-top: 0; /* Override default margin */
-    margin-bottom: 5px;
-    }
+
 
     .chat-buttons-container {
     display: flex;
@@ -129,24 +151,32 @@
     width: 100%;
     }
 
-    .selected-chat-button {
-    background-color: #F0CA91;
-    color: #10161e;
+    .btn-filtrar {
+      background-color: #F0CA91;
+      height: 70px;
+      width: 90%; 
+      font-size: 25px;
+      color: #10161e;
+      border-radius: 10px;
+      padding: 0 15px; 
     }
 
     #chat-container {
-    width: 90%;
-    background-color: #10161e;
+    width: 100%;
     border-radius: 10px;
     padding: 15px;
-    margin-top: 20px;
+    height: 65%;
     display: flex;
     flex-direction: column;
     gap: 10px;
     overflow-y: auto;
-    max-height: 50vh; /* Adjust as needed */
-    min-height: 200px; /* Minimum height for chat container */
+ /* Minimum height for chat container */
     box-sizing: border-box;
+    }
+
+    input:focus
+    {
+        outline: none;
     }
 
     .message-container {
@@ -159,13 +189,15 @@
 
     .own-message {
     background-color: #F0CA91; /* Your chosen color for own messages */
-    align-self: flex-end; /* Align to the right */
+    margin-left: auto; /* Align to the right */
     color: #10161e;
     }
 
     .other-message {
-    background-color: #0A1924; /* Your chosen color for other messages */
-    align-self: flex-start; /* Align to the left */
+    background-color: #F0CA91; /* Your chosen color for other messages */
+    margin-right: auto;/* Align to the left */
+    color: #10161e;
+
     }
 
     .message-container .p-user-name {
@@ -190,11 +222,16 @@
 
 
     #send-message-container {
-    width: 90%;
+    width: 100%;
     display: flex;
+    align-items: center;
+    justify-content: space-evenly;
     gap: 10px;
-    margin-top: 20px;
-    padding-bottom: 20px; /* Ensure space at the bottom */
+    height: 20%;
+    padding-bottom: 2rem;
+
+    background-color: #10161e;
+    border-top: 1px solid #F0CA91; /* Ensure space at the bottom */
     }
 
     #input-message {
@@ -205,6 +242,8 @@
     background-color: #0A1924;
     color: #F0CA91;
     font-size: 16px;
+    width: 70%;
+    height: 55px;
     }
 
     #input-message::placeholder {
@@ -218,6 +257,9 @@
     border-radius: 5px;
     font-size: 16px;
     font-weight: bold;
+    width: 30%;
+    height: 55px;
+
     }
 
     #no-chat-selected-message {
@@ -236,22 +278,15 @@
 
     /* Common Styles (from your original CSS, adjusted as needed) */
     .titulos-listas {
-    font-size: 23px;
+    font-size: 26px;
     color: #F0CA91;
-    margin-top: 1rem;
+    padding: 10px;
     text-align: center;
+    width: 100%;
+    border-bottom: 1px solid #F0CA91;
     }
 
-    .btn-filtrar {
-    background-color: #10161e;
-    height: 70px;
-    width: 100%; /* Make filter buttons take full width within their container */
-    max-width: 250px; /* Limit max width for larger screens */
-    font-size: 25px;
-    border-radius: 10px;
-    transition: 0.2s background ease;
-    padding: 0 15px; /* Add horizontal padding */
-    }
+    
 
     .btn-filtrar.active {
     background-color: #F0CA91;
@@ -309,3 +344,42 @@
 
     /* chat-mozo.page.scss or your main CSS file */
 
+//MARTEEEEN
+
+
+#contenedor-chats-opciones
+{
+    height: 100%;
+    background-color: #0A1924;
+}
+
+.spinner-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: #10161e; /* opcional */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 6px solid #F0CA91;
+  border-top: 6px solid transparent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  position: absolute;
+}
+
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

@@ -9,44 +9,57 @@
       </div>
     </header>
 
+  <div class="spinner-container" *ngIf="isLoading">
+    <div class="spinner"></div>
+  </div>
+
+ 
     <section>
-      <div id="head-container-chat">
-        <p>
-          <ng-container *ngIf="isClient && mesaIdActual">
-            Chat con Mozo (Mesa {{mesaIdActual}})
-          </ng-container>
-          <ng-container *ngIf="isMozo && selectedMozoChat">
-            Chat de Mesa {{selectedMozoChat.mesaId}} (Cliente: {{selectedMozoChat.clienteNombre || 'Desconocido'}})
-          </ng-container>
-          <ng-container *ngIf="!isClient && !mesaIdActual && !isMozo && !selectedMozoChat">
-            No se ha cargado el perfil de mozo correctamente.
-          </ng-container>
+
+      
+      <div id="head-container-chat" *ngIf = "!verChats && user">
+        <p class = "p-encabezado-chat">
+          @if(isClient && mesaIdActual)
+          {
+            Consultar al mozo <p class = "p-encabezado-chat">(Mesa {{numeroMesa}})</p>
+          }
+          @if(isMozo && selectedMozoChat)
+          {
+            Consultas del cliente:<p class = "p-encabezado-chat">Mesa {{numeroMesa}} <br>(Cliente: {{selectedMozoChat.clienteNombre || 'Desconocido'}})</p>
+          }
         </p>
+        <button id = "btn-ver-chats" (click) = "verContenedorChats()" *ngIf = "numeroMesa && user?.perfil ==='empleado'">
+
+          🗨️
+
+        </button>
+
       </div>
 
-      <div id="mozo-chat-selector" *ngIf="isMozo">
-        <p class="titulos-listas">Seleccionar chat de mesa:</p>
+      <div id="mozo-chat-selector" *ngIf="isMozo && verChats">
+        <p class="titulos-listas">Seleccionar conversación de mesa:</p>
         <div class="chat-buttons-container">
-          <button *ngFor="let session of mozoActiveSessions" (click)="selectMozoChat(session)"
+          <button *ngFor="let session of mozoActiveSessions" (click)="selectMozoChat(session)" 
             [ngClass]="{'selected-chat-button': selectedMozoChat?.sesionId === session.sesionId}" class="btn-filtrar">
-            Mesa {{session.mesaId}} ({{session.clienteNombre || 'Cliente'}})
+            Mesa {{session.numeroMesa}} ({{session.clienteNombre || 'Cliente'}})
           </button>
           <p class="titulos-listas" *ngIf="mozoActiveSessions.length === 0">No hay chats de mesa activos.</p>
         </div>
       </div>
 
-      <ng-container *ngIf="isClient || (isMozo && selectedMozoChat)">
+      <ng-container *ngIf="isClient || (isMozo && selectedMozoChat) && !verChats">
+        
         <div id="chat-container" #chatContainer>
           <div
             class="message-container"
             *ngFor="let message of messages"
             [ngClass]="{
-              'own-message': message.userName === user?.userName,
-              'other-message': message.userName !== user?.userName
+              'own-message': message.userTipo === user?.perfil,
+              'other-message': message.userTipo !== user?.perfil
             }"
           >
             <p class="p-user-name">
-              {{ message.userEmail === user?.email ? 'Tú' : (message.userName || message.userEmail?.split('@')[0]) }}
+              {{ message.userEmail === user?.correoUsuario ? 'Tú' : (message.userName || message.userEmail?.split('@')[0]) }}
             </p>
             <p class="p-message">{{ message.message }}</p>
             <p class="p-date">{{ message.date?.toDate() | date: 'dd/MM/yyyy hh:mm a' }}</p>
@@ -59,9 +72,6 @@
         </div>
       </ng-container>
 
-      <div id="no-chat-selected-message" class="ion-text-center ion-padding" *ngIf="isMozo && !selectedMozoChat">
-        <p class="titulos-listas">Selecciona un chat de mesa para empezar.</p>
-      </div>
     </section>
 
     <div id="verify-message" *ngIf="showVerifyMessage">
