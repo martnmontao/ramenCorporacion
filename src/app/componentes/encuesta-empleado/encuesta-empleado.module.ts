@@ -7,6 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { EncuestaEmpleadoPageRoutingModule } from './encuesta-empleado-routing.module';
 
 import { EncuestaEmpleadoPage } from './encuesta-empleado.page';
+import { EstadisticasEncuestaPage } from '../estadisticas-encuesta/estadisticas-encuesta.page';
 
 @NgModule({
   imports: [
@@ -14,7 +15,7 @@ import { EncuestaEmpleadoPage } from './encuesta-empleado.page';
     FormsModule,
     IonicModule,
     ReactiveFormsModule,
-    EncuestaEmpleadoPageRoutingModule
+    EncuestaEmpleadoPageRoutingModule,EstadisticasEncuestaPage
   ],
   declarations: [EncuestaEmpleadoPage]
 })

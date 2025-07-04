@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FirebaseService } from 'src/app/servicios/firebase.service';
+import { NotificacionesServiceService } from 'src/app/servicios/notificaciones-service.service';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera'; 
 import { Router } from '@angular/router';
 import { QrService } from 'src/app/servicios/qr.service';
@@ -36,7 +37,7 @@ export class RegistroPage implements OnInit {
   
   registroForm! : FormGroup;
 
-  constructor(private firebaseService: FirebaseService, 
+  constructor(private firebaseService: FirebaseService, private notificacionesService : NotificacionesServiceService,
   private router: Router, public qrService: QrService,private toast: ToastController) {}
 
   ngOnInit() {
@@ -75,6 +76,11 @@ export class RegistroPage implements OnInit {
   }
 
   obtenerPrimerError(): string | null {
+    /* En esta función se van a devolver los errores que se encuentren
+    para registrar al usuario, más que nada formatos de datos u obligación de poner datos
+    también se va a validar que al seleccionar un usuario de tipo "Empleado" o "gerencia"
+    se ingrese el tipo de perfil correcto */
+
     const controls = this.registroForm.controls;
 
     for(const key in controls){
@@ -95,7 +101,7 @@ export class RegistroPage implements OnInit {
     if(controls['documento'].errors?.['maxlength']){
       return 'El DNI contiene un máximo de 8 NÚMEROS';
     } else if(controls['documento'].errors?.['pattern']){
-      return 'Este campo debe contener SOLO NÚMEROS';
+      return 'El campo DNI debe contener SOLO NÚMEROS';
     }
 
     if (controls['cuil']?.errors?.['dniNoCoincide']) {
@@ -110,36 +116,46 @@ export class RegistroPage implements OnInit {
   if (this.opcionSeleccionada !== 'cliente') {
   const perfil = controls['perfil'].value?.toLowerCase();
 
-  if (this.opcionSeleccionada === 'empleado') {
-    const perfilesValidos = ['mozo', 'cocinero', 'maitre','bartender'];
-    if (!perfilesValidos.includes(perfil)) {
-      return 'Perfil inválido para empleado.';
+    if (this.opcionSeleccionada === 'empleado') {
+      const perfilesValidos = ['mozo', 'cocinero', 'maitre','bartender'];
+      if (!perfilesValidos.includes(perfil)) {
+        return 'Perfil inválido para empleado.';
+      }
     }
-  }
 
-  if (this.opcionSeleccionada === 'gerencia') {
-    const perfilesValidos = ['supervisor', 'dueño'];
-    if (!perfilesValidos.includes(perfil)) {
-      return 'Perfil inválido para gerencia.';
+    if (this.opcionSeleccionada === 'gerencia') {
+      const perfilesValidos = ['supervisor', 'dueño'];
+      if (!perfilesValidos.includes(perfil)) {
+        return 'Perfil inválido para gerencia.';
+      }
     }
   }
-}
 
     return null;
   }
 
   async mostrarToast(mensaje: string){
+    /*Formato en que se tienen que mostrar los mensajes tipo Toast */
     const toastMensaje = await this.toast.create({
       message: mensaje,
       duration:3000,
-      position:'bottom',
+      position:'top',
       buttons:[{text:'OK', role:'cancel'}],
     });
 
     await toastMensaje.present();
   }
 
-  async registrarUsuario() {
+  async registrarUsuario() 
+  /*Esta función maneja el registro a partir de que completamos el form:
+  1- toca todos los elementos del form a ver si detecta un error
+  2- Si hay algún error, lo va a mostrar en orden cada uno hasta que se vayan resolviendo
+  3- Se verifica la existencia de una foto
+  4- Se verifica si no hay algún dato de identificación duplicado con algún otro registro
+  5- Los datos verificados se envían a la base de datos (incluido el token del usuario para notificaciones)
+  6- Aparece un mensaje tipo SweetAlert con mensaje de éxito o fracaso(error)
+   */
+  {
     this.registroForm.markAllAsTouched();
 
     const primerError = this.obtenerPrimerError();
@@ -148,13 +164,13 @@ export class RegistroPage implements OnInit {
       return;
     }
 
-    
     if (!this.fotoUsuario) {
       await this.mostrarToast('⚠ Debe tomarse una foto antes de registrarse.');
       return;
     }
 
     const valores = this.registroForm.value;
+    const token = this.notificacionesService.getToken();
 
     try{
       const mensajeError = await this.firebaseService.verificarExistentesRegistro(
@@ -177,6 +193,7 @@ export class RegistroPage implements OnInit {
       perfil: this.opcionSeleccionada,
       imagenUsuario: this.fotoUsuario,
       autorizado: false,
+      tokenUsuario: token
       };
 
       if (this.mostrarInputs) {
@@ -235,11 +252,10 @@ export class RegistroPage implements OnInit {
       nombre: this.nombreUsuario,
       perfil: "cliente"
     }
-
     this.firebaseService.agregarDocumento(data, "registro");
   }
 
-irA()
+  irA()
   {
     this.router.navigateByUrl('login');
     this.mostrarOpciones = false;
@@ -250,6 +266,11 @@ irA()
   }
 
   seleccionarOpcionesRegistro(opcion: string)
+    /*Esta función nos asegura que al momento de elegir un tipo de cuenta
+    para registrar, no se tomen en cuenta los input que no corresponden a dicha cuenta
+    Ejemplo: si queremos crear un cliente, no se deben tomar en cuenta los input CUIL o perfil.
+    Si creamos una cuenta empleado, se tomaran en cuenta los input con sus 
+    respectivas validaciones */
   {
     this.opcionSeleccionada = opcion;
 
@@ -272,13 +293,15 @@ irA()
       );
     }
 
-      if(!this.registroForm.contains('perfil')){
+    if(!this.registroForm.contains('perfil')){
         this.registroForm.addControl('perfil', new FormControl('', Validators.required));
       }
     }
   }
 
   validarCuilConDni(control: AbstractControl){
+    /* El formato de un cuil debe ser NN-[dniDelUsuario]-N. Esta función verifica
+    que esto del dni y su presencia en el cuil esté */
     const cuil = control.value;
     const documento = this.registroForm?.get('documento')?.value;
 
@@ -296,6 +319,7 @@ irA()
   }
 
   formatearCuil(){
+    /*Esta función nos escribe el cuil con guiones. es decir en formato: NN-NNNNNN-N */
     const control = this.registroForm.get('cuil');
     if(!control) return;
 

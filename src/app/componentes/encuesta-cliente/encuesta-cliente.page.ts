@@ -14,6 +14,7 @@ export class EncuestaClientePage {
   encuestaClienteForm! : FormGroup;
   fBuilder = inject(FormBuilder);
   imagenesBase64: string[] = [];
+  mostrarEncuesta = true;
 
   constructor(private firebase: FirebaseService, private toast: ToastController) { 
     this.encuestaClienteForm = this.fBuilder.group({
@@ -61,7 +62,9 @@ export class EncuestaClientePage {
 
   async enviarEncuesta(){
     if(this.encuestaClienteForm.valid){
-      const datos = this.encuestaClienteForm.value;
+      const datos = {
+        ...this.encuestaClienteForm.value,
+        tipo:'cliente'}
       try{
         await this.firebase.guardarEncuesta(datos);
         this.mostrarToast('¡¡Encuesta enviada con éxito!!');
@@ -80,7 +83,7 @@ export class EncuestaClientePage {
     const toastMensaje = await this.toast.create({
       message: mensaje,
       duration:3000,
-      position:'bottom',
+      position:'top',
       buttons:[{text:'OK', role:'cancel'}],
     });
     await toastMensaje.present();

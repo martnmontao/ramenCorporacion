@@ -93,8 +93,12 @@ export class FirebaseService {
       fecha: Timestamp.now()
     };
     
-
     await addDoc(encuestasRef,datos);
+  }
+
+  getEncuestas(): Observable<any[]>{
+    const encuestasRef = collection(this.firestore,'encuestas');
+    return collectionData(encuestasRef, {idField: 'id'}) as Observable<any[]>;
   }
 
   getCurrentUserProfile(): Observable<any | null> {
@@ -277,6 +281,7 @@ export class FirebaseService {
   }
 
   async verificarExistentesRegistro(email: string, documento: string, cuil?: string): Promise<string | null>{
+    /*verifico que no haya datos duplicados de identificación en otro registro */
     try{
       const ref = this.registroCollection;
 

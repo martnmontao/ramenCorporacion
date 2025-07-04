@@ -46,6 +46,10 @@ const routes: Routes = [
   {
     path: 'juego20',
     loadChildren: () => import('./componentes/juegos/juego20/juego20.module').then( m => m.Juego20PageModule)
+  },
+  {
+    path: 'estadisticas-encuesta',
+    loadChildren: () => import('./componentes/estadisticas-encuesta/estadisticas-encuesta.module').then( m => m.EstadisticasEncuestaPageModule)
   }
 
 

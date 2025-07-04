@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit} from '@angular/core';
 import { FormBuilder, FormGroup, Validators} from '@angular/forms';
 import { FirebaseService } from 'src/app/servicios/firebase.service';
 import { ToastController } from '@ionic/angular';
@@ -10,7 +10,7 @@ import { ToastController } from '@ionic/angular';
   styleUrls: ['./encuesta-empleado.page.scss'],
 })
 export class EncuestaEmpleadoPage implements OnInit{
-
+  
   encuestaEmpleadoForm! : FormGroup;
   fBuilder = inject(FormBuilder);
   mostrarEncuesta = true;
@@ -77,7 +77,10 @@ export class EncuestaEmpleadoPage implements OnInit{
 
   async enviarEncuesta(){
     if(this.encuestaEmpleadoForm.valid){
-      const datos = this.encuestaEmpleadoForm.value;
+      const datos = {
+        ...this.encuestaEmpleadoForm.value,
+        tipo:'empleado'
+      }
       datos.preguntaRange = Number(datos.preguntaRange);
       
       try{
@@ -98,7 +101,7 @@ export class EncuestaEmpleadoPage implements OnInit{
     const toastMensaje = await this.toast.create({
       message: mensaje,
       duration:3000,
-      position:'bottom',
+      position:'top',
       buttons:[{text:'OK', role:'cancel'}],
     });
     await toastMensaje.present();

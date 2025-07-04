@@ -1,14 +1,15 @@
-<ion-content [fullscreen]="true">
+<ion-content [fullscreen]="true" *ngIf="mostrarEncuesta">
   <div id="div-encuesta">
     <form [formGroup] = "encuestaClienteForm" (ngSubmit)="enviarEncuesta()">
+      <h1 style="text-align: center;margin-top: 10%;">Encuesta</h1>
       <div id="div-usuario">
-        <input type="text" placeholder="Nombre" formControlName="nombre" required>
-        <input type="text" placeholder="Apellido" formControlName="apellido" required>
+        <input type="text" placeholder="Nombre" class="input-usuario" formControlName="nombre" required>
+        <input type="text" placeholder="Apellido" class="input-usuario" formControlName="apellido" required>
       </div>
 
       <div id="div-preguntas">
         <!-- 1ra Pregunta -->
-        <p> ¿Qué tan satisfecho estás con el servicio de RamenGB?</p>
+        <p>☛ ¿Qué tan satisfecho estás con el servicio de RamenGB?</p>
         <input type="radio" id="rdo-NS" formControlName="preguntaRdo" value="no-satisfecho">
         <label for="rdo-NS">No muy satisfecho 🙁</label><br>
 
@@ -19,8 +20,8 @@
         <label for="rdo-MS">Muy satisfecho 😄</label><br>
 
         <!--2da Pregunta -->
-        <p> ¿Cómo calificarías la facilidad de uso de la aplicación?</p>
-        <input type="range" id="facilidad" formControlName="preguntaRange" min="0" max="6" step="1" value="3" required>
+        <p>☛ ¿Cómo calificarías la facilidad de uso de la aplicación?</p>
+        <input type="range" id="facilidad" formControlName="preguntaRange" min="0" max="4" step="1" value="2" required>
         <div class="etiquetas">
           <span>Muy difícil</span>
           <span>Difícil</span>
@@ -30,7 +31,7 @@
         </div>
 
         <!--3ra Pregunta -->
-        <p> ¿Con qué frecuencia usa nuestra aplicación?</p>
+        <p>☛ ¿Con qué frecuencia usa nuestra aplicación?</p>
         <select id="frecuencia" formControlName="preguntaSelect" required>
           <option value="todos-dias">Todos los días</option>
           <option value="varias-por-semana">Varias veces por semana</option>
@@ -40,8 +41,8 @@
         </select>
 
         <!--4ta Pregunta -->
-        <p> ¿Qué aspectos valorás más de nuestra aplicación?</p>
-        <div formGroupName="preguntaChk" multiple>
+        <p>☛ ¿Qué aspectos valorás más de nuestra aplicación?</p>
+        <div formGroupName="preguntaChk" id="div-chk" multiple>
           <input type="checkbox" id="facilidad-chk" formControlName="facilidad">
           <label for="facilidad-chk">Facicilidad de uso</label><br>
 
@@ -59,8 +60,8 @@
         </div>
 
         <!--5ta Pregunta -->
-        <p> ¿Qué mejorarías o agregarías a la aplicación?</p>
-        <input type="text" placeholder="..." formControlName="preguntaInput" required>
+        <p>☛ ¿Qué mejorarías o agregarías a la aplicación?</p>
+        <input type="text" placeholder="..." class="input-usuario" formControlName="preguntaInput" required>
       </div>
       
       <p>¡Podés compartirnos hasta 3 fotos!
@@ -70,8 +71,13 @@
       <div *ngIf="imagenesBase64.length > 0" class="preview-imagenes">
         <img *ngFor="let img of imagenesBase64" [src]="img" alt="img seleccionada" width="100" style="margin: 5px;">
       </div>
-
-      <button type="Submit">Enviar encuesta</button>
+      <div id="div-submit">
+        <button type="Submit" class="btn-encuesta">Enviar encuesta</button>
+      </div>
+      
     </form>
+
+    <hr>
+    <app-estadisticas-encuesta [tipoEncuesta]="'cliente'"></app-estadisticas-encuesta>
   </div>
 </ion-content>
