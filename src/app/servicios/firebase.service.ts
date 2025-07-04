@@ -326,6 +326,63 @@ export class FirebaseService {
     return collectionData(qRef, { idField: 'mesaId' }) as Observable<Mesa[]>;
   }
 
+
+  async liberarMesa(uidUsuario: string): Promise<void> {
+  try {
+    // 1. Buscar la mesa asignada al usuario
+    const q = query(collection(this.firestore, 'mesas'), where('currentClientId', '==', uidUsuario));
+    const querySnapshot = await getDocs(q);
+
+    if (querySnapshot.empty) {
+      throw new Error('No se encontró una mesa asignada a este usuario.');
+    }
+
+    const docMesa = querySnapshot.docs[0];
+    const idMesa = docMesa.id;
+
+    // 2. Preparar los cambios: liberar la mesa
+    const cambios = {
+      estado: 'disponible',
+      currentClientId: '',
+      assignedAt: ''
+    };
+
+    const docRefMesa = doc(this.firestore, 'mesas', idMesa);
+    await updateDoc(docRefMesa, cambios);
+
+    // 3. Confirmación visual
+    Swal.fire({
+      icon: 'success',
+      title: 'Mesa liberada',
+      text: 'La mesa ha sido liberada con éxito.',
+      confirmButtonText: 'Aceptar',
+      heightAuto: false,
+      customClass: {
+        popup: 'mi-popup',
+        title: 'mi-titulo',
+        confirmButton: 'mi-boton',
+        htmlContainer: 'mi-texto'
+      }
+    });
+
+  } catch (error) {
+    console.error('Error al liberar la mesa:', error);
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'No se pudo liberar la mesa. Inténtelo de nuevo.',
+      confirmButtonText: 'Aceptar',
+      heightAuto: false,
+      customClass: {
+        popup: 'mi-popup',
+        title: 'mi-titulo',
+        confirmButton: 'mi-boton',
+        htmlContainer: 'mi-texto'
+      }
+    });
+  }
+}
+
 obtenerClientesEnEspera(estadoFiltro?: ClienteEnEspera['estado']): Observable<ClienteEnEspera[]> {
     let qRef: any = this.listaEsperaCollection;
    
@@ -746,33 +803,37 @@ async getListaPedidosPorCliente(uid: string): Promise<Pedido[]> {
     });
   }
 
-  async getActiveTableSessionsForMozo(): Promise<{ mesaId: string, sesionId: string, clienteNombre?: string }[]> {
-    const tables = ['mesa1', 'mesa2', 'mesa3', 'mesa4']; // Define los IDs de tus mesas
-    const activeSessions: { mesaId: string, sesionId: string, clienteNombre?: string }[] = [];
+async getActiveTableSessionsForMozo(): Promise<{ mesaId: string, sesionId: string, clienteNombre?: string }[]> {
+  const mesasSnapshot = await getDocs(collection(this.firestore, 'mesas'));
+  const activeSessions: { mesaId: string, sesionId: string, clienteNombre?: string }[] = [];
 
-    for (const tableId of tables) {
-      const historialSesionesRef = collection(this.firestore, 'chats_mesas', tableId, 'historial_sesiones');
-      // Consulta para obtener la última sesión activa (asumiendo que 'activa: true' se usa para la sesión actual)
-      const q = query(
-        historialSesionesRef,
-        where('activa', '==', true), // Filtra por sesiones activas
-        orderBy('fechaInicio', 'desc'), // Ordena para obtener la más reciente
-        limit(1) // Limita a 1 resultado
-      );
-      const querySnapshot = await getDocs(q);
+  for (const mesaDoc of mesasSnapshot.docs) {
+    const mesaId = mesaDoc.id;
 
-      if (!querySnapshot.empty) {
-        const sesionDoc = querySnapshot.docs[0];
-        const sesionData = sesionDoc.data();
-        activeSessions.push({
-          mesaId: tableId,
-          sesionId: sesionDoc.id,
-          clienteNombre: sesionData['clienteNombre'] // Recupera el nombre del cliente si está almacenado en la sesión
-        });
-      }
+    const historialSesionesRef = collection(this.firestore, 'chats_mesas', mesaId, 'historial_sesiones');
+    const q = query(
+      historialSesionesRef,
+      where('activa', '==', true),
+      orderBy('fechaInicio', 'desc'),
+      limit(1)
+    );
+    const querySnapshot = await getDocs(q);
+
+    if (!querySnapshot.empty) {
+      const sesionDoc = querySnapshot.docs[0];
+      const sesionData = sesionDoc.data();
+
+      activeSessions.push({
+        mesaId: mesaId,
+        sesionId: sesionDoc.id,
+        clienteNombre: sesionData['clienteNombre']
+      });
     }
-    return activeSessions;
   }
+
+  return activeSessions;
+}
+
 
   async getClientActiveChatSessionId(mesaId: string, clientUid: string): Promise<string | null> {
     const historialSesionesRef = collection(this.firestore, 'chats_mesas', mesaId, 'historial_sesiones');

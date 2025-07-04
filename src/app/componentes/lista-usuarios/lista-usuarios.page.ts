@@ -112,14 +112,14 @@ export class ListaUsuariosPage implements OnInit {
     }
   }
 
-   mostrarContenedores(contenedor: string)
+  mostrarContenedores(contenedor: string)
   {
     switch(contenedor)
     {
       case "opciones":
         this.mostrarOpciones = !this.mostrarOpciones;
         break;
-     
+
     }
   }
 
@@ -133,7 +133,6 @@ export class ListaUsuariosPage implements OnInit {
     this.firebaseService.cerrarSesion();
   }
 
- 
   async cargarUsuariosPorPerfil(perfil: 'cliente' | 'empleado') {
   this.isLoading = true;
     this.filtroSeleccionado = perfil;

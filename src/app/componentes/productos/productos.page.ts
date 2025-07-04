@@ -177,7 +177,6 @@ export class ProductosPage implements OnInit {
         descripcionProducto: this.descripcionProducto,
         precioProducto: this.precioProducto,
         tiempoPreparacionProducto: this.tiempoPreparacionProducto,
-     
       };
   
   this.firebaseService.updateDocumento('productos', this.productoEditandoId, data)

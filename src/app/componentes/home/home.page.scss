@@ -35,9 +35,10 @@ section
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
-    width: 50%;
+    align-items: center;
+    width: 60%;
     background-color: #10161e;
-   
+    z-index: 9999;
     border-radius: 0 0 10px 10px;
 }
 
@@ -51,11 +52,15 @@ section
 .btn-opciones-inicio
 {
     border: none;
-    color: #F0CA91;
-    font-size: 20px;
+
+    font-size: 22px;
     font-family: 'Poppins', sans-serif;
     padding: 5px;
-    
+    background-color: #F0CA91;
+    border-radius: 10px;
+    color: #10161e;
+    height: 35%;
+    width: 90%;
 }
 #btn-mostrar-opciones
 {
@@ -84,10 +89,11 @@ button
 }
 
 
-.btn-opciones-cliente
+.btn-opciones-usuario
 {
-    background-color: #10161e;
-    height: 40%;
+    --background: #10161e;
+    color: #F0CA91;
+    height: 10%;
     width: 70%;
     border-radius: 10px;
     font-size: 25px;
@@ -95,10 +101,10 @@ button
 
 #contenedor-opciones-cliente
 {
-    background-color: red;
-    height: 30%;
+    
+    height: 100%;
     display: flex;
-    justify-content: space-evenly;
+    gap: 1%;
     align-items: center;
     flex-direction: column;
 }

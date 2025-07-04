@@ -1,6 +1,4 @@
-
-
-<ion-content>
+<ion-content>  
   <div id = "contenedor-principal">
     <header>
       <h1 class ="titulos">RamenGB🍜</h1>
@@ -24,10 +22,8 @@
           [class.active]="filtroSeleccionado === 'empleado'"
           (click)="cargarUsuariosPorPerfil('empleado')" *ngIf = "user?.perfil == 'gerencia'">EMPLEADOS</button>
 
-  <button class="btn-filtrar" type="button"
-          [class.active]="filtroSeleccionado === 'mesas'"
-         >MESAS</button>
-</div>
+  <button class="btn-filtrar" (click)="irA('alta-mesa')">AGREGAR MESA</button>
+        </div>
 
 <!-- Lista Usuarios NO autorizados -->
 
@@ -78,10 +74,6 @@
         <div class="spinner"></div>
       </div>
       </div>
-
-    
-    
-     
     
     </section>
     

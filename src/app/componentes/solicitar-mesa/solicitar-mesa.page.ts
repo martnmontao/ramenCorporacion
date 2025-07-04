@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { ClienteEnEspera } from 'src/app/interfaces/clienteEnEspera';
 import { FirebaseService } from 'src/app/servicios/firebase.service';
 import Swal from 'sweetalert2';
@@ -11,111 +12,152 @@ import Swal from 'sweetalert2';
   standalone: false
 })
 export class SolicitarMesaPage implements OnInit {
-
-  solicitudMesaForm: FormGroup;
+solicitudMesaForm: FormGroup;
   solicitudEnviada: boolean = false;
   usuarioLogueadoNombre: string | null = null; // Para guardar el nombre del usuario logueado
   usuarioLogueadoUid: string = "";
-
+  mostrarOpciones = false;
+  user: any;
   constructor(
     private fb: FormBuilder,
-    private firebaseService: FirebaseService
+    private firebaseService: FirebaseService,
+    private router: Router
   ) {
-    this.solicitudMesaForm = this.fb.group({
-      nombre: ['', Validators.required],
-      cantidadPersonas: ['', [Validators.required, Validators.min(1), Validators.max(10)]],
-      telefono: ['', [Validators.pattern('^[0-9]{8,15}$')]],
-    });
+      this.solicitudMesaForm = this.fb.group({
+        nombre: ['', Validators.required],
+        cantidadPersonas: ['', [Validators.required, Validators.min(1), Validators.max(10)]],
+        telefono: ['', [Validators.pattern('^[0-9]{8,15}$')]],
+      });
+    }
+
+    async ngOnInit() {
+      // Intentar obtener el nombre del usuario logueado para pre-llenar el campo
+      
+      this.user = await this.firebaseService.obtenerUsuarioLogueado();
+      
+      if (this.firebaseService.userId) { // Verifica si hay un usuario logueado
+        try {
+          const usuarioData = await this.firebaseService.obtenerUsuarioLogueado() as any;
+          if (usuarioData?.nombreUsuario) {
+            this.usuarioLogueadoNombre = usuarioData.nombreUsuario;
+            this.usuarioLogueadoUid = usuarioData.uid;
+            if (usuarioData.apellidoUsuario) {
+              this.usuarioLogueadoNombre += ' ' + usuarioData.apellidoUsuario;
+            }
+
+            this.solicitudMesaForm.patchValue({
+              nombre: this.usuarioLogueadoNombre // si querés precargar también el DNI como teléfono opcional
+            });}
+        } catch (error) {
+                  console.error('Error al obtener datos del usuario logueado:', error);
+                  // Puedes decidir si mostrar un mensaje al usuario o simplemente no pre-llenar
+              }
+          }
   }
 
-  async ngOnInit() {
-    // Intentar obtener el nombre del usuario logueado para pre-llenar el campo
-    if (this.firebaseService.userId) { // Verifica si hay un usuario logueado
-      try {
-        const usuarioData = await this.firebaseService.obtenerUsuarioLogueado() as any;
-        if (usuarioData?.nombreUsuario) {
-          this.usuarioLogueadoNombre = usuarioData.nombreUsuario;
-          this.usuarioLogueadoUid = usuarioData.uid;
-          if (usuarioData.apellidoUsuario) {
-            this.usuarioLogueadoNombre += ' ' + usuarioData.apellidoUsuario;
+    async onSubmit() {
+      if (this.solicitudMesaForm.valid) {
+        const datosFormulario = this.solicitudMesaForm.value;
+
+        const nuevoClienteEnEspera: Omit<ClienteEnEspera, 'id'> = {
+          nombre: datosFormulario.nombre,
+          cantidadPersonas: datosFormulario.cantidadPersonas,
+          telefono: datosFormulario.telefono || '',
+          horaLlegada: new Date(),
+          estado: 'esperando',
+          usuarioUid: this.usuarioLogueadoUid
+        };
+
+        try {
+          await this.firebaseService.agregarClienteEnEspera(nuevoClienteEnEspera);
+          this.solicitudEnviada = true;
+          this.solicitudMesaForm.reset(); // Limpia el formulario
+          // Opcional: Volver a pre-llenar el nombre si el usuario decide hacer otra solicitud sin desloguearse
+          if (this.usuarioLogueadoNombre) {
+            this.solicitudMesaForm.patchValue({ nombre: this.usuarioLogueadoNombre });
           }
 
-          this.solicitudMesaForm.patchValue({
-            nombre: this.usuarioLogueadoNombre,
-            telefono: usuarioData.documentoUsuario ?? '' // si querés precargar también el DNI como teléfono opcional
-          });}
-      } catch (error) {
-                console.error('Error al obtener datos del usuario logueado:', error);
-                // Puedes decidir si mostrar un mensaje al usuario o simplemente no pre-llenar
+
+          Swal.fire({
+            icon: 'success',
+            title: '¡Solicitud Enviada!',
+            text: 'Hemos recibido tu solicitud. Te notificaremos cuando tu mesa esté lista. ¡Gracias!',
+            confirmButtonText: 'Entendido',
+            heightAuto: false,
+            customClass: {
+              popup: 'mi-popup',
+              title: 'mi-titulo',
+              confirmButton: 'mi-boton',
+              htmlContainer: 'mi-texto'
             }
+          });
+
+        } catch (error) {
+          console.error('Error al solicitar mesa:', error);
+          Swal.fire({
+            icon: 'error',
+            title: 'Error al solicitar',
+            text: 'No pudimos procesar tu solicitud en este momento. Por favor, inténtalo de nuevo.',
+            confirmButtonText: 'Aceptar',
+            heightAuto: false,
+            customClass: {
+              popup: 'mi-popup',
+              title: 'mi-titulo',
+              confirmButton: 'mi-boton',
+              htmlContainer: 'mi-texto'
+            }
+          });
+          this.solicitudEnviada = false;
         }
-}
-
-  async onSubmit() {
-    if (this.solicitudMesaForm.valid) {
-      const datosFormulario = this.solicitudMesaForm.value;
-
-      const nuevoClienteEnEspera: Omit<ClienteEnEspera, 'id'> = {
-        nombre: datosFormulario.nombre,
-        cantidadPersonas: datosFormulario.cantidadPersonas,
-        telefono: datosFormulario.telefono || '',
-        horaLlegada: new Date(),
-        estado: 'esperando',
-        usuarioUid: this.usuarioLogueadoUid
-      };
-
-      try {
-        await this.firebaseService.agregarClienteEnEspera(nuevoClienteEnEspera);
-        this.solicitudEnviada = true;
-        this.solicitudMesaForm.reset(); // Limpia el formulario
-        // Opcional: Volver a pre-llenar el nombre si el usuario decide hacer otra solicitud sin desloguearse
-        if (this.usuarioLogueadoNombre) {
-          this.solicitudMesaForm.patchValue({ nombre: this.usuarioLogueadoNombre });
-        }
-
-
+      } else {
         Swal.fire({
-          icon: 'success',
-          title: '¡Solicitud Enviada!',
-          text: 'Hemos recibido tu solicitud. Te notificaremos cuando tu mesa esté lista. ¡Gracias!',
-          confirmButtonText: 'Entendido',
-          heightAuto: false
-        });
-
-      } catch (error) {
-        console.error('Error al solicitar mesa:', error);
-        Swal.fire({
-          icon: 'error',
-          title: 'Error al solicitar',
-          text: 'No pudimos procesar tu solicitud en este momento. Por favor, inténtalo de nuevo.',
+          icon: 'warning',
+          title: 'Datos Incompletos',
+          text: 'Por favor, completa todos los campos requeridos correctamente.',
           confirmButtonText: 'Aceptar',
-          heightAuto: false
+          heightAuto: false,
+          customClass: {
+              popup: 'mi-popup',
+              title: 'mi-titulo',
+              confirmButton: 'mi-boton',
+              htmlContainer: 'mi-texto'
+            }
         });
-        this.solicitudEnviada = false;
+        this.solicitudMesaForm.markAllAsTouched();
       }
-    } else {
-      Swal.fire({
-        icon: 'warning',
-        title: 'Datos Incompletos',
-        text: 'Por favor, completa todos los campos requeridos correctamente.',
-        confirmButtonText: 'Aceptar',
-        heightAuto: false
-      });
-      this.solicitudMesaForm.markAllAsTouched();
     }
-  }
 
-  get formControls() {
-    return this.solicitudMesaForm.controls;
-  }
-
-  nuevaSolicitud() {
-    this.solicitudEnviada = false;
-    this.solicitudMesaForm.reset();
-    // Vuelve a pre-llenar el nombre si hay un usuario logueado
-    if (this.usuarioLogueadoNombre) {
-      this.solicitudMesaForm.patchValue({ nombre: this.usuarioLogueadoNombre });
+    get formControls() {
+      return this.solicitudMesaForm.controls;
     }
-  }
+
+    nuevaSolicitud() {
+      this.solicitudEnviada = false;
+      this.solicitudMesaForm.reset();
+      // Vuelve a pre-llenar el nombre si hay un usuario logueado
+      if (this.usuarioLogueadoNombre) {
+        this.solicitudMesaForm.patchValue({ nombre: this.usuarioLogueadoNombre });
+      }
+    }
+
+    mostrarContenedores(contenedor: string)
+    {
+      switch(contenedor)
+      {
+        case "opciones":
+          this.mostrarOpciones = !this.mostrarOpciones;
+          break;
+      
+      }
+    }
+
+    irA(path:string)
+    {
+      this.router.navigateByUrl(path);
+    }
+
+    cerrarSesion(){
+    this.firebaseService.cerrarSesion();
+    }
 
 }

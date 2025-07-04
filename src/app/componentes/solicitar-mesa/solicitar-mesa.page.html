@@ -1,62 +1,71 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>Solicitar Mesa</ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-content>
+  <div id = "contenedor-principal">
+    
+      <header>
+        <h1 class ="titulos">RamenGB🍜</h1>
+        <button id = "btn-mostrar-opciones" (click) = "mostrarContenedores('opciones')">≋</button>
+        <div id = "contenedor-opciones-inicio" class="contenedor-animado"[class.visible]="mostrarOpciones">
+          <button (click)="irA('home')"class="btn-opciones-inicio" >INICIO</button>
+          <button (click)="cerrarSesion()"class="btn-opciones-inicio">CERRAR SESIÓN</button>
+        </div>
+      </header>
+    
+    <section>
 
-<ion-content class="ion-padding">
-  <div *ngIf="!solicitudEnviada">
-    <ion-card>
-      <ion-card-header>
-        <ion-card-title class="ion-text-center">¡Bienvenido!</ion-card-title>
-        <ion-card-subtitle class="ion-text-center">Ingresa tus datos para unirte a la lista de espera.</ion-card-subtitle>
-      </ion-card-header>
-      <ion-card-content>
-        <form [formGroup]="solicitudMesaForm" (ngSubmit)="onSubmit()">
-
-          <ion-item>
-            <ion-label position="floating">Tu Nombre</ion-label>
-            <ion-input type="text" formControlName="nombre"></ion-input>
-          </ion-item>
-          <div *ngIf="formControls['nombre'].invalid && formControls['nombre'].touched" class="error-message">
-            <p *ngIf="formControls['nombre'].errors?.['required']">Tu nombre es requerido.</p>
-          </div>
-
-          <ion-item>
-            <ion-label position="floating">Cantidad de Personas</ion-label>
-            <ion-input type="number" formControlName="cantidadPersonas" min="1"></ion-input>
-          </ion-item>
-          <div *ngIf="formControls['cantidadPersonas'].invalid && formControls['cantidadPersonas'].touched" class="error-message">
-            <p *ngIf="formControls['cantidadPersonas'].errors?.['required']">La cantidad de personas es requerida.</p>
-            <p *ngIf="formControls['cantidadPersonas'].errors?.['min']">Debe ser al menos 1 persona.</p>
-            <p *ngIf="formControls['cantidadPersonas'].errors?.['max']">La capacidad máxima es de 10 personas.</p>
-          </div>
-
-          <ion-item>
-            <ion-label position="floating">Teléfono (opcional)</ion-label>
-            <ion-input type="tel" formControlName="telefono" placeholder="Ej: 1123456789"></ion-input>
-          </ion-item>
-          <div *ngIf="formControls['telefono'].invalid && formControls['telefono'].touched" class="error-message">
-            <p *ngIf="formControls['telefono'].errors?.['pattern']">Formato de teléfono inválido (solo números, 8-15 dígitos).</p>
-          </div>
-
-          <ion-button expand="block" type="submit" [disabled]="solicitudMesaForm.invalid" class="ion-margin-top">
-            Unirme a la Lista de Espera
-          </ion-button>
-
-        </form>
-      </ion-card-content>
-    </ion-card>
-  </div>
-
-  <div *ngIf="solicitudEnviada" class="ion-text-center ion-padding">
-    <ion-icon name="checkmark-circle-outline" color="success" style="font-size: 8em;"></ion-icon>
-    <h2>¡Solicitud Recibida!</h2>
-    <p>Estamos procesando tu solicitud. Te notificaremos a través de la aplicación (o por tu teléfono si lo brindaste) cuando tu mesa esté lista.</p>
-    <p>¡Gracias por tu paciencia!</p>
-    <ion-button expand="block" fill="outline" (click)="nuevaSolicitud()">
-      Hacer otra solicitud
-    </ion-button>
+      <div *ngIf="!solicitudEnviada" class="contenedor-solicitud">
+       <div class="card">
+          <div class="card-content">
+           <form [formGroup]="solicitudMesaForm" (ngSubmit)="onSubmit()">
+     
+             <!-- Nombre -->
+             <div class="form-group">
+               <label for="nombre">Tu Nombre</label>
+               <input type="text" id="nombre" formControlName="nombre" />
+               <div *ngIf="formControls['nombre'].invalid && formControls['nombre'].touched" class="error-message">
+                 <p *ngIf="formControls['nombre'].errors?.['required']">Tu nombre es requerido.</p>
+               </div>
+             </div>
+     
+             <!-- Cantidad de Personas -->
+             <div class="form-group">
+               <label for="cantidadPersonas">Cantidad de Personas</label>
+               <input type="number" id="cantidadPersonas" formControlName="cantidadPersonas" min="1" />
+               <div *ngIf="formControls['cantidadPersonas'].invalid && formControls['cantidadPersonas'].touched" class="error-message">
+                 <p *ngIf="formControls['cantidadPersonas'].errors?.['required']">La cantidad de personas es requerida.</p>
+                 <p *ngIf="formControls['cantidadPersonas'].errors?.['min']">Debe ser al menos 1 persona.</p>
+                 <p *ngIf="formControls['cantidadPersonas'].errors?.['max']">La capacidad máxima es de 10 personas.</p>
+               </div>
+             </div>
+     
+             <!-- Teléfono -->
+             <div class="form-group">
+               <label for="telefono">Teléfono (opcional)</label>
+               <input type="tel" id="telefono" formControlName="telefono" placeholder="Ej: 1123456789" />
+               <div *ngIf="formControls['telefono'].invalid && formControls['telefono'].touched" class="error-message">
+                 <p *ngIf="formControls['telefono'].errors?.['pattern']">Formato de teléfono inválido (solo números, 8-15 dígitos).</p>
+               </div>
+             </div>
+     
+             <!-- Botón -->
+             <button type="submit" [disabled]="solicitudMesaForm.invalid" class="btn-submit">
+               Ingresar a la lista de espera
+             </button>
+     
+           </form>
+         </div>
+       </div>
+     </div>
+     
+     <!-- Mensaje de éxito -->
+     <div *ngIf="solicitudEnviada" class="mensaje-solicitud">
+       <div class="icono-check">✔️</div>
+       <h2>¡Solicitud Recibida!</h2>
+       <p>Estamos procesando tu solicitud. Espera a ser notificado.</p>
+       <p>¡Gracias por tu paciencia!</p>
+       <button class="btn-outline" (click)="nuevaSolicitud()">Hacer otra solicitud</button>
+     </div>
+    </section>
+    
   </div>
 
 </ion-content>

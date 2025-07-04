@@ -1,4 +1,3 @@
-
 <ion-content [fullscreen]="true">
 
   
@@ -8,7 +7,7 @@
       <h1 class ="titulos">RamenGB🍜</h1>
       <button id = "btn-mostrar-opciones" (click) = "mostrarContenedores('opciones')">≋</button>
       <div id = "contenedor-opciones-inicio" class="contenedor-animado"[class.visible]="mostrarOpciones">
-        <button (click)="irA('lista-usuarios')"class="btn-opciones-inicio">ADMINISTRACIÓN</button>
+        <button (click)="irA('lista-usuarios')"class="btn-opciones-inicio" *ngIf = "user && user.perfil == 'gerencia'">ADMINISTRACIÓN</button>
         <button (click)="cerrarSesion()"class="btn-opciones-inicio">CERRAR SESIÓN</button>
       </div>
     </header>
@@ -21,15 +20,13 @@
             <button class = "btn-opciones-cliente" (click)="irA('alta-mesa')">dar de alta mesa</button>
             <button class = "btn-opciones-cliente" (click)="irConQR()">ESCANEAR QR</button>
           -->
+            <ion-button class = "btn-opciones-usuario" (click)="irA('home-cliente')">home cliente</ion-button>
 
-            <ion-button (click)="irA('alta-mesa')">dar de alta mesa</ion-button>
-            <ion-button (click)="irA('home-cliente')">home cliente</ion-button>
-
-            <ion-button (click)="irConQR()">ESCANEAR QR</ion-button>
-            <ion-button (click)="irA('productos')">PRODUCTOS</ion-button>
-            <ion-button (click)="irA('lista-espera')">CLIENTES EN ESPERA</ion-button>
-            <ion-button (click)="irA('lista-pedidos')">PEDIDOS</ion-button>
-            <button class="btn-opciones-cliente" (click)="irA('chat-mozo')">chats</button>
+            <ion-button class = "btn-opciones-usuario" (click)="irA('home-cliente')">ESCANEAR QR</ion-button>
+            <ion-button class = "btn-opciones-usuario" (click)="irA('productos')">PRODUCTOS</ion-button>
+            <ion-button class = "btn-opciones-usuario" (click)="irA('lista-espera')">CLIENTES EN ESPERA</ion-button>
+            <ion-button class = "btn-opciones-usuario" (click)="irA('lista-pedidos')">PEDIDOS</ion-button>
+            <ion-button class = "btn-opciones-usuario" (click)="irA('chat-mozo')">CONSULTA MOZOS</ion-button>
 
           
         </div>
@@ -40,5 +37,3 @@
 
   </div>
 </ion-content>
-
-

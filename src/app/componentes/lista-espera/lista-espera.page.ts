@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { ClienteEnEspera } from 'src/app/interfaces/clienteEnEspera';
 import { Mesa } from 'src/app/interfaces/mesa';
@@ -15,6 +16,7 @@ export class ListaEsperaPage implements OnInit {
 
 mesasDisponibles$: Observable<Mesa[]>;
   clientesEnEspera$: Observable<ClienteEnEspera[]>;
+  mostrarOpciones = false;
 
   selectedClient: ClienteEnEspera | null = null;
   selectedMesa: Mesa | null = null;
@@ -23,7 +25,7 @@ mesasDisponibles$: Observable<Mesa[]>;
   private mesaSubscription: Subscription | undefined;
   private clienteSubscription: Subscription | undefined;
 
-  constructor(private firebaseService: FirebaseService) {
+  constructor(private firebaseService: FirebaseService, private router: Router) {
     // Inicializamos los observables aquí.
     // Usamos el método obtenerMesas con el filtro 'disponible'.
     // Usamos el método obtenerClientesEnEspera con el filtro 'esperando'.
@@ -122,6 +124,26 @@ mesasDisponibles$: Observable<Mesa[]>;
         });
       }
     }
+  }
+   mostrarContenedores(contenedor: string)
+  {
+    switch(contenedor)
+    {
+      case "opciones":
+        this.mostrarOpciones = !this.mostrarOpciones;
+        break;
+     
+    }
+  }
+
+  
+  irA(path:string)
+  {
+    this.router.navigateByUrl(path);
+  }
+
+   cerrarSesion(){
+  this.firebaseService.cerrarSesion();
   }
 
   // Asegurarse de desuscribirse para evitar fugas de memoria

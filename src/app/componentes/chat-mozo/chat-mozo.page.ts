@@ -26,13 +26,14 @@ export class ChatMozoPage implements OnInit {
   isClient: boolean = false;
   isMozo: boolean = false;
   mesaIdActual: string | null = null;
+  numeroMesa:number|null=null;
   sesionChatIdActual: string | null = null;
 
   mozoActiveSessions: { mesaId: string, sesionId: string, clienteNombre?: string }[] = [];
   selectedMozoChat: { mesaId: string, sesionId: string, clienteNombre?: string } | null = null;
 
-  private chatSubscription: (() => void) | undefined; // <<-- CAMBIO: onSnapshot devuelve una función de desuscripción -->>
-  private userRoleSubscription: Subscription | undefined; // Si manejas roles con RxJS (mantener si lo usas)
+  private chatSubscription: (() => void) | undefined; 
+  private userRoleSubscription: Subscription | undefined; 
 
   constructor(private router: Router, private firebase: FirebaseService) { }
 
@@ -41,18 +42,18 @@ export class ChatMozoPage implements OnInit {
     this.user = await this.firebase.obtenerUsuarioLogueado();
 
     if (this.user) {
-      // --- LÓGICA MEJORADA PARA DETERMINAR EL ROL --- 
+
       if (this.user && this.user.perfil) {
         this.userName = this.user.nombreUsuario || this.user.email?.split('@')[0] || 'Usuario';
         this.isClient = this.user.perfil === 'cliente';
-        this.isMozo = this.user.tipo==='mozo'; // O el nombre de perfil que uses para mozos
+        this.isMozo = this.user.tipo==='mozo'; 
 
         if (this.isClient) {
           await this.loadClientChatSession();
         } else if (this.isMozo) {
           await this.loadMozoChatSessions();
         } else {
-          // Si el perfil no es ni cliente ni mozo, redirige
+
           Swal.fire({
             icon: 'error',
             title: 'Acceso Denegado',
@@ -60,11 +61,11 @@ export class ChatMozoPage implements OnInit {
             confirmButtonText: 'Aceptar',
             heightAuto: false
           });
-          this.router.navigateByUrl('/home'); // O a una página de error/inicio de sesión apropiada
+          this.router.navigateByUrl('/home'); 
           return;
         }
       } else {
-        // No se pudo cargar el perfil del usuario
+
         Swal.fire({
           icon: 'error',
           title: 'Error de Perfil',
@@ -76,14 +77,14 @@ export class ChatMozoPage implements OnInit {
         return;
       }
     } else {
-      this.router.navigateByUrl('login'); // Redirigir si no hay usuario logueado
+      this.router.navigateByUrl('login'); 
     }
   }
 
   ngOnDestroy() {
-    // Desuscribirse para evitar fugas de memoria
+
     if (this.chatSubscription) {
-      this.chatSubscription(); // <<-- LLAMAR COMO FUNCIÓN PARA onSnapshot -->>
+      this.chatSubscription(); 
     }
     if (this.userRoleSubscription) {
       this.userRoleSubscription.unsubscribe();
@@ -91,17 +92,15 @@ export class ChatMozoPage implements OnInit {
   }
 
   async loadClientChatSession() {
-    // 1. Obtener la mesa asignada al cliente
+    
     const mesaAsignada = await this.firebase.obtenerMesaPorUidUsuario(this.user!.uid);
 
     console.log('Mesa asignada:', mesaAsignada);
-console.log('UID del usuario:', this.user.uid);
-console.log('Buscando sesión activa...');
+    console.log('UID del usuario:', this.user.uid);
+    console.log('Buscando sesión activa...');
 
     if (mesaAsignada && mesaAsignada.mesaId) {
       this.mesaIdActual = mesaAsignada.mesaId;
-
-      // 2. Usar la nueva función para obtener el ID de la sesión de chat activa para esta mesa y cliente
       const activeSesionId = await this.firebase.getClientActiveChatSessionId(this.mesaIdActual, this.user!.uid);
 
       if (activeSesionId) {
@@ -126,7 +125,6 @@ console.log('Buscando sesión activa...');
     console.log('Nueva sesión creada:', nuevaSesionId);
     this.sesionChatIdActual = nuevaSesionId;
 
-    // Suscribirse a mensajes
     this.chatSubscription = this.firebase.getAllMessagesFromTableSession(
       this.mesaIdActual,
       nuevaSesionId,
@@ -137,7 +135,7 @@ console.log('Buscando sesión activa...');
     );
       }
     } else {
-      // Cliente no tiene mesa asignada.
+
       this.verifyMessage = "No tienes una mesa asignada para chatear.";
       this.showVerifyMessage = true;
     }
@@ -145,7 +143,7 @@ console.log('Buscando sesión activa...');
 
   async loadMozoChatSessions() {
     this.mozoActiveSessions = await this.firebase.getActiveTableSessionsForMozo();
-    // Opcional: Si solo hay una sesión activa, seleccionarla por defecto
+
     if (this.mozoActiveSessions.length > 0 && !this.selectedMozoChat) {
       this.selectMozoChat(this.mozoActiveSessions[0]);
     }
@@ -156,9 +154,8 @@ console.log('Buscando sesión activa...');
     this.mesaIdActual = session.mesaId;
     this.sesionChatIdActual = session.sesionId;
 
-    // Desuscribirse del chat anterior si lo hay
     if (this.chatSubscription) {
-      this.chatSubscription(); // <<-- LLAMAR COMO FUNCIÓN -->>
+      this.chatSubscription(); 
     }
 
     this.chatSubscription = this.firebase.getAllMessagesFromTableSession(

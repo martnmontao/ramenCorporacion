@@ -11,7 +11,8 @@ import { QrService } from 'src/app/servicios/qr.service';
   standalone: false
 })
 export class HomePage implements OnInit {
-  private sub?: Subscription;
+  
+   private sub?: Subscription;
   scanning = false;
   mostrarOpciones = false;
   user:any;
@@ -20,11 +21,14 @@ export class HomePage implements OnInit {
 
   async ngOnInit() {
     this.user = await this.firebaseService.obtenerUsuarioLogueado();
+  
   }
 
   irConQR() {
   this.qrService.StartScanYRedireccionar();
-}
+  }
+
+
 
   ngOnDestroy(): void {
     this.sub?.unsubscribe();
@@ -32,6 +36,8 @@ export class HomePage implements OnInit {
 
   irA(path:string)
   {
+    this.mostrarOpciones = false;
+
     this.router.navigateByUrl(path);
   }
 
@@ -50,5 +56,5 @@ export class HomePage implements OnInit {
         break;
      
     }
-  }
+}
 }

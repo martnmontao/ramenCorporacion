@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { Mesa } from 'src/app/interfaces/mesa';
 import { FirebaseService } from 'src/app/servicios/firebase.service';
 import Swal from 'sweetalert2';
@@ -11,14 +12,15 @@ import Swal from 'sweetalert2';
   standalone: false
 })
 export class AltaMesaPage implements OnInit {
-
-  mesaForm: FormGroup;
-
+ mesaForm: FormGroup;
+  mostrarOpciones = false;
+  user: any;
   tiposMesa: string[] = ['estandar', 'VIP', 'apta-movilidad-reducida'];
 
   constructor(
     private fb: FormBuilder,
-    private firebaseService: FirebaseService // Inyectamos tu servicio de Firebase
+    private firebaseService: FirebaseService,
+    private router: Router // Inyectamos tu servicio de Firebase
   ) {
     // Inicialización del formulario en el constructor
     this.mesaForm = this.fb.group({
@@ -29,7 +31,9 @@ export class AltaMesaPage implements OnInit {
     });
   }
 
-  ngOnInit() {
+  async ngOnInit() {
+    this.user = await this.firebaseService.obtenerUsuarioLogueado();
+  
   }
 
   // Método para manejar el envío del formulario
@@ -71,7 +75,13 @@ export class AltaMesaPage implements OnInit {
         title: 'Formulario Inválido',
         text: 'Por favor, complete todos los campos requeridos correctamente.',
         confirmButtonText: 'Aceptar',
-        heightAuto: false
+        heightAuto: false,
+        customClass: {
+            popup: 'mi-popup',
+            title: 'mi-titulo',
+            confirmButton: 'mi-boton',
+            htmlContainer: 'mi-texto'
+          }
       });
       // Marcar los campos para que se muestren los mensajes de error de validación
       this.mesaForm.markAllAsTouched();
@@ -83,4 +93,24 @@ export class AltaMesaPage implements OnInit {
     return this.mesaForm.controls;
   }
 
+  mostrarContenedores(contenedor: string)
+  {
+    switch(contenedor)
+    {
+      case "opciones":
+        this.mostrarOpciones = !this.mostrarOpciones;
+        break;
+     
+    }
+  }
+
+  
+  irA(path:string)
+  {
+    this.router.navigateByUrl(path);
+  }
+
+   cerrarSesion(){
+  this.firebaseService.cerrarSesion();
+  }
 }
