@@ -1,8 +1,8 @@
-<ion-content [fullscreen]="true">
+<ion-content [fullscreen]="true" *ngIf = "!qrService.scan">
 
   
   
-  <div id = "contenedor-principal">
+  <div id = "contenedor-principal" *ngIf = "!qrService.scan">
     <header>
       <h1 class ="titulos">RamenGB🍜</h1>
       <button id = "btn-mostrar-opciones" (click) = "mostrarContenedores('opciones')">≋</button>
@@ -11,24 +11,23 @@
         <button (click)="cerrarSesion()"class="btn-opciones-inicio">CERRAR SESIÓN</button>
       </div>
     </header>
-    <section>
 
-
-    
+     
+      <div *ngIf="isLoading" class="spinner-container">
+        <div class="spinner"></div>
+      </div>
+    <section *ngIf = "!isLoading">
         <div id = "contenedor-opciones-cliente">
           <!--
             <button class = "btn-opciones-cliente" (click)="irA('alta-mesa')">dar de alta mesa</button>
             <button class = "btn-opciones-cliente" (click)="irConQR()">ESCANEAR QR</button>
           -->
-            <ion-button class = "btn-opciones-usuario" (click)="irA('home-cliente')">home cliente</ion-button>
+            <ion-button class = "btn-opciones-usuario" (click)="irConQR()" *ngIf = "user?.perfil == 'cliente'">ESCANEAR QR</ion-button>
+            <ion-button class = "btn-opciones-usuario" (click)="irA('productos')" *ngIf = "user?.tipo == 'bartender' || user?.tipo == 'cocinero'">PRODUCTOS</ion-button>
+            <ion-button class = "btn-opciones-usuario" (click)="irA('lista-espera')" *ngIf = "user?.tipo == 'maitre'">CLIENTES EN ESPERA</ion-button>
+            <ion-button class = "btn-opciones-usuario" (click)="irA('lista-pedidos')" *ngIf = "user?.perfil == 'empleado' && user?.tipo == 'mozo' || user?.tipo == 'bartender' || user?.tipo == 'cocinero'">PEDIDOS</ion-button>
+            <ion-button class = "btn-opciones-usuario" (click)="irA('chat-mozo')" *ngIf = "user?.tipo == 'mozo'">CONSULTAS DE CLIENTES</ion-button>
 
-            <ion-button class = "btn-opciones-usuario" (click)="irA('home-cliente')">ESCANEAR QR</ion-button>
-            <ion-button class = "btn-opciones-usuario" (click)="irA('productos')">PRODUCTOS</ion-button>
-            <ion-button class = "btn-opciones-usuario" (click)="irA('lista-espera')">CLIENTES EN ESPERA</ion-button>
-            <ion-button class = "btn-opciones-usuario" (click)="irA('lista-pedidos')">PEDIDOS</ion-button>
-            <ion-button class = "btn-opciones-usuario" (click)="irA('chat-mozo')">CONSULTA MOZOS</ion-button>
-
-          
         </div>
       
       

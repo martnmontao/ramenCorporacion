@@ -5,11 +5,6 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 const routes: Routes = [
 
   {
-    path: '',
-    redirectTo: 'login',
-    pathMatch: 'full'
-  },
-  {
     path: 'login',
     loadChildren: () => import('./componentes/login/login.module').then( m => m.LoginPageModule)
   },
@@ -84,7 +79,12 @@ const routes: Routes = [
       {
     path: 'chat-mozo',
     loadChildren: () => import('./componentes/chat-mozo/chat-mozo.module').then( m => m.ChatMozoPageModule)
+  },
+  {
+    path: 'splash-screen',
+    loadChildren: () => import('./componentes/splash-screen/splash-screen.module').then( m => m.SplashScreenPageModule)
   }
+
 
   
 ];

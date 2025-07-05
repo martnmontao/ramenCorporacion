@@ -12,6 +12,7 @@ dependencies {
     implementation project(':capacitor-community-barcode-scanner')
     implementation project(':capacitor-camera')
     implementation project(':capacitor-push-notifications')
+    implementation project(':capacitor-splash-screen')
 
 }
 

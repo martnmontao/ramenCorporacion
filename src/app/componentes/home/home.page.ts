@@ -12,15 +12,28 @@ import { QrService } from 'src/app/servicios/qr.service';
 })
 export class HomePage implements OnInit {
   
-   private sub?: Subscription;
+  private sub?: Subscription;
+  verificarCliente = false;
   scanning = false;
   mostrarOpciones = false;
   user:any;
-
-  constructor(private router: Router, private firebaseService: FirebaseService, private qrService: QrService) { }
+  isLoading = true;
+  constructor(private router: Router, private firebaseService: FirebaseService, public qrService: QrService) { }
 
   async ngOnInit() {
     this.user = await this.firebaseService.obtenerUsuarioLogueado();
+    this.verificarClienteEnMesa().then(respuesta => 
+    {
+      if(this.verificarCliente)
+      {
+        this.router.navigateByUrl('home-cliente');
+      }
+    }
+    )
+
+      setTimeout(() => {
+        this.isLoading = false;
+      }, 2000);
   
   }
 
@@ -56,5 +69,20 @@ export class HomePage implements OnInit {
         break;
      
     }
-}
+  }
+
+    async verificarClienteEnMesa()
+  {
+    const tieneMesa = await this.firebaseService.obtenerMesaPorUidUsuario(this.user.uid);
+    //tieneMesa.qr == QrService.scan.result
+      //this.verificarQr = true;
+    if(tieneMesa != null)
+    {
+
+      this.verificarCliente = true;
+      
+    }
+    
+
+  }
 }

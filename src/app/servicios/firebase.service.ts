@@ -707,7 +707,7 @@ async obtenerPedidosParaUsuario(rol: 'cocinero' | 'bartender'): Promise<Pedido[]
   try {
     console.log(rol)
     const pedidosRef = collection(this.firestore, 'pedidos');
-    const q = query(pedidosRef, where('estadoPedido', '==', 'Esperando confirmación')); // asumí 'En proceso' porque no hay 'En preparacion'
+    const q = query(pedidosRef, where('estadoPedido', '!=', 'Pendiente')); // asumí 'En proceso' porque no hay 'En preparacion'
 
     const querySnapshot = await getDocs(q);
 
@@ -927,6 +927,22 @@ async getActiveTableSessionsForMozo(){
     return null;
   }
 }
+
+
+  async obtenerPedidoPorUidUsuario(uidUsuario: string): Promise<any> {
+  const pedidosRef = collection(this.firestore, 'pedidos');
+  const q = query(pedidosRef, where('clienteUid', '==', uidUsuario));
+
+  const querySnapshot = await getDocs(q);
+  if (!querySnapshot.empty) {
+    const doc = querySnapshot.docs[0];
+    return { id: doc.id, ...doc.data() }; // Retorna el primer pedido encontrado
+  }
+
+  return null; // No se encontró ningún pedido
+}
+
+
 }
 
 
