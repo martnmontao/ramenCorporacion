@@ -1,9 +1,90 @@
 .estadisticas-container{
-    background-color: rgb(13, 18, 57);
+    background-color: #10161e;
+    color: #F0CA91;
     border-radius: 20px;
     padding:10px;
     height: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
+    overflow-y: auto;
+}
+
+#contenedor-principal
+{
+    height: 100%;
+    overflow-y: auto;
+
+}
+
+header{
+    height: 60px;
+    background-color: #10161e;
+    display: flex;
+    justify-content: space-between;
+  
+}
+
+#contenedor-opciones-inicio
+{
+    position: absolute;
+    top: 57px;
+    right: 0;
+    height: 200px;
+    box-shadow: 0px 18px 17px 4px rgba(0,0,0,0.75);
+    -webkit-box-shadow: 0px 18px 17px 4px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 18px 17px 4px rgba(0,0,0,0.75);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    width: 60%;
+    background-color: #10161e;
+    z-index: 9999;
+    border-radius: 0 0 10px 10px;
+}
+.titulos
+{
+    margin: 10px 10px;
+    color: #F0CA91;
+    font-size: 35px;
+    font-family: 'Poppins', sans-serif;
+}
+.btn-opciones-inicio
+{
+    border: none;
+
+    font-size: 22px;
+    font-family: 'Poppins', sans-serif;
+    padding: 5px;
+    background-color: #F0CA91;
+    border-radius: 10px;
+    color: #10161e;
+    height: 35%;
+    width: 90%;
+}
+#btn-mostrar-opciones
+{
+    width: 17%;
+    font-size: 43px;
+    color: #F0CA91;
+    
+}
+
+button
+{
+    background-color: transparent;
+    color: #F0CA91;
+}
+
+.contenedor-animado {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height 0.3s ease, opacity 0.3s ease;
+}
+
+.contenedor-animado.visible {
+  max-height: 200px; 
+  opacity: 1;
 }

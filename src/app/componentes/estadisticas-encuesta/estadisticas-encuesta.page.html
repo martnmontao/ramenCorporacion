@@ -1,44 +1,56 @@
-<div class="estadisticas-container">
+<div id = "contenedor-principal">
+     <header>
+      <h1 class ="titulos">RamenGB🍜</h1>
+      <button id = "btn-mostrar-opciones" (click) = "mostrarContenedores('opciones')">≋</button>
+      <div id = "contenedor-opciones-inicio" class="contenedor-animado"[class.visible]="mostrarOpciones">
+        <button (click)="irA('home-cliente')"class="btn-opciones-inicio">INICIO</button>
+        <button (click)="cerrarSesion()"class="btn-opciones-inicio">CERRAR SESIÓN</button>
 
-  <h2>Estadísticas de la encuesta</h2>
-
-<div>
-  <h3>Promedio de satisfacción (rango):</h3>
-  <ng-container *ngIf="!rangoEsTexto; else textoRango">
-    <p>{{ rangoPromedio | number:'1.1-1' }} / 10</p>
-  </ng-container>
-  <ng-template #textoRango>
-    <ul>
-      <li *ngFor="let key of rangoFrecuencias | keyvalue">
-        {{ key.key }}: {{ key.value }} votos
-      </li>
-    </ul>
-  </ng-template>
-</div>
-
-  <div style="max-width: 500px; margin: auto">
-    <h3>Respuestas seleccionadas (Select)</h3>
-    <canvas baseChart
-            [data]="selectData"
-            [options]="selectOptions"
-            chartType="pie">
-    </canvas>
+      </div>
+    </header>
+  
+  <div class="estadisticas-container">
+  
+    <h2>Estadísticas de la encuesta</h2>
+  
+  <div>
+    <h3>Promedio de satisfacción (rango):</h3>
+    <ng-container *ngIf="!rangoEsTexto; else textoRango">
+      <p>{{ rangoPromedio | number:'1.1-1' }} / 10</p>
+    </ng-container>
+    <ng-template #textoRango>
+      <ul>
+        <li *ngFor="let key of rangoFrecuencias | keyvalue">
+          {{ key.key }}: {{ key.value }} votos
+        </li>
+      </ul>
+    </ng-template>
   </div>
-
-  <div style="max-width: 500px; margin: auto">
-    <h3>Resultados de las respuestas únicas (Radio)</h3>
-    <canvas baseChart
-            [data]="radioData"
-            chartType="pie">
-    </canvas>
+  
+    <div style="max-width: 500px; margin: auto">
+      <h3>Respuestas seleccionadas (Select)</h3>
+      <canvas baseChart
+              [data]="selectData"
+              [options]="selectOptions"
+              chartType="pie">
+      </canvas>
+    </div>
+  
+    <div style="max-width: 500px; margin: auto">
+      <h3>Resultados de las respuestas únicas (Radio)</h3>
+      <canvas baseChart
+              [data]="radioData"
+              chartType="pie">
+      </canvas>
+    </div>
+  
+    <div style="max-width: 500px; margin: auto">
+      <h3>Opiniones marcadas (Checkbox)</h3>
+      <canvas baseChart
+              [data]="checkboxData"
+              chartType="pie">
+      </canvas>
+    </div>
+  
   </div>
-
-  <div style="max-width: 500px; margin: auto">
-    <h3>Opiniones marcadas (Checkbox)</h3>
-    <canvas baseChart
-            [data]="checkboxData"
-            chartType="pie">
-    </canvas>
-  </div>
-
 </div>
