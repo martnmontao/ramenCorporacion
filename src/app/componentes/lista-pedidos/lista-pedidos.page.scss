@@ -27,7 +27,8 @@ header{
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
-    width: 50%;
+    align-items: center;
+    width: 60%;
     background-color: #10161e;
     z-index: 9999;
     border-radius: 0 0 10px 10px;
@@ -46,6 +47,17 @@ header{
     font-size: 22px;
     font-family: 'Poppins', sans-serif;
     padding: 5px;
+    background-color: #F0CA91;
+    border-radius: 10px;
+    color: #10161e;
+    height: 35%;
+    width: 90%;
+}
+#btn-mostrar-opciones
+{
+    width: 17%;
+    font-size: 43px;
+    color: #F0CA91;
     
 }
 
@@ -53,14 +65,6 @@ button
 {
     background-color: transparent;
     color: #F0CA91;
-}
-
-#btn-mostrar-opciones
-{
-    width: 17%;
-    font-size: 43px;
-
-    
 }
 
 .contenedor-animado {

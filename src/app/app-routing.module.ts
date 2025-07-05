@@ -81,10 +81,11 @@ const routes: Routes = [
     path: 'estadisticas-encuesta',
     loadChildren: () => import('./componentes/estadisticas-encuesta/estadisticas-encuesta.module').then( m => m.EstadisticasEncuestaPageModule)
   },
-      {
+  {
     path: 'chat-mozo',
     loadChildren: () => import('./componentes/chat-mozo/chat-mozo.module').then( m => m.ChatMozoPageModule)
-  },  {
+  },
+  {
     path: 'juegos-vista',
     loadChildren: () => import('./componentes/juegos-vista/juegos-vista.module').then( m => m.JuegosVistaPageModule)
   }

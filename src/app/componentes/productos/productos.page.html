@@ -28,7 +28,7 @@
       <button class = "btn-filtrar-productos" (click) = "seleccionarFiltro('bebida')" [ngClass]="{'activo': filtroSeleccionado === 'bebida'}"><img class = "img-editar-agregar-producto"src="../../../assets/imagenes/bebida-producto.png"></button>
       <button class = "btn-filtrar-productos" (click) = "seleccionarFiltro('postre')" [ngClass]="{'activo': filtroSeleccionado === 'postre'}"><img class = "img-editar-agregar-producto"src="../../../assets/imagenes/postre-producto.png"></button>
     </div>
-    <div id = "contenedor-agregar-editar-productos" *ngIf = "user && user.tipo == 'cocinero' || user.tipo == 'bartender'">
+    <div id = "contenedor-agregar-editar-productos" *ngIf = "user && (user.tipo == 'cocinero' || user.tipo == 'bartender')">
         <button class = "btn-crear-editar-producto btn-crear-producto" (click) = "mostrarContenedor('formAgregarProductos')" ><img class = "img-editar-agregar-producto"src="../../../assets/imagenes/agregar-producto.png" ></button> 
 
     </div>
@@ -44,12 +44,13 @@
             Pedido: {{pedido.nombreProducto}}<br>
             Precio: ${{pedido.precioProducto}}<br>
           </p>
-          <button class = "btn-cancelar-pedido" (click) = "eliminarPedido(pedido.nombreProducto, pedido.precioProducto)"><img class = "img-eliminar-pedido"src="../../../assets/imagenes/producto-eliminar1.png"></button>
+          <button class = "btn-cancelar-pedido" (click) = "eliminarPedido(pedido.nombreProducto, pedido.precioProducto, pedido.tiempoPreparacion)"><img class = "img-eliminar-pedido"src="../../../assets/imagenes/producto-eliminar1.png"></button>
         </div>
 
       </div>
       <div id = "contenedor-importe">
-        <p id = "p-importe-total">IMPORTE TOTAL <br>${{importeTotalPedido}}</p>
+        <p id = "p-importe-total">IMPORTE TOTAL: ${{importeTotalPedido}} <br>TIEMPO DE PREPARACIÓN: {{tiempoTotalPedido}}min.</p>
+
         
         <button id = "btn-realizar-pedido" (click) = "finalizarPedido()">REALIZAR PEDIDO</button>
       </div>

@@ -5,6 +5,6 @@ export interface Producto
     nombreProducto: string;
     descripcionProducto: string;
     precioProducto: number;
-    tiempoPreparacionProducto: string;
+    tiempoPreparacionProducto: number;
     fotosProducto: string[];
 }

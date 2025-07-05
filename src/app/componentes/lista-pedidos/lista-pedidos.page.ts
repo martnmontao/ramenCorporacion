@@ -267,11 +267,6 @@ async confirmarPagoCliente(pedido:any)
     this.listaPedidos = await this.firebaseService.getListaPedidos();
 
     await this.firebaseService.liberarMesa(pedido.clienteUid);
-    
-
-
-
-
 }
 
 

@@ -51,6 +51,9 @@ export class LoginPage implements OnInit {
 
   irA()
   {
+    this.emailUsuario = "";
+    this.claveUsuario = "";
+
     this.mostrarOpciones = false;
     this.router.navigateByUrl('registro');
   }
@@ -62,7 +65,19 @@ export class LoginPage implements OnInit {
   
   iniciarSesion()
   {
-    this.firebaseService.acceder(this.emailUsuario, this.claveUsuario);
+
+    this.firebaseService.acceder(this.emailUsuario, this.claveUsuario).then(respuesta => 
+    {
+      this.emailUsuario = "";
+      this.claveUsuario = "";
+      this.router.navigateByUrl("home");
+    }
+    ).catch(error => 
+    {
+      console.log(error);
+    }
+    )
+
   }
 
   inicioSesionRapido(usuario: string)

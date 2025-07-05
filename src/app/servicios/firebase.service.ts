@@ -844,7 +844,7 @@ async obtenerPedidosParaUsuario(rol: 'cocinero' | 'bartender'): Promise<Pedido[]
   try {
     console.log(rol)
     const pedidosRef = collection(this.firestore, 'pedidos');
-    const q = query(pedidosRef, where('estadoPedido', '==', 'Esperando confirmación')); // asumí 'En proceso' porque no hay 'En preparacion'
+    const q = query(pedidosRef, where('estadoPedido', '!=', 'Pendiente')); // asumí 'En proceso' porque no hay 'En preparacion'
 
     const querySnapshot = await getDocs(q);
 
@@ -1064,6 +1064,11 @@ async getActiveTableSessionsForMozo(){
     return null;
   }
 }
+
+
+
+
+
 }
 
 

@@ -4,7 +4,8 @@
     <h1 class ="titulos">RamenGB🍜</h1>
     <button id = "btn-mostrar-opciones" (click) = "mostrarContenedores('opciones')">≋</button>
     <div id = "contenedor-opciones-inicio" class="contenedor-animado"[class.visible]="mostrarOpciones">
-      <button class="btn-opciones-inicio" (click) = "irA('home')">INICIO</button>
+      <button class="btn-opciones-inicio" (click) = "irA('home')" *ngIf ="user?.perfil != 'cliente'">INICIO</button>
+      <button class="btn-opciones-inicio" (click) = "irA('home-cliente')" *ngIf ="user?.perfil == 'cliente'">INICIO</button>
       <button class="btn-opciones-inicio" (click) = "cerrarSesion()">CERRAR SESIÓN</button>
     </div>
     </header>
@@ -18,12 +19,11 @@
               <div class="contenido-flex">
                 <div class="contenedor-informacion-pedido">
                   <div class = "contenedor-informacion-cliente">
-                    <h2>{{ pedido.nombreUsuario }}</h2>
                     <p>Mesa: {{ pedido.numeroMesa }}</p>
+                    <h2>{{ pedido.nombreUsuario }}</h2>
+                    <p *ngIf = "pedido.estadoPedido == 'Entregado'">Descuento: {{pedido.descuento}}%</p>
                     <p>Importe total: ${{ pedido.importeTotal }}</p>
                     <p>Estado: {{ pedido.estadoPedido }}</p>
-                    <p *ngIf = "pedido.estadoPedido == 'Entregado'">Descuento: {{pedido.descuento}}%</p>
-                    <p *ngIf = "pedido.estadoPedido == 'Entregado'">Importe final con descuento: ${{pedido.importeTotalConDescuento}}</p>
                   </div>
                   <img [src]="pedido.imagenUsuario" class="img-usuario" />
                 </div>

@@ -2,6 +2,9 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { BarcodeScanner } from '@capacitor-community/barcode-scanner';
 import { BehaviorSubject } from 'rxjs';
+import { FirebaseService } from './firebase.service';
+import Swal from 'sweetalert2';
+
 export interface DocumentoData {
   numero: string;
   apellido: string;
@@ -25,7 +28,7 @@ export class QrService {
   // NUEVA FUNCIÓN: Observable para que otros componentes puedan suscribirse a los resultados de QR.
   qrContentScanned$ = this.qrContentScannedSubject.asObservable();
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private firebaseService: FirebaseService) { }
 
   async CheckPermission()
   {
@@ -164,7 +167,7 @@ export class QrService {
         // Esa lógica la manejará el componente que se suscribe (HomeClientePage).
         // Si necesitas que este método también maneje otras redirecciones que no sean de mesas,
         // puedes mantenerlas aquí, pero la lógica de mesas la haremos en el componente.
-        const rutasValidasIniciales = ['home-admin', 'home-empleado']; // Excluye 'home-cliente' de esta parte
+        const rutasValidasIniciales = ['home-cliente']; // Excluye 'home-cliente' de esta parte
         if (rutasValidasIniciales.includes(this.scanResult)) {
           this.router.navigate(['/' + this.scanResult]);
         } else {
@@ -178,5 +181,54 @@ export class QrService {
       this.scan = false;
     }
   }
+
+
+async startScanMesa(usuarioUid: string): Promise<boolean | void> {
+  const tieneMesa = await this.firebaseService.obtenerMesaPorUidUsuario(usuarioUid);
+  const codigoMesa = tieneMesa?.qrCodeUrl;
+
+  if (this.scan) return;
+
+  this.scan = true;
+
+  try {
+    const permission = await this.CheckPermission();
+    if (!permission) {
+      this.scan = false;
+      this.scanResult = 'Error. No hay permisos';
+      return false;
+    }
+
+    await BarcodeScanner.hideBackground();
+    document.querySelector('body')?.classList.add('scanner-active');
+
+    const result = await BarcodeScanner.startScan();
+
+    BarcodeScanner.showBackground();
+    document.querySelector('body')?.classList.remove('scanner-active');
+    this.scan = false;
+
+    if (result?.hasContent) {
+      this.scanResult = result.content;  
+
+      if (this.scanResult === codigoMesa) {
+        return true;
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'El código QR escaneado no le pertenece a su mesa.',
+          confirmButtonText: 'Aceptar',
+          heightAuto: false
+        });
+        return false;
+      }
+    }
+  } catch (e) {
+    console.error('Error durante escaneo y emisión de resultado', e);
+    this.scan = false;
+    return false;
+  }
+}
 
 }

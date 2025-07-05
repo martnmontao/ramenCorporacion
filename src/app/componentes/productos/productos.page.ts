@@ -3,6 +3,7 @@ import { FirebaseService } from 'src/app/servicios/firebase.service';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera'; 
 import { Producto } from 'src/app/interfaces/producto.';
 import { Router } from '@angular/router';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-productos',
@@ -17,7 +18,7 @@ export class ProductosPage implements OnInit {
   tipoProducto: string = "";
   descripcionProducto: string = "";
   precioProducto: number = 0;
-  tiempoPreparacionProducto: string = "";
+  tiempoPreparacionProducto: number = 0;
   fotoProducto: string | undefined;
   fotosProductos: string[] = [];
   listaProductos: Producto[] = [];
@@ -29,7 +30,8 @@ export class ProductosPage implements OnInit {
   user: any;
   mostrarPedido = false;
   importeTotalPedido = 0;
-  listaPedido: {nombreProducto: string, tipoProducto: string, precioProducto: number, tiempoPreparacion: string, estadoPreparacion: string}[] = [];
+  tiempoTotalPedido = 0;
+  listaPedido: {nombreProducto: string, tipoProducto: string, precioProducto: number, tiempoPreparacion: number, estadoPreparacion: string}[] = [];
 
 
 
@@ -120,7 +122,7 @@ export class ProductosPage implements OnInit {
         this.nombreProducto = "";
         this.descripcionProducto = "";
         this.precioProducto = 0;
-        this.tiempoPreparacionProducto = "";
+        this.tiempoPreparacionProducto = 0;
       }
       )
     }
@@ -204,6 +206,7 @@ export class ProductosPage implements OnInit {
       
     this.listaPedido.forEach(element => {
       this.importeTotalPedido += element.precioProducto
+      this.tiempoTotalPedido += element.tiempoPreparacion;
     });
 
 
@@ -212,7 +215,7 @@ export class ProductosPage implements OnInit {
 
   }
 
-  eliminarPedido(nombreProducto: string, precioProducto: number)
+  eliminarPedido(nombreProducto: string, precioProducto: number, tiempoProducto: number)
   {
     const index = this.listaPedido.findIndex(
       pedido => pedido.nombreProducto === nombreProducto
@@ -223,6 +226,8 @@ export class ProductosPage implements OnInit {
     }
 
     this.importeTotalPedido -= precioProducto;
+    this.tiempoTotalPedido -= tiempoProducto;
+
   }
 
   async finalizarPedido()
@@ -240,11 +245,20 @@ export class ProductosPage implements OnInit {
       importeTotal: this.importeTotalPedido,
       pagado: 'No pagado',
       imagenUsuario: this.user.imagenUsuario,
-      verPedido: false
-      
+      verPedido: false,
+      descuento: 0
     }
 
-    this.firebaseService.agregarDocumento(data, 'pedidos');
+    this.firebaseService.agregarDocumento(data, 'pedidos').then(() => 
+    {
+       Swal.fire({
+                  icon: 'success', 
+                  title: 'Pedido tomado',
+                  text: "Se ha realizado el pedido, espere a ser tomado.",
+                  confirmButtonText: 'Aceptar',
+                  heightAuto: false 
+                });
+    })
   }
 
 

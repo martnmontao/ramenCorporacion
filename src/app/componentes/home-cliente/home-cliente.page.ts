@@ -17,19 +17,34 @@ export class HomeClientePage implements OnInit {
   verificarCliente= false;
   user: any;
   verificarQr = false;
-  
-  constructor(private router: Router, private firebaseService: FirebaseService) { }
+
+  numeroMesa: any;
+  isLoading = true;
+  verificarPedido = false;
+  pedidoTomado = false;
+  pedidoTerminado = false;
+
+  constructor(private router: Router, private firebaseService: FirebaseService, public qrService: QrService) { }
+
 
   async ngOnInit() {
-      this.user = await this.firebaseService.obtenerUsuarioLogueado();
 
+      
+      this.user = await this.firebaseService.obtenerUsuarioLogueado();
       await this.verificarClienteEnMesa();
+    
+
+      setTimeout(() => {
+        this.isLoading = false;
+      }, 500);
   }
   
   
   irA(path:string)
   {
     this.mostrarOpciones = false;
+    this.verificarPedido = false;
+    this.verificarQr = false;
 
     this.router.navigateByUrl(path);
   }
@@ -76,12 +91,87 @@ export class HomeClientePage implements OnInit {
     const tieneMesa = await this.firebaseService.obtenerMesaPorUidUsuario(this.user.uid);
     //tieneMesa.qr == QrService.scan.result
       //this.verificarQr = true;
+    this.numeroMesa = tieneMesa?.numeroMesa;
     if(tieneMesa != null)
     {
 
       this.verificarCliente = true;
     }
+    else
+    {
+      this.verificarCliente = false;
+    }
     
+
+  }
+
+  async verificarPedidoTomado()
+  {
+    const pedido = await this.firebaseService.obtenerPedidoPorUidUsuario(this.user.uid);
+    const estadoPedido = pedido.estadoPedido;
+    if(estadoPedido != 'Pendiente')
+    {
+      this.pedidoTomado = true;
+    }
+    else
+    {
+      this.pedidoTomado = false;
+    }
+  }
+
+  async verificarPedidoTerminado()
+  {
+    const pedido = await this.firebaseService.obtenerPedidoPorUidUsuario(this.user.uid);
+    const estadoPedido = pedido.estadoPedido;
+    if(estadoPedido == 'Entregado')
+    {
+      this.pedidoTerminado = true;
+      this.pedidoTomado = true;
+    }
+    else
+    {
+      this.pedidoTerminado = false;
+    }
+  }
+
+
+
+  async verificarPedidoCliente()
+  {
+   
+    const pedido = await this.firebaseService.obtenerPedidoPorUidUsuario(this.user.uid);
+    const estadoPedido = pedido.estadoPedido;
+    if(pedido != null)
+    {
+      this.verificarPedido = true;
+      
+    }
+    else
+    {
+      this.verificarPedido = false;
+    }
+    
+  }
+
+
+  
+  
+  
+  async scanearCodigoMesa()
+  {
+    const scaneo = await this.qrService.startScanMesa(this.user.uid);
+    if(scaneo)
+      {
+        this.verificarQr = true;
+        await this.verificarPedidoCliente();
+        await this.verificarPedidoTomado();
+        await this.verificarPedidoTerminado();
+    }else
+    {
+      this.verificarQr = false;
+    }
+
+
 
   }
 
