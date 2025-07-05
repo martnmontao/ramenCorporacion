@@ -84,7 +84,11 @@ const routes: Routes = [
       {
     path: 'chat-mozo',
     loadChildren: () => import('./componentes/chat-mozo/chat-mozo.module').then( m => m.ChatMozoPageModule)
+  },  {
+    path: 'juegos-vista',
+    loadChildren: () => import('./componentes/juegos-vista/juegos-vista.module').then( m => m.JuegosVistaPageModule)
   }
+
 
   
 ];

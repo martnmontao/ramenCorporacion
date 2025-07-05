@@ -2,10 +2,10 @@
   <div id = "contenedor-principal">
     <header>
     <h1 class ="titulos">RamenGB🍜</h1>
-    <button id = "btn-mostrar-opciones" (click) = "mostrarContenedores('opciones')">≋</button>
-    <div id = "contenedor-opciones-inicio" class="contenedor-animado"[class.visible]="mostrarOpciones">
+    <button id = "btn-mostrar-opciones" (click)="mostrarContenedores('opciones')">≋</button>
+    <div id="contenedor-opciones-inicio" class="contenedor-animado"[class.visible]="mostrarOpciones">
       <button class="btn-opciones-inicio">Iniciar sesión</button>
-      <button class="btn-opciones-inicio" (click) = "irA()">Registrarse</button>
+      <button class="btn-opciones-inicio" (click)="irA()">Registrarse</button>
     </div>
   </header>
     <section>
@@ -17,8 +17,8 @@
 
         
 
-        <button type = "button" id="btn-mostrar-opciones-ingresos" (click) = "mostrarContenedores('ingresos')">VER OPCIONES DE INGRESO 📋</button>
-        <div id = "contenedor-btn-ingresos" *ngIf = "mostrarOpcionesIngresos">
+        <button type = "button" id="btn-mostrar-opciones-ingresos" (click)="mostrarContenedores('ingresos')">VER OPCIONES DE INGRESO 📋</button>
+        <div id = "contenedor-btn-ingresos" *ngIf="mostrarOpcionesIngresos">
           <button
             *ngFor="let rol of roles"
             type="button"
@@ -30,11 +30,11 @@
             {{ rol }}
           </button>
           <div id = "contenedor-cerrar-ingresos">
-            <button type="button" class = "btn-opcion-ingreso-aceptar btn-cancelar-opciones-ingresos" (click) = "mostrarContenedores('ingresos')">ACEPTAR</button>
-            <button type="button" class = "btn-cancelar-opciones-ingresos" (click) = "mostrarContenedores('ingresos')">CANCELAR</button> 
+            <button type="button" class = "btn-opcion-ingreso-aceptar btn-cancelar-opciones-ingresos" (click)="mostrarContenedores('ingresos')">ACEPTAR</button>
+            <button type="button" class = "btn-cancelar-opciones-ingresos" (click)="mostrarContenedores('ingresos')">CANCELAR</button> 
           </div>
         </div>
-        <button type="button" class = "btn-login" (click) = "iniciarSesion()">INGRESAR</button>
+        <button type="button" class = "btn-login" (click)="iniciarSesion()">INGRESAR</button>
         
       </form>
 

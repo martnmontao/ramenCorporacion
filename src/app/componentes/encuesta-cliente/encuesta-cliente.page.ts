@@ -61,10 +61,12 @@ export class EncuestaClientePage {
   }
 
   async enviarEncuesta(){
+    const usuarioActual = this.firebase.getUsuarioActual();
     if(this.encuestaClienteForm.valid){
       const datos = {
         ...this.encuestaClienteForm.value,
-        tipo:'cliente'}
+        tipo:'cliente',
+        uid:usuarioActual?.uid}
       try{
         await this.firebase.guardarEncuesta(datos);
         this.mostrarToast('¡¡Encuesta enviada con éxito!!');

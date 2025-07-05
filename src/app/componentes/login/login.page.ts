@@ -51,32 +51,18 @@ export class LoginPage implements OnInit {
 
   irA()
   {
-
-
     this.mostrarOpciones = false;
     this.router.navigateByUrl('registro');
-
   }
 
   seleccionarRol(rol: string): void 
   {
     this.rolSeleccionado = rol;
   }
-
-
-
   
   iniciarSesion()
   {
-    this.firebaseService.acceder(this.emailUsuario, this.claveUsuario).then(respuesta => 
-    {
-      this.router.navigateByUrl("home");
-    }
-    ).catch(error => 
-    {
-      console.log(error);
-    }
-    )
+    this.firebaseService.acceder(this.emailUsuario, this.claveUsuario);
   }
 
   inicioSesionRapido(usuario: string)

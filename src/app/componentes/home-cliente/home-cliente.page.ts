@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { collection, getDocs, query, where } from 'firebase/firestore';
 import { Subscription } from 'rxjs';
 import { FirebaseService } from 'src/app/servicios/firebase.service';
 import { QrService } from 'src/app/servicios/qr.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-home-cliente',
@@ -11,10 +13,11 @@ import { QrService } from 'src/app/servicios/qr.service';
   standalone: false,
 })
 export class HomeClientePage implements OnInit {
- mostrarOpciones = false;
+  mostrarOpciones = false;
   verificarCliente= false;
   user: any;
   verificarQr = false;
+  
   constructor(private router: Router, private firebaseService: FirebaseService) { }
 
   async ngOnInit() {
@@ -31,6 +34,28 @@ export class HomeClientePage implements OnInit {
     this.router.navigateByUrl(path);
   }
 
+  verEstadisticasCliente(){
+    this.router.navigate(['/estadisticas-encuesta']);
+  }
+
+  async accederEncuesta(){
+    const encuestasRef = collection(this.firebaseService.firestore,'encuestas');
+    const q = query(encuestasRef, where('uid','==',this.user.uid));
+    const resultado = await getDocs(q);
+
+    if(!resultado.empty){
+      Swal.fire({
+        icon: 'info',
+        title: 'Encuesta ya completada',
+        text: 'Ya has respondido esta encuesta. ¡Gracias por participar!',
+        confirmButtonText: 'Aceptar',
+        heightAuto: false
+      });
+      return;
+    }
+    this.router.navigate(['/encuesta-cliente']);
+  }
+
   
   mostrarContenedores(contenedor: string)
   {
@@ -39,7 +64,6 @@ export class HomeClientePage implements OnInit {
       case "opciones":
         this.mostrarOpciones = !this.mostrarOpciones;
         break;
-
     }
   }
 //34HoDbHVynOnCmC5ijz2RzX2BAV2

@@ -76,10 +76,12 @@ export class EncuestaEmpleadoPage implements OnInit{
   }
 
   async enviarEncuesta(){
+    const usuarioActual =  this.firebase.getUsuarioActual();
     if(this.encuestaEmpleadoForm.valid){
       const datos = {
         ...this.encuestaEmpleadoForm.value,
-        tipo:'empleado'
+        tipo:'empleado',
+        uid: usuarioActual?.uid
       }
       datos.preguntaRange = Number(datos.preguntaRange);
       

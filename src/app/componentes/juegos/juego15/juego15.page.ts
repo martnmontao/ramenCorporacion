@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
+import { FirebaseService } from 'src/app/servicios/firebase.service';
 
 @Component({
   selector: 'app-juego15',
@@ -25,10 +26,25 @@ export class Juego15Page implements OnInit {
   imagenReverso = 'assets/imagenes/juegos/reverso.png';
   cartasVolteadas: number[] = [];
   bloqueo = false;
+  user:any;
 
-  constructor(private cd: ChangeDetectorRef, private router: Router) {}
+  constructor(private cd: ChangeDetectorRef, private router: Router, private firebase: FirebaseService) {}
 
-  ngOnInit() {
+  async ngOnInit() {
+    this.user = this.firebase.obtenerUsuarioLogueado();
+
+    const yaTieneDescuento = await this.firebase.verificarDescuentoJugado(this.user.uid);
+    if (yaTieneDescuento) {
+      await Swal.fire({
+        icon: 'info',
+        title: 'Ya jugaste',
+        text: 'Ya participaste y obtuviste un descuento.',
+        confirmButtonText: 'Aceptar',
+        heightAuto: false,
+      });
+      this.router.navigate(['/juegos-vista']);
+      return;
+    }
     this.inicializarCartas();
     this.iniciarTemporizador();
   }
@@ -56,10 +72,20 @@ export class Juego15Page implements OnInit {
     }, 1000);
   }
 
-  detenerTemporizador() {
+  async detenerTemporizador() {
     if (this.juegoTerminado) return; 
     clearInterval(this.temporizador);
     this.juegoTerminado = true;
+    await Swal.fire({
+      icon: 'error',
+      title: '¡Perdiste!',
+      text: '¡Uy, no llegaste! Será la próxima',
+      confirmButtonText: 'Aceptar',
+      heightAuto: false,
+      }).then(async()=>{
+        await this.firebase.guardarDescuento(this.user.uid, 0);
+        this.router.navigate(['/juegos-vista']);
+      });
   }
 
   inicializarCartas() {
@@ -120,8 +146,10 @@ export class Juego15Page implements OnInit {
         text: '¡Ganaste un descuento del 15% en tu compra!',
         confirmButtonText: 'Aceptar',
         heightAuto: false,
-      }).then(() => {
-        this.router.navigate(['/login']);
+      }).then(async()=>{
+        await this.firebase.guardarDescuento(this.user.uid, 15);
+        await this.firebase.aplicarDescuentoAlPedido(this.user.uid);
+        this.router.navigate(['/juegos-vista']);
       });
     }
   }

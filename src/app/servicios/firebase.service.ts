@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Auth, authState, createUserWithEmailAndPassword, getAuth, onAuthStateChanged, sendEmailVerification, signInWithEmailAndPassword, signOut, User, UserCredential } from '@angular/fire/auth';
+import { Auth, authState, createUserWithEmailAndPassword, getAuth, onAuthStateChanged, sendEmailVerification, signInWithEmailAndPassword, signOut, user, User, UserCredential } from '@angular/fire/auth';
 
 import { Firestore, collection, addDoc, query, orderBy, limit, getDocs, where, CollectionReference, collectionData, updateDoc, doc, Timestamp, deleteDoc, onSnapshot, getDoc, arrayUnion, setDoc } from '@angular/fire/firestore';
 
@@ -32,7 +32,7 @@ export class FirebaseService {
   private mesasCollection: CollectionReference;
   private listaEsperaCollection: CollectionReference;
 
-  constructor(private auth: Auth, private firestore: Firestore, private router: Router) {
+  constructor(private auth: Auth, public firestore: Firestore, private router: Router) {
     onAuthStateChanged(this.auth, (user) => {
           if (user) {
             this.userId = user.uid;
@@ -51,49 +51,74 @@ export class FirebaseService {
   }
 
   async acceder(correo: string, clave: string): Promise<void> {
+    await this.auth.signOut();
+    if(!correo || !clave){
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Por favor, complete el correo y la clave.',
+          confirmButtonText: 'Aceptar',
+          heightAuto: false
+        });
+        return;
+    }
     try {
+      
       const userCredential = await signInWithEmailAndPassword(this.auth, correo, clave);
       if (userCredential.user) {
         this.router.navigate(['/home']);
       }
     } catch (error: any) {
       let mensaje = 'Error al iniciar sesión';
-      if (error.code === 'auth/user-not-found') 
-        {
-        mensaje = 'El correo electrónico no está registrado.';
-      } else if (error.code === 'auth/wrong-password') 
-      {
+      if (error.code === 'auth/user-not-found' || error.code === 'auth/invalid-credential') {
+        const refRegistro = this.registroCollection;
+        const q = query(refRegistro, where('correoUsuario', '==', correo));
+        const snap = await getDocs(q);
+
+        if (!snap.empty) {
+          const datos = snap.docs[0].data();
+          if (datos['autorizado'] === false) {
+            mensaje = 'Su cuenta aún no fue autorizada. Espere a ser notificado vía correo electrónico';
+          } else {
+            mensaje = 'Tu cuenta fue rechazada o eliminada.';
+          }
+        } else {
+          mensaje = 'El correo electrónico no está registrado.';
+        }
+
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: mensaje,
+          confirmButtonText: 'Aceptar',
+          heightAuto: false
+        });
+        return;
+      }
+      
+      if (error.code === 'auth/wrong-password') {
         mensaje = 'La contraseña es incorrecta.';
-      }
-      else if(error.code === 'auth/invalid-email' || error.code === 'auth/invalid-credential')
-      {
-        mensaje = 'Verifique las credenciales.';
-
-      }
-      else if( error.code === 'auth/missing-password')
-      {
+      } else if (error.code === 'auth/invalid-email') {
+        mensaje = 'El correo ingresado es inválido.';
+      } else if (error.code === 'auth/missing-password') {
         mensaje = 'Ingrese una contraseña.';
-
-      }
-      else
-      {
-        mensaje = "Usuario no autorizado. Espere a ser notificado vía correo electrónico."
+      } else {
+        mensaje = '¡Ups, ocurrió un error inesperado!';
       }
 
       console.log(error.code);
 
       Swal.fire({
-            icon: 'error', 
-            title: 'Error',
-            text: mensaje,
-            confirmButtonText: 'Aceptar',
-            heightAuto: false 
-          });
+        icon: 'error',
+        title: 'Error',
+        text: mensaje,
+        confirmButtonText: 'Aceptar',
+        heightAuto: false
+      });
+
       throw error;
     }
   }
-
-  
 
   async cerrarSesion() {
     try {
@@ -111,6 +136,41 @@ export class FirebaseService {
   {
     return this.auth.currentUser;
   }
+  
+  async aplicarDescuentoAlPedido(uid: string): Promise<void> {
+    const pedido = await this.obtenerPedidoPorUidUsuario(uid);
+
+    if (pedido) {
+      const pedidoRef = doc(this.firestore, 'pedidos', pedido.id);
+      const descuento = pedido.descuento ?? 0;
+      const total = pedido.importeTotal ?? 0;
+
+      const importeConDescuento = total - (total * descuento / 100);
+
+      await updateDoc(pedidoRef, {
+        importeConDescuento: Math.round(importeConDescuento * 100) / 100  // redondeo a 2 decimales
+      });
+    }
+  }
+
+
+  async verificarDescuentoJugado(uid: string): Promise<boolean> {
+    const pedidoRef = doc(this.firestore, 'pedidos', uid);
+    const pedidoSnap = await getDoc(pedidoRef);
+    
+    if (pedidoSnap.exists()) {
+      const descuento = pedidoSnap.data()['descuento'];
+      return descuento > 0;
+    }
+
+    return false;
+  }
+
+
+  async guardarDescuento(uid: string, porcentaje: number) {
+    const pedidoRef = doc(this.firestore, 'pedidos', uid); 
+    await setDoc(pedidoRef, { descuento: porcentaje }, { merge: true });
+  }
 
   async guardarEncuesta(datosEncuesta: any):Promise<void>{
     //const usuario = this.getUsuarioActual();
@@ -125,6 +185,20 @@ export class FirebaseService {
     
     await addDoc(encuestasRef,datos);
   }
+
+  async obtenerPedidoPorUidUsuario(uidUsuario: string): Promise<any> {
+    const pedidosRef = collection(this.firestore, 'pedidos');
+    const q = query(pedidosRef, where('clienteUid', '==', uidUsuario));
+
+    const querySnapshot = await getDocs(q);
+    if (!querySnapshot.empty) {
+      const doc = querySnapshot.docs[0];
+      return { id: doc.id, ...doc.data() }; // Retorna el primer pedido encontrado
+    }
+
+    return null; // No se encontró ningún pedido
+  }
+
 
   getEncuestas(): Observable<any[]>{
     const encuestasRef = collection(this.firestore,'encuestas');
@@ -151,9 +225,6 @@ export class FirebaseService {
       
     }
   }
-
-
-  
 
   agregarDocumento(data: any, col: string) {
     const dataRef = collection(this.firestore, col);

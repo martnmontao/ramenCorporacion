@@ -16,7 +16,8 @@ export class GraficosService {
       },
       select: {},
       input: [],
-      checkbox: {}
+      checkbox: {},
+      radio: {}
     };
 
     encuestas.forEach((encuesta: any) => {
@@ -28,6 +29,11 @@ export class GraficosService {
       const seleccion = encuesta.preguntaSelect;
       if(seleccion){
         estadisticas.select[seleccion] = (estadisticas.select[seleccion] || 0) + 1;
+      }
+
+      const respuestaRadio = encuesta.preguntaRdo;
+      if (respuestaRadio) {
+        estadisticas.radio[respuestaRadio] = (estadisticas.radio[respuestaRadio] || 0) + 1;
       }
 
       if(encuesta.preguntaInput){

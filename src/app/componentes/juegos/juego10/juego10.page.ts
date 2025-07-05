@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { FirebaseService } from 'src/app/servicios/firebase.service';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -14,10 +15,26 @@ export class Juego10Page implements OnInit {
   indiceGanador = 0;
   seleccion: number | null = null;
   juegoTerminado = false;
+  user:any;
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private firebase: FirebaseService) { }
 
-  ngOnInit() {
+  async ngOnInit() {
+    this.user = this.firebase.obtenerUsuarioLogueado();
+
+    const yaTieneDescuento = await this.firebase.verificarDescuentoJugado(this.user.uid);
+    if (yaTieneDescuento) {
+      await Swal.fire({
+        icon: 'info',
+        title: 'Ya jugaste',
+        text: 'Ya participaste y obtuviste un descuento.',
+        confirmButtonText: 'Aceptar',
+        heightAuto: false,
+      });
+      this.router.navigate(['/juegos-vista']);
+      return;
+    }
+
     this.reiniciarJuego();
   }
 
@@ -40,6 +57,11 @@ export class Juego10Page implements OnInit {
         text: '¡Ganaste un descuento del 10% en tu compra!',
         confirmButtonText: 'Aceptar',
         heightAuto: false,
+      }).then(async()=>{
+        await this.firebase.guardarDescuento(this.user.uid, 10);
+        await this.firebase.aplicarDescuentoAlPedido(this.user.uid);
+        this.router.navigate(['/juegos-vista']);
+        return;
       });
     } else {
       await Swal.fire({
@@ -48,6 +70,10 @@ export class Juego10Page implements OnInit {
         text: '¡Uy, ese no era! Será la próxima',
         confirmButtonText: 'Aceptar',
         heightAuto: false,
+      }).then(async()=>{
+        await this.firebase.guardarDescuento(this.user.uid, 0);
+        this.router.navigate(['/juegos-vista']);
+        return;
       });
     }
   }

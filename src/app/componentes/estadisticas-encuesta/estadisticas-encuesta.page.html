@@ -26,6 +26,14 @@
   </div>
 
   <div style="max-width: 500px; margin: auto">
+    <h3>Resultados de las respuestas únicas (Radio)</h3>
+    <canvas baseChart
+            [data]="radioData"
+            chartType="pie">
+    </canvas>
+  </div>
+
+  <div style="max-width: 500px; margin: auto">
     <h3>Opiniones marcadas (Checkbox)</h3>
     <canvas baseChart
             [data]="checkboxData"

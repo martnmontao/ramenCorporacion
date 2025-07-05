@@ -35,6 +35,7 @@ export class EstadisticasEncuestaPage implements OnInit {
   }
 };
   checkboxData: ChartConfiguration<'pie'>['data'] = { labels: [], datasets: [] };
+  radioData: ChartConfiguration<'pie'>['data'] = { labels: [], datasets: [] };
 
   rangoEsTexto:any;
   rangoFrecuencias:any;
@@ -49,6 +50,15 @@ export class EstadisticasEncuestaPage implements OnInit {
       this.rangoEsTexto = estadisticas.rango.esTexto;
       this.rangoFrecuencias = estadisticas.rango.frecuencias;
       this.rangoPromedio = estadisticas.rango.promedio;
+
+      this.radioData = {
+        labels: Object.keys(estadisticas.radio),
+        datasets: [{
+          label: 'Radios',
+          data: Object.values(estadisticas.radio),
+          backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF']
+        }]
+      };
 
       this.selectData = { labels: Object.keys(estadisticas.select),
       datasets:[{

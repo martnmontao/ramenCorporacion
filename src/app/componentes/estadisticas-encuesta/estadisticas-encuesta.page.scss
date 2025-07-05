@@ -1,5 +1,9 @@
 .estadisticas-container{
-    background-color: rgba(2, 32, 255, 0.3);
+    background-color: rgb(13, 18, 57);
     border-radius: 20px;
     padding:10px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
