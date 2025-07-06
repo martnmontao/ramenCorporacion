@@ -1,17 +1,33 @@
-<ion-content [fullscreen]="true" class="ion-padding">
-    <div class="juego20-container">
-        <h2>Elegí tu jugada: </h2>
-        <div class="opciones">
-            <button *ngFor="let opcion of opciones"
-                    [class.seleccionada]="jugadaJugador === opcion"
-                    (click)="elegir(opcion)">
-                <img [src]="'assets/imagenes/juegos/' + opcion + '.png'" />
-            </button>
-        </div>
+<ion-content [fullscreen]="true">
 
-        <div class="resultado" *ngIf="jugadaRamen">
-            <p>Ramen eligió: </p>
-            <img [src]="'assets/imagenes/juegos/' + jugadaRamen + '.png'" class="ramen-img" />
+    <div id = "contenedor-principal">
+        <header>
+            <h1 class ="titulos">RamenGB🍜</h1>
+            <button id="btn-mostrar-opciones" (click)="mostrarContenedores('opciones')">≋</button>
+            <div id="contenedor-opciones-inicio" class="contenedor-animado"[class.visible]="mostrarOpciones">
+                <button (click)="irA('home-cliente')"class="btn-opciones-inicio">INICIO</button>
+                <button (click)="cerrarSesion()"class="btn-opciones-inicio">CERRAR SESIÓN</button>
+
+            </div>
+        </header>
+
+        <div class="juego20-container" *ngIf = "empezar">
+            <h2>¡DESCUENTO DE 20%!</h2>
+
+            <h2>Elegí tu jugada:</h2>
+            <div class="opciones">
+                <button *ngFor="let opcion of opciones"
+                        [class.seleccionada]="jugadaJugador === opcion"
+                        (click)="elegir(opcion)">
+                    <img [src]="'assets/imagenes/juegos/' + opcion + '.png'" />
+                </button>
+            </div>
+    
+            <div class="resultado" *ngIf="jugadaRamen">
+                <p>Ramen eligió: </p>
+                <img [src]="'assets/imagenes/juegos/' + jugadaRamen + '.png'" class="ramen-img" />
+            </div>
         </div>
     </div>
+
 </ion-content>

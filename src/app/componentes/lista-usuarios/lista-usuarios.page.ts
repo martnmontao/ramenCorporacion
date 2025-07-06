@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { FirebaseService } from 'src/app/servicios/firebase.service';
 import Swal from 'sweetalert2';
-
+import { NotificacionesServiceService } from 'src/app/servicios/notificaciones-service.service';
 @Component({
   selector: 'app-lista-usuarios',
   templateUrl: './lista-usuarios.page.html',
@@ -12,7 +12,7 @@ import Swal from 'sweetalert2';
 })
 export class ListaUsuariosPage implements OnInit {
   mostrarOpciones = false;
-  
+
   isLoading: boolean = true; // Para mostrar un indicador de carga
   currentUserProfile: any | null = null; // Almacena el perfil del usuario logueado
   private profileSubscription: Subscription | undefined; // Para desuscribirse del Observable del perfil
@@ -29,7 +29,7 @@ export class ListaUsuariosPage implements OnInit {
   usuariosParaAutorizar: any = [];
   usuariosParaNoAutorizar: any = [];
 
-  constructor(private firebaseService: FirebaseService, private router: Router) {}
+  constructor(private firebaseService: FirebaseService, private router: Router, private notificacionesService: NotificacionesServiceService) {}
 
   async ngOnInit() {
  
@@ -213,4 +213,23 @@ export class ListaUsuariosPage implements OnInit {
     this.isLoading = false;
   }
 }
+
+
+async enviarEmail() {
+this.notificacionesService.enviarCorreo('martin', 'martinmontano455@gmail.com', false)
+  .subscribe({
+    next: (res) => {
+      if (res.seEnvio) {
+        alert('📧 Correo enviado correctamente.');
+      } else {
+        alert('⚠️ El correo no se envió.');
+      }
+    },
+    error: (err) => {
+      console.error('❌ Error al enviar el correo:', err);
+      alert('❌ Falló el envío del correo');
+    }
+  });
+}
+
 }

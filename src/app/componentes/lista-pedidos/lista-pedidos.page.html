@@ -21,9 +21,9 @@
                   <div class = "contenedor-informacion-cliente">
                     <p>Mesa: {{ pedido.numeroMesa }}</p>
                     <h2>{{ pedido.nombreUsuario }}</h2>
-                    <p *ngIf = "pedido.estadoPedido == 'Entregado'">Descuento: {{pedido.descuento}}%</p>
-                    <p>Importe total: ${{ pedido.importeTotal }}</p>
-                    <p>Estado: {{ pedido.estadoPedido }}</p>
+                    <p *ngIf = "pedido.estadoPedido == 'Entregado' && pedido.descuento > 1">Descuento: {{pedido.descuento}}%</p>
+                    <p *ngIf = "pedido.estadoPedido != 'Entregado' || user?.perfil == 'empleado'">Estado: {{ pedido.estadoPedido }}</p>
+                    <p>Importe total: <span id = "p-importeTotal">${{ pedido.importeTotal }}</span></p>
                   </div>
                   <img [src]="pedido.imagenUsuario" class="img-usuario" />
                 </div>
@@ -75,14 +75,16 @@
               Número de tarjeta:
               <input type="text" maxlength="16" [(ngModel)]="numeroTarjeta" placeholder="1234 5678 9012 3456">
             </label>
-            <label>
-              Vencimiento:
-              <input type="text" maxlength="5" [(ngModel)]="vencimiento" placeholder="MM/AA">
-            </label>
-            <label>
-              Código de seguridad:
-              <input type="password" maxlength="4" [(ngModel)]="codigoSeguridad" placeholder="123">
-            </label>
+           
+              <label>
+                Vencimiento:
+                <input type="text" maxlength="5" [(ngModel)]="vencimiento" placeholder="MM/AA">
+              </label>
+              <label>
+                Código de seguridad:
+                <input type="password" maxlength="4" [(ngModel)]="codigoSeguridad" placeholder="123">
+              </label>
+      
           </div>
 
           <div class="boton-pagar">

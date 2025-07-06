@@ -13,13 +13,13 @@ export class Juego15Page implements OnInit {
   tiempo: number = 15;
   temporizador: any;
   juegoTerminado = false;
+  mostrarOpciones = false;
 
   imagenesOriginales: string[] = [
     'assets/imagenes/juegos/ramen.png',
     'assets/imagenes/juegos/palillos.png',
     'assets/imagenes/juegos/gatito.png',
-    'assets/imagenes/juegos/arco.png',
-    'assets/imagenes/juegos/nikuman.png',
+    'assets/imagenes/juegos/arco.png'
   ];
 
   cartas: { imagen: string; descubierta: boolean; emparejada: boolean }[] = [];
@@ -31,27 +31,47 @@ export class Juego15Page implements OnInit {
   constructor(private cd: ChangeDetectorRef, private router: Router, private firebase: FirebaseService) {}
 
   async ngOnInit() {
-    this.user = this.firebase.obtenerUsuarioLogueado();
-
-    const yaTieneDescuento = await this.firebase.verificarDescuentoJugado(this.user.uid);
+    this.user = await this.firebase.obtenerUsuarioLogueado();
+   
+    const pedido = await this.firebase.obtenerPedidoPorUidUsuario(this.user.uid);
+    const yaTieneDescuento = await this.firebase.verificarDescuentoJugado(pedido);
     if (yaTieneDescuento) {
       await Swal.fire({
         icon: 'info',
         title: 'Ya jugaste',
-        text: 'Ya participaste y obtuviste un descuento.',
+        text: 'Ya has participado por un descuento.',
         confirmButtonText: 'Aceptar',
         heightAuto: false,
+        customClass: {
+          popup: 'mi-alerta',
+          confirmButton: 'btn-alerta',
+          title: 'titulo-alerta',
+          htmlContainer: 'texto-alerta'
+        }
       });
       this.router.navigate(['/juegos-vista']);
       return;
     }
-    this.inicializarCartas();
-    this.iniciarTemporizador();
+    else
+    {
+      this.inicializarCartas();
+      this.iniciarTemporizador();
+
+    }
   }
 
-  ionViewWillEnter() {
-    this.reiniciarJuego();
+
+    mostrarContenedores(contenedor: string)
+  {
+    switch(contenedor)
+    {
+      case "opciones":
+        this.mostrarOpciones = !this.mostrarOpciones;
+        break;
+     
+    }
   }
+
 
   reiniciarJuego(){
     this.inicializarCartas();
@@ -82,9 +102,18 @@ export class Juego15Page implements OnInit {
       text: '¡Uy, no llegaste! Será la próxima',
       confirmButtonText: 'Aceptar',
       heightAuto: false,
+      customClass: {
+          popup: 'mi-alerta',
+          confirmButton: 'btn-alerta',
+          title: 'titulo-alerta',
+          htmlContainer: 'texto-alerta'
+        }
       }).then(async()=>{
-        await this.firebase.guardarDescuento(this.user.uid, 0);
         this.router.navigate(['/juegos-vista']);
+        const pedido = await this.firebase.obtenerPedidoPorUidUsuario(this.user.uid);
+
+        await this.firebase.guardarDescuento(pedido, 0);
+
       });
   }
 
@@ -146,12 +175,37 @@ export class Juego15Page implements OnInit {
         text: '¡Ganaste un descuento del 15% en tu compra!',
         confirmButtonText: 'Aceptar',
         heightAuto: false,
+        customClass: {
+          popup: 'mi-alerta',
+          confirmButton: 'btn-alerta',
+          title: 'titulo-alerta',
+          htmlContainer: 'texto-alerta'
+        }
       }).then(async()=>{
-        await this.firebase.guardarDescuento(this.user.uid, 15);
-        await this.firebase.aplicarDescuentoAlPedido(this.user.uid);
+       
+         const pedido = await this.firebase.obtenerPedidoPorUidUsuario(this.user.uid);
+      
+        if(pedido)
+        {
+          await this.firebase.guardarDescuento(pedido, 15);
+         
+
+        }
         this.router.navigate(['/juegos-vista']);
       });
     }
+  }
+
+   irA(path:string)
+  {
+    this.mostrarOpciones = false;
+    this.juegoTerminado = true;
+    this.router.navigateByUrl(path);
+  }
+
+  
+  cerrarSesion(){
+  this.firebase.cerrarSesion();
   }
 
 }

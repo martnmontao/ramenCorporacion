@@ -15,23 +15,34 @@ export class Juego20Page implements OnInit{
   jugadaJugador: string | null = null;
   jugadaRamen: string | null = null;
   user:any;
+  mostrarOpciones = false;
+  empezar = false;
   constructor(private router: Router, private firebase: FirebaseService){}
 
   async ngOnInit() {
-    this.user = this.firebase.obtenerUsuarioLogueado();
+    this.user = await this.firebase.obtenerUsuarioLogueado();
 
-    const yaTieneDescuento = await this.firebase.verificarDescuentoJugado(this.user.uid);
+    const pedido = await this.firebase.obtenerPedidoPorUidUsuario(this.user.uid);
+    const yaTieneDescuento = await this.firebase.verificarDescuentoJugado(pedido);
     if (yaTieneDescuento) {
       await Swal.fire({
         icon: 'info',
         title: 'Ya jugaste',
-        text: 'Ya participaste y obtuviste un descuento.',
+        text: 'Ya has participado por un descuento.',
         confirmButtonText: 'Aceptar',
         heightAuto: false,
+        customClass: {
+          popup: 'mi-alerta',
+          confirmButton: 'btn-alerta',
+          title: 'titulo-alerta',
+          htmlContainer: 'texto-alerta'
+        }
       });
       this.router.navigate(['/juegos-vista']);
       return;
     }
+
+    this.empezar = true;
   }
 
   elegir(opcion: string){
@@ -49,8 +60,16 @@ export class Juego20Page implements OnInit{
         text: '¡Ambos eligieron lo mismo!',
         confirmButtonText: 'Reintentar',
         heightAuto: false,
+        customClass: {
+          popup: 'mi-alerta',
+          confirmButton: 'btn-alerta',
+          title: 'titulo-alerta',
+          htmlContainer: 'texto-alerta'
+        }
       }).then(async()=>{
-        await this.firebase.guardarDescuento(this.user.uid, 0);
+        const pedido = await this.firebase.obtenerPedidoPorUidUsuario(this.user.uid);
+
+        await this.firebase.guardarDescuento(pedido, 0);
         this.router.navigate(['/juegos-vista']);
       });
       
@@ -67,8 +86,11 @@ export class Juego20Page implements OnInit{
         confirmButtonText: 'Aceptar',
         heightAuto: false,
       }).then(async()=>{
-        await this.firebase.guardarDescuento(this.user.uid, 20);
-        await this.firebase.aplicarDescuentoAlPedido(this.user.uid);
+        const pedido = await this.firebase.obtenerPedidoPorUidUsuario(this.user.uid);
+        if(pedido)
+        {
+          await this.firebase.guardarDescuento(pedido, 20);
+        }
         this.router.navigate(['/juegos-vista']);
       });
 
@@ -79,8 +101,16 @@ export class Juego20Page implements OnInit{
         text: '¡Será la próxima!',
         confirmButtonText: 'Aceptar',
         heightAuto: false,
+        customClass: {
+          popup: 'mi-alerta',
+          confirmButton: 'btn-alerta',
+          title: 'titulo-alerta',
+          htmlContainer: 'texto-alerta'
+        }
         }).then(async()=>{
-          await this.firebase.guardarDescuento(this.user.uid, 0);
+          const pedido = await this.firebase.obtenerPedidoPorUidUsuario(this.user.uid);
+
+          await this.firebase.guardarDescuento(pedido, 0);
           this.router.navigate(['/juegos-vista']);
         });
 
@@ -92,5 +122,25 @@ export class Juego20Page implements OnInit{
     this.jugadaJugador = null;
     this.jugadaRamen = null;
   }
+  irA(path:string)
+  {
+    this.mostrarOpciones = false;
 
+    this.router.navigateByUrl(path);
+  }
+
+  cerrarSesion(){
+  this.firebase.cerrarSesion();
+  }
+
+  mostrarContenedores(contenedor: string)
+  {
+    switch(contenedor)
+    {
+      case "opciones":
+        this.mostrarOpciones = !this.mostrarOpciones;
+        break;
+     
+    }
+  }
 }

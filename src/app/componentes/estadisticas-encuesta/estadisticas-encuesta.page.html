@@ -14,9 +14,9 @@
     <h2>Estadísticas de la encuesta</h2>
   
   <div>
-    <h3>Promedio de satisfacción (rango):</h3>
+    <h3>Promedio de satisfacción:</h3>
     <ng-container *ngIf="!rangoEsTexto; else textoRango">
-      <p>{{ rangoPromedio | number:'1.1-1' }} / 10</p>
+      <p style="text-align: center;">{{ rangoPromedio | number:'1.1-1' }} / 10</p>
     </ng-container>
     <ng-template #textoRango>
       <ul>
@@ -27,8 +27,8 @@
     </ng-template>
   </div>
   
-    <div style="max-width: 500px; margin: auto">
-      <h3>Respuestas seleccionadas (Select)</h3>
+    <div style="max-width: 100%; margin: auto">
+      <h3>Frecuencia de visitas de clientes</h3>
       <canvas baseChart
               [data]="selectData"
               [options]="selectOptions"
@@ -36,16 +36,16 @@
       </canvas>
     </div>
   
-    <div style="max-width: 500px; margin: auto">
-      <h3>Resultados de las respuestas únicas (Radio)</h3>
+    <div style="max-width: 100%; margin: auto">
+      <h3>Valores de satisfacción del cliente</h3>
       <canvas baseChart
               [data]="radioData"
               chartType="pie">
       </canvas>
     </div>
   
-    <div style="max-width: 500px; margin: auto">
-      <h3>Opiniones marcadas (Checkbox)</h3>
+    <div style="max-width: 100%; margin: auto">
+      <h3>Valoraciones sobre RamenGB</h3>
       <canvas baseChart
               [data]="checkboxData"
               chartType="pie">

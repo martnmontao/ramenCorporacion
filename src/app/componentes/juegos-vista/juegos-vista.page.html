@@ -4,7 +4,9 @@
       <h1 class ="titulos">RamenGB🍜</h1>
       <button id="btn-mostrar-opciones" (click)="mostrarContenedores('opciones')">≋</button>
       <div id="contenedor-opciones-inicio" class="contenedor-animado"[class.visible]="mostrarOpciones">
+        <button (click)="irA('home-cliente')"class="btn-opciones-inicio">INICIO</button>
         <button (click)="cerrarSesion()"class="btn-opciones-inicio">CERRAR SESIÓN</button>
+
       </div>
     </header>
     <section>
@@ -12,7 +14,7 @@
           <button class = "btn-opciones-cliente" routerLink="/juego10">¡Adivina en qué olla está!</button>
           <button class = "btn-opciones-cliente" routerLink="/juego15">Memotest</button>
           <button class = "btn-opciones-cliente" routerLink="/juego20">¿Piedra, Papel o tijera?</button>
-          <button class = "btn-opciones-cliente" routerLink="/home-cliente">Volver al Home Cliente</button>
+         
         </div>
     </section>
   </div>

@@ -1,16 +1,98 @@
-ion-content{
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    font-size: large;
+
+header{
+    height: 60px;
+    background-color: #10161e;
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #F0CA91;
+}
+
+p
+{
+    color: #F0CA91;
+    font-size: 20px;
+
+}
+#contenedor-opciones-inicio
+{
+    position: absolute;
+    top: 57px;
+    right: 0;
+    height: 200px;
+    box-shadow: 0px 18px 17px 4px rgba(0,0,0,0.75);
+    -webkit-box-shadow: 0px 18px 17px 4px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 18px 17px 4px rgba(0,0,0,0.75);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    width: 60%;
+    background-color: #10161e;
+    z-index: 9999;
+    border-radius: 0 0 10px 10px;
+}
+
+.titulos
+{
+    margin: 10px 10px;
+    color: #F0CA91;
+    font-size: 35px;
+    font-family: 'Poppins', sans-serif;
+}
+.btn-opciones-inicio
+{
+    border: none;
+
+    font-size: 22px;
+    font-family: 'Poppins', sans-serif;
+    padding: 5px;
+    background-color: #F0CA91;
+    border-radius: 10px;
+    color: #10161e;
+    height: 35%;
+    width: 90%;
+}
+#btn-mostrar-opciones
+{
+    width: 17%;
+    font-size: 43px;
+    color: #F0CA91;
+    
+}
+
+.contenedor-animado {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height 0.3s ease, opacity 0.3s ease;
+}
+
+.contenedor-animado.visible {
+  max-height: 200px; 
+  opacity: 1;
+}
+
+button
+{
+    background-color: transparent;
+    color: #F0CA91;
+}
+
+#contenedor-principal
+{
+    height: 100%;
+    overflow-y: auto;
+    background-color: #10161e;
 }
 
 #div-encuesta{
-    height: auto;
+   
     background-color: #10161e;
     display:flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+
+    
     color:#F0CA91;
+   
 }
 
 #div-usuario{
@@ -18,16 +100,41 @@ ion-content{
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin-top: 5%;
+    margin-top: 1%;
     gap:10px;
+    
+    height: 160px;
+}
+
+.preview-imagenes
+{
+    height: 100px;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
 }
 
 .input-usuario{
-    height:40px;
+    height:70px;
     width: 95%;
-    border: none;
+    padding-left: 10px;
+    color: #F0CA91;
+    font-size: 20px;
+    
     border-radius: 10px;
     text-align: justify;
+    background-color: #10161e;
+    border: 1px solid #F0CA91;
+}
+p
+{
+    text-align: center;
+}
+
+
+.input-usuario:focus
+{
+    outline: none;
 }
 
 .input-usuario::placeholder{
@@ -40,38 +147,52 @@ ion-content{
     justify-content: center;
     text-align: center;
     padding: 10px;
+    width: 100%;
 }
 
 #div-chk{
     display:flex;
     flex-direction: column;
-    justify-content: left;
-    align-items: center;
+    justify-content: start;
+    align-items: start;
+
+    gap: 5%;
 }
 
 .etiquetas {
     display: flex;
     justify-content: space-between;
     margin-top: 5px;
-    font-size: 0.9em;
+    font-size: 1.1em;
     padding: 0 5px;
 }
 
 #div-submit{
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    align-items: center;
     text-align: center;
     margin-top: 10px;
+
+    height: 200px;
     width: 100%;
+}
+#input-archivo
+{
+   
+    height: 50px;
+    
+    margin-left: 5%;
 }
 
 .btn-encuesta{
-    height: 40px;
+    height: 70px;
     width:80%;
-    font-size: large;
-    width: auto;
+    font-size: 25px;
+    color: #10161e;
     border-radius: 20px;
+    background-color: #F0CA91;
+    margin: 10px auto;
 }
 
 input[type="checkbox"] {
@@ -95,5 +216,53 @@ input[type="radio"],
 input[type="checkbox"],
 input[type="text"],
 input[type="select"]{
-    background-color: rgba(240, 202, 145,0.3);
+   background-color: #10161e;
+}
+
+#frecuencia
+{
+    height: 55px;
+    border-radius: 10px;
+    border: 1px solid  #F0CA91;
+    text-align: center;
+    font-size: 20px;
+}   
+
+#frecuencia:focus{
+    outline: none;
+}
+
+#facilidad
+{
+    height: 55px;    
+}
+
+
+.contenedor-preguntas-radio
+{
+    width: 100%;
+    display: flex;
+    
+    gap: 10%;
+    
+}
+
+
+
+.contenedor-preguntas-radio label
+{
+    font-size: 20px;
+}
+
+.lbl-checkbox
+{
+    font-size: 25px;
+}
+
+
+.mi-toast-custom .toast-button {
+  background-color: transparent; /* o uno personalizado */
+  border: 1px solid #F0CA91;     /* opcional */
+  border-radius: 8px;
+  padding: 4px 12px;
 }

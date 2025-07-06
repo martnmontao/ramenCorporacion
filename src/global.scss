@@ -40,3 +40,56 @@ body.scanner-active {
   background: transparent;
   --ion-background-color: transparent;
 }
+
+.mi-toast-custom {
+  --background: rgb(255,0,0, 0.9);
+  --color: white;
+  --height: 100px;
+  border-radius: 30px;
+  text-align: center;
+  font-size: 20px;
+}
+
+.mi-toast-custom::part(toast) {
+  border: 1px solid #F0CA91;
+  border-radius: 20px;
+}
+
+.mi-toast-custom::part(button) {
+  color: white;
+  background-color: transparent;
+  border: 2px solid white;
+  border-radius: 8px;
+  padding: 4px 12px;
+  font-weight: bold;
+  height: 55px;
+}
+
+.mi-alerta {
+  background-color: #10161e;
+  border: 1px solid #F0CA91;
+  color: #F0CA91;
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.titulo-alerta {
+  font-size: 24px;
+  font-weight: bold;
+  color: #F0CA91;
+}
+
+.texto-alerta {
+  font-size: 18px;
+  color: #F0CA91;
+}
+
+.btn-alerta {
+  background-color: transparent;
+  border: 1px solid #F0CA91;
+  color: #F0CA91;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: bold;
+  box-shadow: none;
+}

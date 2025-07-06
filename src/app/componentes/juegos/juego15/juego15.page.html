@@ -1,15 +1,27 @@
-<ion-content [fullscreen]="true" class="ion-padding">
-    <div class="juego-memo-layout">
-        <h1>Tiempo: {{tiempo}} segundos</h1>
-        <div class="memo-container">
-            <ion-button 
-                color="medium" class="botones-vista" *ngFor="let carta of cartas; let i = index" 
-                fill="clear" 
-                (click)="voltearCarta(i)">
-                <img [src]="carta.descubierta ? carta.imagen : imagenReverso" />
-            </ion-button>
+<ion-content [fullscreen]="true" >
+    <div id = "contenedor-principal">
+    <header>
+      <h1 class ="titulos">RamenGB🍜</h1>
+      <button id="btn-mostrar-opciones" (click)="mostrarContenedores('opciones')">≋</button>
+      <div id="contenedor-opciones-inicio" class="contenedor-animado"[class.visible]="mostrarOpciones">
+        <button (click)="irA('home-cliente')"class="btn-opciones-inicio">INICIO</button>
+        <button (click)="cerrarSesion()"class="btn-opciones-inicio">CERRAR SESIÓN</button>
+
+      </div>
+    </header>
+        <div class="juego-memo-layout">
+            <h2>¡DESCUENTO DE 15%!</h2>
+
+            <h2>TIEMPO: {{tiempo}} SEG.</h2>
+            <div class="memo-container">
+                <ion-button 
+                    color="medium" class="botones-vista" *ngFor="let carta of cartas; let i = index" 
+                    fill="clear" 
+                    (click)="voltearCarta(i)">
+                    <img [src]="carta.descubierta ? carta.imagen : imagenReverso" />
+                </ion-button>
+            </div>
         </div>
     </div>
-    
 
 </ion-content>

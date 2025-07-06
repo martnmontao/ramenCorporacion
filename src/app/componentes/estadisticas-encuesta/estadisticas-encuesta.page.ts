@@ -5,6 +5,7 @@ import { ChartConfiguration } from 'chart.js';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
+import { Router } from '@angular/router';
 
 import { BaseChartDirective} from 'ng2-charts';
 import { Chart, registerables } from 'chart.js';
@@ -36,11 +37,12 @@ export class EstadisticasEncuestaPage implements OnInit {
 };
   checkboxData: ChartConfiguration<'pie'>['data'] = { labels: [], datasets: [] };
   radioData: ChartConfiguration<'pie'>['data'] = { labels: [], datasets: [] };
+  mostrarOpciones = false;
 
   rangoEsTexto:any;
   rangoFrecuencias:any;
   
-  constructor(private firebase: FirebaseService, private graficos: GraficosService) { }
+  constructor(private firebase: FirebaseService, private graficos: GraficosService, private router: Router) { }
 
   ngOnInit(): void {
     this.firebase.getEncuestas().subscribe(encuestas => {
@@ -76,4 +78,22 @@ export class EstadisticasEncuestaPage implements OnInit {
     });
   }
 
+  mostrarContenedores(contenedor: string)
+  {
+    switch(contenedor)
+    {
+      case "opciones":
+        this.mostrarOpciones = !this.mostrarOpciones;
+        break;
+    }
+  }
+//34HoDbHVynOnCmC5ijz2RzX2BAV2
+  cerrarSesion(){
+  this.firebase.cerrarSesion();
+  }
+
+    irA(path:string)
+  {
+    this.router.navigateByUrl(path);
+  }
 }

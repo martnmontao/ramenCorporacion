@@ -18,24 +18,26 @@
             <button class = "btn-opciones-cliente" (click)="irA('alta-mesa')">dar de alta mesa</button>
             <button class = "btn-opciones-cliente" (click)="irConQR()">ESCANEAR QR</button>
           -->
-          <h2 *ngIf = "verificarCliente">Número de mesa asignada: {{numeroMesa}}</h2>
-          <button class = "btn-opciones-cliente" (click)="irA('solicitar-mesa')" *ngIf = "!verificarCliente">Ingresar a la lista de espera</button>
+          <h2 *ngIf = "verificarCliente">Mesa asignada: {{numeroMesa}}</h2>
+          <div class = "contenedor-estadisticas">
 
-
-          <button class = "btn-opciones-cliente" (click)="accederEncuesta()">Realizar ENCUESTA</button>
-          <button class = "btn-opciones-cliente" (click)="verEstadisticasCliente()">Ver ESTADISTICAS DE ENCUESTAS</button>
-
-          <button class = "btn-opciones-cliente" (click)="irA('productos')" *ngIf = "verificarQr">MENÚ</button><!--POR QR-->
-          <button class = "btn-opciones-cliente" (click)="irA('productos')">MENÚ</button><!--POR QR-->
-          <button class = "btn-opciones-cliente" (click)="irA('lista-pedidos')">VER PEDIDO</button><!--POR QR-->
-
-
-          <button class = "btn-opciones-cliente" *ngIf = "verificarCliente" (click) = "irA('chat-mozo')">Consulta al mozo</button>
-          <button class = "btn-opciones-cliente" *ngIf = "verificarCliente" (click)="scanearCodigoMesa()" >ESCANEAR CÓDIGO DE MESA</button>
-          <button class = "btn-opciones-cliente" *ngIf = "verificarQr && pedidoTomado" (click) = "irA('juegos-vista')">JUEGOS</button>
-          <button class = "btn-opciones-cliente" (click)="irA('lista-pedidos')" *ngIf = "verificarQr && verificarPedido">VER PEDIDO</button><!--POR QR-->
+            <button class = "btn-qr" *ngIf = "verificarCliente" (click)="scanearCodigoMesa()" ><img src = "../../../assets/imagenes/qrBOTON.png"></button>
+            <button class = "btn-qr" (click) = "irA('juegos-vista')">🎲</button>
+            <button class = "btn-qr" *ngIf = "verificarCliente" (click) = "irA('chat-mozo')">💬</button>
+          </div>          
           
+          <button class = "btn-opciones-cliente" (click)="irA('solicitar-mesa')" *ngIf = "!verificarCliente">SOLICITAR MESA</button>
+          <button class = "btn-opciones-cliente" (click)="irA('lista-pedidos')" *ngIf = "verificarQr && verificarPedido">VER PEDIDO</button><!--POR QR *ngIf = "verificarQr && verificarPedido"-->
           <button class = "btn-opciones-cliente" (click)="irA('lista-pedidos')" *ngIf = "verificarQr && pedidoTerminado">PEDIR CUENTA</button><!--POR QR-->
+          <button class = "btn-opciones-cliente" (click)="irA('productos')" *ngIf = "verificarQr">MENÚ</button><!--POR QR-->
+          
+          
+          
+          <button class = "btn-opciones-cliente" (click)="accederEncuesta()">ENCUESTA</button>
+          <button class = "btn-opciones-cliente" (click)="verEstadisticasCliente()">ESTADÍSTICAS</button>
+        
+          
+          
 
         
 

@@ -73,7 +73,6 @@ mostrarOpciones = false;
 
   mostrarProductos(pedido: any) 
   {
-  // Alternar solo el pedido clickeado
     pedido.verPedido = !pedido.verPedido;
   }
 
@@ -267,6 +266,11 @@ async confirmarPagoCliente(pedido:any)
     this.listaPedidos = await this.firebaseService.getListaPedidos();
 
     await this.firebaseService.liberarMesa(pedido.clienteUid);
+}
+
+async darPropina()
+{
+  
 }
 
 

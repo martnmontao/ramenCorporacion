@@ -41,7 +41,7 @@ export class FirebaseService {
             this.userId = null;
             this.nombreUsuario = null;
           }
-          console.log("AuthState:", this.userId);
+
         });
   
     this.registroCollection = collection(this.firestore, 'registro');
@@ -58,7 +58,13 @@ export class FirebaseService {
           title: 'Error',
           text: 'Por favor, complete el correo y la clave.',
           confirmButtonText: 'Aceptar',
-          heightAuto: false
+          heightAuto: false,
+          customClass: {
+            popup: 'mi-alerta',
+            confirmButton: 'btn-alerta',
+            title: 'titulo-alerta',
+            htmlContainer: 'texto-alerta'
+          }
         });
         return;
     }
@@ -91,7 +97,13 @@ export class FirebaseService {
           title: 'Error',
           text: mensaje,
           confirmButtonText: 'Aceptar',
-          heightAuto: false
+          heightAuto: false,
+          customClass: {
+            popup: 'mi-alerta',
+            confirmButton: 'btn-alerta',
+            title: 'titulo-alerta',
+            htmlContainer: 'texto-alerta'
+          }
         });
         return;
       }
@@ -113,7 +125,13 @@ export class FirebaseService {
         title: 'Error',
         text: mensaje,
         confirmButtonText: 'Aceptar',
-        heightAuto: false
+        heightAuto: false,
+        customClass: {
+          popup: 'mi-alerta',
+          confirmButton: 'btn-alerta',
+          title: 'titulo-alerta',
+          htmlContainer: 'texto-alerta'
+        }
       });
 
       throw error;
@@ -137,39 +155,39 @@ export class FirebaseService {
     return this.auth.currentUser;
   }
   
-  async aplicarDescuentoAlPedido(uid: string): Promise<void> {
-    const pedido = await this.obtenerPedidoPorUidUsuario(uid);
+  async aplicarDescuentoAlPedido(pedido:any): Promise<void> {
 
     if (pedido) {
       const pedidoRef = doc(this.firestore, 'pedidos', pedido.id);
-      const descuento = pedido.descuento ?? 0;
-      const total = pedido.importeTotal ?? 0;
+     
+     
 
-      const importeConDescuento = total - (total * descuento / 100);
-
+      const importeConDescuento = Math.round(pedido.importeTotal - (pedido.importeTotal * (pedido.descuento / 100)));
+      console.log(importeConDescuento);
       await updateDoc(pedidoRef, {
-        importeConDescuento: Math.round(importeConDescuento * 100) / 100  // redondeo a 2 decimales
+        importeTotal: importeConDescuento // redondeo a 2 decimales
       });
     }
   }
 
 
-  async verificarDescuentoJugado(uid: string): Promise<boolean> {
-    const pedidoRef = doc(this.firestore, 'pedidos', uid);
+  async verificarDescuentoJugado(pedido:any): Promise<boolean> {
+    const pedidoRef = doc(this.firestore, 'pedidos', pedido.id);
     const pedidoSnap = await getDoc(pedidoRef);
     
     if (pedidoSnap.exists()) {
       const descuento = pedidoSnap.data()['descuento'];
-      return descuento > 0;
+      return descuento  == 0 || descuento > 1;
     }
 
     return false;
   }
 
 
-  async guardarDescuento(uid: string, porcentaje: number) {
-    const pedidoRef = doc(this.firestore, 'pedidos', uid); 
-    await setDoc(pedidoRef, { descuento: porcentaje }, { merge: true });
+  async guardarDescuento(pedido: any, porcentaje: number) {
+    
+    const pedidoRef = doc(this.firestore, 'pedidos', pedido.id); 
+    await setDoc(pedidoRef, { descuento: porcentaje, importeTotal: Math.round(pedido.importeTotal - (pedido.importeTotal * (porcentaje / 100))) }, { merge: true });
   }
 
   async guardarEncuesta(datosEncuesta: any):Promise<void>{
@@ -187,6 +205,7 @@ export class FirebaseService {
   }
 
   async obtenerPedidoPorUidUsuario(uidUsuario: string): Promise<any> {
+    
     const pedidosRef = collection(this.firestore, 'pedidos');
     const q = query(pedidosRef, where('clienteUid', '==', uidUsuario));
 
@@ -198,7 +217,7 @@ export class FirebaseService {
 
     return null; // No se encontró ningún pedido
   }
-
+  //obtenerUsuarioLogueado
 
   getEncuestas(): Observable<any[]>{
     const encuestasRef = collection(this.firestore,'encuestas');
@@ -212,7 +231,7 @@ export class FirebaseService {
 
   async obtenerUsuarioLogueado() {
     const usersRef = collection(this.firestore, 'usuarios');
-    console.log(this.userId);
+    console.log("ESTE ES EL UID",this.userId);
     const q = query(usersRef, where('uid', '==', this.userId), limit(1)); 
     const querySnapshot = await getDocs(q);
 
@@ -250,7 +269,13 @@ export class FirebaseService {
         title: 'Error',
         text: 'No se pudieron cargar los usuarios no autorizados.',
         confirmButtonText: 'Aceptar',
-        heightAuto: false
+        heightAuto: false,
+        customClass: {
+          popup: 'mi-alerta',
+          confirmButton: 'btn-alerta',
+          title: 'titulo-alerta',
+          htmlContainer: 'texto-alerta'
+        }
       });
       throw error;
     }
@@ -276,7 +301,13 @@ export class FirebaseService {
         title: 'Error',
         text: 'No se pudieron cargar los usuarios no autorizados.',
         confirmButtonText: 'Aceptar',
-        heightAuto: false
+        heightAuto: false,
+        customClass: {
+          popup: 'mi-alerta',
+          confirmButton: 'btn-alerta',
+          title: 'titulo-alerta',
+          htmlContainer: 'texto-alerta'
+        }
       });
       throw error;
     }
@@ -301,7 +332,13 @@ export class FirebaseService {
         title: 'Error',
         text: 'No se pudieron cargar los usuarios no autorizados.',
         confirmButtonText: 'Aceptar',
-        heightAuto: false
+        heightAuto: false,
+        customClass: {
+          popup: 'mi-alerta',
+          confirmButton: 'btn-alerta',
+          title: 'titulo-alerta',
+          htmlContainer: 'texto-alerta'
+        }
       });
       throw error;
     }
@@ -337,7 +374,13 @@ export class FirebaseService {
           title: 'Error de autorización',
           text: errorMessage,
           confirmButtonText: 'Aceptar',
-          heightAuto: false
+          heightAuto: false,
+          customClass: {
+            popup: 'mi-alerta',
+            confirmButton: 'btn-alerta',
+            title: 'titulo-alerta',
+            htmlContainer: 'texto-alerta'
+          }
         });
         throw error;
       }
@@ -419,7 +462,13 @@ export class FirebaseService {
         title: 'Usuario no encontrado',
         text: `No se encontró ningún usuario con el correo ${correoUsuario}`,
         confirmButtonText: 'Aceptar',
-        heightAuto: false
+        heightAuto: false,
+        customClass: {
+          popup: 'mi-alerta',
+          confirmButton: 'btn-alerta',
+          title: 'titulo-alerta',
+          htmlContainer: 'texto-alerta'
+        }
       });
       return;
     }
@@ -433,7 +482,13 @@ export class FirebaseService {
       title: '¡Usuario Rechazado!',
       text: `El usuario ${correoUsuario} fue eliminado correctamente.`,
       confirmButtonText: 'Aceptar',
-      heightAuto: false
+      heightAuto: false,
+      customClass: {
+        popup: 'mi-alerta',
+        confirmButton: 'btn-alerta',
+        title: 'titulo-alerta',
+        htmlContainer: 'texto-alerta'
+      }
     });
 
   } catch (error) {
@@ -443,7 +498,13 @@ export class FirebaseService {
       title: 'Error',
       text: 'No se pudo eliminar el usuario. Inténtelo de nuevo.',
       confirmButtonText: 'Aceptar',
-      heightAuto: false
+      heightAuto: false,
+      customClass: {
+        popup: 'mi-alerta',
+        confirmButton: 'btn-alerta',
+        title: 'titulo-alerta',
+        htmlContainer: 'texto-alerta'
+      }
     });
     throw error;
   }
@@ -498,7 +559,13 @@ export class FirebaseService {
         title: '¡Mesa Agregada!',
         text: `La mesa ${datosMesa.numeroMesa} ha sido agregada con éxito.`,
         confirmButtonText: 'Aceptar',
-        heightAuto: false
+        heightAuto: false,
+        customClass: {
+          popup: 'mi-alerta',
+          confirmButton: 'btn-alerta',
+          title: 'titulo-alerta',
+          htmlContainer: 'texto-alerta'
+        }
       });
     } catch (error) {
       console.error('Error al agregar mesa:', error);
@@ -507,7 +574,13 @@ export class FirebaseService {
         title: 'Error',
         text: 'No se pudo agregar la mesa. Inténtelo de nuevo.',
         confirmButtonText: 'Aceptar',
-        heightAuto: false
+        heightAuto: false,
+        customClass: {
+          popup: 'mi-alerta',
+          confirmButton: 'btn-alerta',
+          title: 'titulo-alerta',
+          htmlContainer: 'texto-alerta'
+        }
       });
       throw error;
     }
@@ -552,10 +625,10 @@ export class FirebaseService {
       confirmButtonText: 'Aceptar',
       heightAuto: false,
       customClass: {
-        popup: 'mi-popup',
-        title: 'mi-titulo',
-        confirmButton: 'mi-boton',
-        htmlContainer: 'mi-texto'
+        popup: 'mi-alerta',
+        confirmButton: 'btn-alerta',
+        title: 'titulo-alerta',
+        htmlContainer: 'texto-alerta'
       }
     });
 
@@ -568,10 +641,10 @@ export class FirebaseService {
       confirmButtonText: 'Aceptar',
       heightAuto: false,
       customClass: {
-        popup: 'mi-popup',
-        title: 'mi-titulo',
-        confirmButton: 'mi-boton',
-        htmlContainer: 'mi-texto'
+        popup: 'mi-alerta',
+        confirmButton: 'btn-alerta',
+        title: 'titulo-alerta',
+        htmlContainer: 'texto-alerta'
       }
     });
   }
@@ -635,7 +708,13 @@ obtenerClientesEnEspera(estadoFiltro?: ClienteEnEspera['estado']): Observable<Cl
         title: '¡Mesa Actualizada!',
         text: `La mesa ${idMesa} ha sido actualizada con éxito.`,
         confirmButtonText: 'Aceptar',
-        heightAuto: false
+        heightAuto: false,
+        customClass: {
+          popup: 'mi-alerta',
+          confirmButton: 'btn-alerta',
+          title: 'titulo-alerta',
+          htmlContainer: 'texto-alerta'
+        }
       });
     } catch (error) {
       console.error('Error al actualizar mesa:', error);
@@ -644,7 +723,13 @@ obtenerClientesEnEspera(estadoFiltro?: ClienteEnEspera['estado']): Observable<Cl
         title: 'Error',
         text: 'No se pudo actualizar la mesa. Inténtelo de nuevo.',
         confirmButtonText: 'Aceptar',
-        heightAuto: false
+        heightAuto: false,
+        customClass: {
+          popup: 'mi-alerta',
+          confirmButton: 'btn-alerta',
+          title: 'titulo-alerta',
+          htmlContainer: 'texto-alerta'
+        }
       });
       throw error;
     }
@@ -664,7 +749,13 @@ obtenerClientesEnEspera(estadoFiltro?: ClienteEnEspera['estado']): Observable<Cl
         title: '¡Mesa Eliminada!',
         text: `La mesa ${idMesa} ha sido eliminada con éxito.`,
         confirmButtonText: 'Aceptar',
-        heightAuto: false
+        heightAuto: false,
+        customClass: {
+          popup: 'mi-alerta',
+          confirmButton: 'btn-alerta',
+          title: 'titulo-alerta',
+          htmlContainer: 'texto-alerta'
+        }
       });
     } catch (error) {
       console.error('Error al eliminar mesa:', error);
@@ -673,7 +764,13 @@ obtenerClientesEnEspera(estadoFiltro?: ClienteEnEspera['estado']): Observable<Cl
         title: 'Error',
         text: 'No se pudo eliminar la mesa. Inténtelo de nuevo.',
         confirmButtonText: 'Aceptar',
-        heightAuto: false
+        heightAuto: false,
+        customClass: {
+          popup: 'mi-alerta',
+          confirmButton: 'btn-alerta',
+          title: 'titulo-alerta',
+          htmlContainer: 'texto-alerta'
+        }
       });
       throw error;
     }
@@ -698,7 +795,13 @@ obtenerClientesEnEspera(estadoFiltro?: ClienteEnEspera['estado']): Observable<Cl
         title: '¡Cliente en Espera!',
         text: `El cliente ${cliente.nombre} ha sido añadido a la lista de espera.`,
         confirmButtonText: 'Aceptar',
-        heightAuto: false
+        heightAuto: false,
+        customClass: {
+          popup: 'mi-alerta',
+          confirmButton: 'btn-alerta',
+          title: 'titulo-alerta',
+          htmlContainer: 'texto-alerta'
+        }
       });
     } catch (error) {
       console.error('Error al agregar cliente en espera:', error);
@@ -707,7 +810,13 @@ obtenerClientesEnEspera(estadoFiltro?: ClienteEnEspera['estado']): Observable<Cl
         title: 'Error',
         text: 'No se pudo agregar el cliente a la lista de espera. Inténtelo de nuevo.',
         confirmButtonText: 'Aceptar',
-        heightAuto: false
+        heightAuto: false,
+        customClass: {
+          popup: 'mi-alerta',
+          confirmButton: 'btn-alerta',
+          title: 'titulo-alerta',
+          htmlContainer: 'texto-alerta'
+        }
       });
       throw error;
     }
@@ -741,7 +850,13 @@ obtenerClientesEnEspera(estadoFiltro?: ClienteEnEspera['estado']): Observable<Cl
         title: 'Error',
         text: 'No se pudo actualizar el cliente en espera. Inténtelo de nuevo.',
         confirmButtonText: 'Aceptar',
-        heightAuto: false
+        heightAuto: false,
+  customClass: {
+    popup: 'mi-alerta',
+    confirmButton: 'btn-alerta',
+    title: 'titulo-alerta',
+    htmlContainer: 'texto-alerta'
+  }
       });
       throw error;
     }
@@ -761,7 +876,13 @@ obtenerClientesEnEspera(estadoFiltro?: ClienteEnEspera['estado']): Observable<Cl
         title: '¡Cliente Removido!',
         text: `El cliente ha sido removido de la lista de espera.`,
         confirmButtonText: 'Aceptar',
-        heightAuto: false
+        heightAuto: false,
+  customClass: {
+    popup: 'mi-alerta',
+    confirmButton: 'btn-alerta',
+    title: 'titulo-alerta',
+    htmlContainer: 'texto-alerta'
+  }
       });
     } catch (error) {
       console.error('Error al eliminar cliente en espera:', error);
@@ -770,7 +891,13 @@ obtenerClientesEnEspera(estadoFiltro?: ClienteEnEspera['estado']): Observable<Cl
         title: 'Error',
         text: 'No se pudo eliminar el cliente de la lista de espera. Inténtelo de nuevo.',
         confirmButtonText: 'Aceptar',
-        heightAuto: false
+        heightAuto: false,
+  customClass: {
+    popup: 'mi-alerta',
+    confirmButton: 'btn-alerta',
+    title: 'titulo-alerta',
+    htmlContainer: 'texto-alerta'
+  }
       });
       throw error;
     }

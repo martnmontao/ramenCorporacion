@@ -106,7 +106,7 @@ export class RegistroPage implements OnInit {
     }
 
     if (controls['cuil']?.errors?.['dniNoCoincide']) {
-      return 'La parte del medio del CUIL debe coincidir con el DNI ingresado.';
+      return 'Verifique su CUIL. CUIL inválido.';
     }
 
     if (controls['cuil']?.errors?.['pattern']) {
@@ -141,7 +141,8 @@ export class RegistroPage implements OnInit {
       message: mensaje,
       duration:3000,
       position:'top',
-      buttons:[{text:'OK', role:'cancel'}],
+      buttons:[{text:'ACEPTAR', role:'cancel'}],
+      cssClass: 'mi-toast-custom'
     });
 
     await toastMensaje.present();
@@ -211,7 +212,13 @@ export class RegistroPage implements OnInit {
       title: '¡Registro exitoso!',
       text: 'Queda esperar la autorización.',
       confirmButtonText: 'Aceptar',
-      heightAuto: false
+      heightAuto: false,
+  customClass: {
+    popup: 'mi-alerta',
+    confirmButton: 'btn-alerta',
+    title: 'titulo-alerta',
+    htmlContainer: 'texto-alerta'
+  }
       });
       this.registroForm.reset();
       this.fotoUsuario = undefined;
@@ -224,7 +231,13 @@ export class RegistroPage implements OnInit {
       title: '¡Error inesperado!',
       text: 'Intentá de nuevo',
       confirmButtonText: 'Aceptar',
-      heightAuto: false
+      heightAuto: false,
+  customClass: {
+    popup: 'mi-alerta',
+    confirmButton: 'btn-alerta',
+    title: 'titulo-alerta',
+    htmlContainer: 'texto-alerta'
+  }
       });
     }
   }

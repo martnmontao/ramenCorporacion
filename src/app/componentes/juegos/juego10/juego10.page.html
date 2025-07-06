@@ -1,14 +1,28 @@
-<ion-content class="ion-padding" [fullscreen]="true">
-  <div class="ollas-container">
-    <div class="fila">
-      <button *ngFor="let item of [0,1]; let i = index" [class.seleccionada]="i === seleccion" (click)="elegirOlla(i)" [disabled]="juegoTerminado">
-        <img [src]="mostrarContenido(i)" alt="Olla" />
-      </button>
-    </div>
-    <div class="fila">
-      <button *ngFor="let item of [2,3]; let i = index " [class.seleccionada]="(i + 2) === seleccion" (click)="elegirOlla(i + 2)" [disabled]="juegoTerminado">
-        <img [src]="mostrarContenido(i + 2)" alt="Olla" />
-      </button>
-    </div>
+<ion-content [fullscreen]="true">
+  <div id = "contenedor-principal">
+    <header>
+        <h1 class ="titulos">RamenGB🍜</h1>
+        <button id = "btn-mostrar-opciones" (click) = "mostrarContenedores('opciones')">≋</button>
+        <div id = "contenedor-opciones-inicio" class="contenedor-animado"[class.visible]="mostrarOpciones">
+          <button (click)="irA('home-cliente')"class="btn-opciones-inicio">INICIO</button>
+          <button (click)="cerrarSesion()"class="btn-opciones-inicio">CERRAR SESIÓN</button>
+        </div>
+      </header>
+      <div class="ollas-container" *ngIf = "empezar">  
+        <h2>¡DESCUENTO DE 10%!</h2>
+        <p>Elija la olla que desee</p>
+        <div class="fila">
+          <button class = "btn-ollas"*ngFor="let item of [0,1]; let i = index"(click)="elegirOlla(i)" [disabled]="juegoTerminado">
+            <img [src]="mostrarContenido(i)" alt="Olla" [class.seleccionada]="i === seleccion"/>
+          </button>
+        </div>
+        <div class="fila">
+          <button class = "btn-ollas"*ngFor="let item of [2,3]; let i = index "  (click)="elegirOlla(i + 2)" [disabled]="juegoTerminado">
+            <img [src]="mostrarContenido(i + 2)" alt="Olla" [class.seleccionada]="(i + 2) === seleccion"/>
+          </button>
+        </div>
+      </div>
+
+
   </div>
 </ion-content>

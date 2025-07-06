@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FirebaseService } from 'src/app/servicios/firebase.service';
-
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-juegos-vista',
   templateUrl: './juegos-vista.page.html',
@@ -10,7 +10,7 @@ import { FirebaseService } from 'src/app/servicios/firebase.service';
 export class JuegosVistaPage implements OnInit {
   mostrarOpciones = false;
 
-  constructor(private firebaseService: FirebaseService) { }
+  constructor(private router: Router, private firebaseService: FirebaseService) { }
 
   ngOnInit() {
   }
@@ -23,6 +23,13 @@ export class JuegosVistaPage implements OnInit {
         this.mostrarOpciones = !this.mostrarOpciones;
         break;
     }
+  }
+
+     irA(path:string)
+  {
+    this.mostrarOpciones = false;
+
+    this.router.navigateByUrl(path);
   }
 
   jugar10(){

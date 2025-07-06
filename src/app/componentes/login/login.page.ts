@@ -70,7 +70,6 @@ export class LoginPage implements OnInit {
     {
       this.emailUsuario = "";
       this.claveUsuario = "";
-      this.router.navigateByUrl("home");
     }
     ).catch(error => 
     {

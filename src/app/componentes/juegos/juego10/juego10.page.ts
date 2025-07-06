@@ -16,30 +16,66 @@ export class Juego10Page implements OnInit {
   seleccion: number | null = null;
   juegoTerminado = false;
   user:any;
-
+  mostrarOpciones = false;
+  empezar = false;
   constructor(private router: Router, private firebase: FirebaseService) { }
 
   async ngOnInit() {
-    this.user = this.firebase.obtenerUsuarioLogueado();
-
-    const yaTieneDescuento = await this.firebase.verificarDescuentoJugado(this.user.uid);
+    this.user = await this.firebase.obtenerUsuarioLogueado();
+    const pedido = await this.firebase.obtenerPedidoPorUidUsuario(this.user.uid);
+    const yaTieneDescuento = await this.firebase.verificarDescuentoJugado(pedido);
     if (yaTieneDescuento) {
       await Swal.fire({
         icon: 'info',
         title: 'Ya jugaste',
-        text: 'Ya participaste y obtuviste un descuento.',
+        text: 'Ya has participado por un descuento.',
         confirmButtonText: 'Aceptar',
         heightAuto: false,
+        customClass: {
+          popup: 'mi-alerta',
+          confirmButton: 'btn-alerta',
+          title: 'titulo-alerta',
+          htmlContainer: 'texto-alerta'
+        }
       });
       this.router.navigate(['/juegos-vista']);
       return;
     }
+    else
+    {
+      this.empezar = true;
+      this.indiceGanador = Math.floor(Math.random() * 4);
+      this.reiniciarJuego();
 
-    this.reiniciarJuego();
+    }
+  }
+   irA(path:string)
+  {
+    this.mostrarOpciones = false;
+
+    this.router.navigateByUrl(path);
   }
 
+  
+
+  cerrarSesion(){
+  this.firebase.cerrarSesion();
+  }
+
+  mostrarContenedores(contenedor: string)
+  {
+    switch(contenedor)
+    {
+      case "opciones":
+        this.mostrarOpciones = !this.mostrarOpciones;
+        break;
+     
+    }
+  }
+
+
   reiniciarJuego(){
-    this.indiceGanador = Math.floor(Math.random() * 4);
+   
     this.seleccion = null;
     this.juegoTerminado = false;
   }
@@ -57,9 +93,19 @@ export class Juego10Page implements OnInit {
         text: '¡Ganaste un descuento del 10% en tu compra!',
         confirmButtonText: 'Aceptar',
         heightAuto: false,
+        customClass: {
+          popup: 'mi-alerta',
+          confirmButton: 'btn-alerta',
+          title: 'titulo-alerta',
+          htmlContainer: 'texto-alerta'
+        }
       }).then(async()=>{
-        await this.firebase.guardarDescuento(this.user.uid, 10);
-        await this.firebase.aplicarDescuentoAlPedido(this.user.uid);
+        const pedido = await this.firebase.obtenerPedidoPorUidUsuario(this.user.uid);
+        if(pedido)
+        {
+          await this.firebase.guardarDescuento(pedido, 10);
+
+        }
         this.router.navigate(['/juegos-vista']);
         return;
       });
@@ -70,8 +116,16 @@ export class Juego10Page implements OnInit {
         text: '¡Uy, ese no era! Será la próxima',
         confirmButtonText: 'Aceptar',
         heightAuto: false,
+        customClass: {
+          popup: 'mi-alerta',
+          confirmButton: 'btn-alerta',
+          title: 'titulo-alerta',
+          htmlContainer: 'texto-alerta'
+        }
       }).then(async()=>{
-        await this.firebase.guardarDescuento(this.user.uid, 0);
+        const pedido = await this.firebase.obtenerPedidoPorUidUsuario(this.user.uid);
+
+        await this.firebase.guardarDescuento(pedido, 0);
         this.router.navigate(['/juegos-vista']);
         return;
       });

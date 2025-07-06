@@ -4,8 +4,9 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 20px;
-    margin-top: 40px;
+    gap: 10px;
+
+    width: 100%;
 }
 
 .fila {
@@ -14,19 +15,119 @@
     gap: 20px;
 }
 
-button {
+.btn-ollas {
     background: transparent;
     border: none;
-    padding: 0;
+   
+    width: 170px;
+    height: 170px;
+   
+
 }
 
-button img {
-    width: 130px;
-    height: 130px;
-    object-fit: contain;
+.btn-ollas img {
+    width: 100%;
+    height: 100%;
+    border-radius: 30%;
+  
 }
 
 .seleccionada {
-    box-shadow: 0 0 10px 3px #ffc107;
+    box-shadow: 0 0 10px 3px #F0CA91;
+       
+
+}
+
+header{
+    height: 60px;
+    background-color: #10161e;
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #F0CA91;
+}
+
+#contenedor-opciones-inicio
+{
+    position: absolute;
+    top: 57px;
+    right: 0;
+    height: 200px;
+    box-shadow: 0px 18px 17px 4px rgba(0,0,0,0.75);
+    -webkit-box-shadow: 0px 18px 17px 4px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 18px 17px 4px rgba(0,0,0,0.75);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    width: 60%;
+    background-color: #10161e;
+    z-index: 9999;
+    border-radius: 0 0 10px 10px;
+}
+
+.titulos
+{
+    margin: 10px 10px;
+    color: #F0CA91;
+    font-size: 35px;
+   
+    font-family: 'Poppins', sans-serif;
+}
+.btn-opciones-inicio
+{
+    border: none;
+
+    font-size: 22px;
+    font-family: 'Poppins', sans-serif;
+    padding: 5px;
+    background-color: #F0CA91;
     border-radius: 10px;
+    color: #10161e;
+    height: 35%;
+    width: 90%;
+}
+#btn-mostrar-opciones
+{
+    width: 17%;
+    font-size: 43px;
+    color: #F0CA91;
+
+}
+
+.contenedor-animado {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height 0.3s ease, opacity 0.3s ease;
+}
+
+.contenedor-animado.visible {
+  max-height: 200px; 
+  opacity: 1;
+}
+
+button
+{
+    background-color: transparent;
+    color: #F0CA91;
+}
+#contenedor-principal
+{
+    height: 100%;
+    overflow-y: hidden;
+    background-color: #10161e;
+}
+
+h2
+{
+    color: #F0CA91;
+    font-size: 30px;
+   
+}
+
+
+p
+{
+    color: #F0CA91;
+    font-size: 30px;
 }

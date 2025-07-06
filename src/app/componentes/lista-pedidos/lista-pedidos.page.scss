@@ -151,7 +151,7 @@ button
   width: 80px;
   height: 80px;
   border-radius: 50%;
-  margin-top: 6%;
+  margin-top: 0%;
   margin-right: 10%;
   right: 0;
   position: absolute;
@@ -363,5 +363,12 @@ input:focus
 
 .mensaje {
   margin-top: 1rem;
+  font-weight: bold;
+}
+
+#p-importeTotal
+{
+
+  font-size: 40px;
   font-weight: bold;
 }

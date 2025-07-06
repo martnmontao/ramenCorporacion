@@ -1,10 +1,10 @@
 .juego20-container {
     display: flex;
     height: 100%;
-    justify-content: center;
+    margin-top: 25%;
     align-items: center;
-    text-align: center;
     flex-direction: column;
+
 }
 
 .opciones {
@@ -28,8 +28,8 @@
 }
 
 .opciones button.seleccionada {
-    border: 3px solid #ffd700;
-    box-shadow: 0 0 10px #ffd700;
+    border: 3px solid #F0CA91;
+    box-shadow: 0 0 10px #F0CA91;
 }
 
 .resultado {
@@ -40,4 +40,97 @@
     width: 150px;
     height: 150px;
     margin-top: 10px;
+}
+
+#contenedor-opciones-inicio
+{
+    position: absolute;
+    top: 57px;
+    right: 0;
+    height: 200px;
+    box-shadow: 0px 18px 17px 4px rgba(0,0,0,0.75);
+    -webkit-box-shadow: 0px 18px 17px 4px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 18px 17px 4px rgba(0,0,0,0.75);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    width: 60%;
+    background-color: #10161e;
+    z-index: 9999;
+    border-radius: 0 0 10px 10px;
+}
+
+.titulos
+{
+    margin: 10px 10px;
+    color: #F0CA91;
+    font-size: 35px;
+    font-family: 'Poppins', sans-serif;
+}
+.btn-opciones-inicio
+{
+    border: none;
+
+    font-size: 22px;
+    font-family: 'Poppins', sans-serif;
+    padding: 5px;
+    background-color: #F0CA91;
+    border-radius: 10px;
+    color: #10161e;
+    height: 35%;
+    width: 90%;
+}
+#btn-mostrar-opciones
+{
+    width: 17%;
+    font-size: 43px;
+    color: #F0CA91;
+    
+}
+
+.contenedor-animado {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height 0.3s ease, opacity 0.3s ease;
+}
+
+.contenedor-animado.visible {
+  max-height: 200px; 
+  opacity: 1;
+}
+
+button
+{
+    background-color: transparent;
+    color: #F0CA91;
+}
+
+header{
+    height: 60px;
+    background-color: #10161e;
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #F0CA91;
+  
+}
+#contenedor-principal
+{
+    height: 100%;
+    overflow-y: hidden;
+    background-color: #10161e;
+}
+
+h2
+{
+    font-size: 30px;
+    color: #F0CA91;
+}
+
+p
+{
+    font-size: 25px;
+    color: #F0CA91;
+    text-align: center;
 }

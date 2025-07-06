@@ -246,7 +246,7 @@ export class ProductosPage implements OnInit {
       pagado: 'No pagado',
       imagenUsuario: this.user.imagenUsuario,
       verPedido: false,
-      descuento: 0
+      descuento: 1
     }
 
     this.firebaseService.agregarDocumento(data, 'pedidos').then(() => 

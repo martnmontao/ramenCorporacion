@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
 })
 export class AppComponent {
    constructor(private platform: Platform, private router: Router) {
-    this.initializeApp();
+   // this.initializeApp();
   }
 
   initializeApp() {
