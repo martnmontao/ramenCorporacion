@@ -93,7 +93,16 @@ const routes: Routes = [
   {
     path: 'splash-screen',
     loadChildren: () => import('./componentes/splash-screen/splash-screen.module').then( m => m.SplashScreenPageModule)
+  },
+  {
+    path: 'reservas',
+    loadChildren: () => import('./componentes/reservas/reservas.module').then( m => m.ReservasPageModule)
+  },
+  {
+    path: 'gestion-reservas',
+    loadChildren: () => import('./componentes/gestion-reservas/gestion-reservas.module').then( m => m.GestionReservasPageModule)
   }
+
 
 
   

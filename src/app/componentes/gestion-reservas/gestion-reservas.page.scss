@@ -1,0 +1,115 @@
+/* src/app/components/gestion-reservas/gestion-reservas.component.css */
+/* Custom styles for Swal alerts to match the application's aesthetic */
+.mi-alerta {
+  background-color: #f7fafc !important; /* Light gray background */
+  border-radius: 0.75rem !important; /* Rounded corners */
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important; /* Shadow */
+  font-family: 'Inter', sans-serif !important; /* Consistent font */
+}
+
+.titulo-alerta {
+  color: #2d3748 !important; /* Dark gray for title */
+  font-weight: 700 !important; /* Bold title */
+}
+
+.texto-alerta {
+  color: #4a5568 !important; /* Medium gray for text */
+}
+
+.btn-alerta {
+  background-color: #4299e1 !important; /* Blue button */
+  color: white !important;
+  border-radius: 0.5rem !important; /* Rounded button */
+  padding: 0.75rem 1.5rem !important;
+  font-weight: 600 !important;
+  transition: background-color 0.2s ease-in-out !important;
+}
+
+.btn-alerta:hover {
+  background-color: #3182ce !important; /* Darker blue on hover */
+}
+
+/* Specific style for cancel button in Swal */
+.btn-alerta-cancel {
+  background-color: #ef4444 !important; /* Red button */
+  color: white !important;
+  border-radius: 0.5rem !important;
+  padding: 0.75rem 1.5rem !important;
+  font-weight: 600 !important;
+  transition: background-color 0.2s ease-in-out !important;
+}
+
+.btn-alerta-cancel:hover {
+  background-color: #dc2626 !important; /* Darker red on hover */
+}
+
+/* Table specific styles */
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  text-align: left;
+  padding: 8px;
+  border-bottom: 1px solid #e2e8f0; /* Light gray border */
+}
+
+th {
+  background-color: #edf2f7; /* Lighter gray for header */
+  font-weight: 600;
+  color: #4a5568;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+}
+
+tr:last-child td {
+  border-bottom: none;
+}
+
+/* Responsive table */
+@media (max-width: 768px) {
+  table, thead, tbody, th, td, tr {
+    display: block;
+  }
+
+  thead tr {
+    position: absolute;
+    top: -9999px;
+    left: -9999px;
+  }
+
+  tr {
+    border: 1px solid #ccc;
+    margin-bottom: 1rem;
+    border-radius: 0.5rem;
+    overflow: hidden;
+  }
+
+  td {
+    border: none;
+    border-bottom: 1px solid #eee;
+    position: relative;
+    padding-left: 50%;
+    text-align: right;
+  }
+
+  td:before {
+    position: absolute;
+    top: 0;
+    left: 6px;
+    width: 45%;
+    padding-right: 10px;
+    white-space: nowrap;
+    text-align: left;
+    font-weight: bold;
+    content: attr(data-label); /* Use data-label for mobile headers */
+  }
+
+  td:nth-of-type(1):before { content: "Cliente"; }
+  td:nth-of-type(2):before { content: "Fecha y Hora"; }
+  td:nth-of-type(3):before { content: "Personas"; }
+  td:nth-of-type(4):before { content: "Notas"; }
+  td:nth-of-type(5):before { content: "Asignar Mesa"; }
+  td:nth-of-type(6):before { content: "Acciones"; }
+}

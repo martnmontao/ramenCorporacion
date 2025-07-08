@@ -43,11 +43,7 @@ solicitudMesaForm: FormGroup;
             this.usuarioLogueadoUid = usuarioData.uid;
             if (usuarioData.apellidoUsuario) {
               this.usuarioLogueadoNombre += ' ' + usuarioData.apellidoUsuario;
-            }
-
-            this.solicitudMesaForm.patchValue({
-              nombre: this.usuarioLogueadoNombre // si querés precargar también el DNI como teléfono opcional
-            });}
+            }}
         } catch (error) {
                   console.error('Error al obtener datos del usuario logueado:', error);
                   // Puedes decidir si mostrar un mensaje al usuario o simplemente no pre-llenar
@@ -62,7 +58,6 @@ solicitudMesaForm: FormGroup;
         const nuevoClienteEnEspera: Omit<ClienteEnEspera, 'id'> = {
           nombre: datosFormulario.nombre,
           cantidadPersonas: datosFormulario.cantidadPersonas,
-          telefono: datosFormulario.telefono || '',
           horaLlegada: new Date(),
           estado: 'esperando',
           usuarioUid: this.usuarioLogueadoUid

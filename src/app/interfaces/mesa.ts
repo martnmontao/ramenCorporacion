@@ -3,7 +3,7 @@ export interface Mesa {
     numeroMesa: number;
     capacidad: number;
     tipo: 'estandar' | 'VIP' | 'apta-movilidad-reducida'
-    estado: 'disponible' | 'ocupada' ; // O los estados que definas
+    estado: 'disponible' | 'ocupada' | 'reservada' ; // O los estados que definas
     qrCodeUrl: string;
     currentClientId: string | null;
     assignedAt: Date | null; // Usar Date para timestamps
