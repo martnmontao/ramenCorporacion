@@ -13,17 +13,17 @@
     
       <!-- Mensaje si el usuario no tiene permisos para ver esta lista --> 
       <!-- Lista de usuarios si no está cargando y hay usuarios para mostrar y el usuario tiene permisos -->
-    <div class="contenedor-opciones-filtro">                    
-  <button class="btn-filtrar" type="button"
-          [class.active]="filtroSeleccionado === 'cliente'"
-          (click)="cargarUsuariosPorPerfil('cliente')">CLIENTES</button>
+  <div class="contenedor-opciones-filtro">                    
+          <button class="btn-filtrar" type="button"
+                  [class.active]="filtroSeleccionado === 'cliente'"
+                  (click)="cargarUsuariosPorPerfil('cliente')">CLIENTES</button>
 
-  <button class="btn-filtrar" type="button"
-          [class.active]="filtroSeleccionado === 'empleado'"
-          (click)="cargarUsuariosPorPerfil('empleado')" *ngIf = "user?.perfil == 'gerencia'">EMPLEADOS</button>
+          <button class="btn-filtrar" type="button"
+                  [class.active]="filtroSeleccionado === 'empleado'"
+                  (click)="cargarUsuariosPorPerfil('empleado')" *ngIf = "user?.perfil == 'gerencia'">EMPLEADOS</button>
 
-  <button class="btn-filtrar" (click)="irA('alta-mesa')">AGREGAR MESA</button>
-        </div>
+          <button class="btn-filtrar" (click)="irA('alta-mesa')">AGREGAR MESA</button>
+    </div>
 
 <!-- Lista Usuarios NO autorizados -->
 

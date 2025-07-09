@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { interval, startWith, Subscription, switchMap } from 'rxjs';
 import { Mesa } from 'src/app/interfaces/mesa';
 import { Reserva } from 'src/app/interfaces/reserva';
@@ -12,21 +13,28 @@ import Swal from 'sweetalert2';
   standalone: false
 })
 export class GestionReservasPage implements OnInit {
+  mostrarOpciones = false;
+  user: any;
   reservasPendientes: Reserva[] = [];
   reservasConfirmadas: Reserva[] = [];
+
   mesasDisponibles: Mesa[] = []; // These are truly 'disponible' mesas for assignment
   selectedMesaId: string | null = null;
   private subscriptions: Subscription = new Subscription();
   private readonly MAX_WAIT_TIME_MINUTES = 15; // Tiempo máximo de espera para que el cliente llegue después de la hora de reserva
 
-  constructor(private firebaseService: FirebaseService) { }
+  constructor(private firebaseService: FirebaseService, private router: Router) { }
 
-  ngOnInit(): void {
-    // Suscribirse a las reservas pendientes
+  async ngOnInit() {
+    this.user = await this.firebaseService.obtenerUsuarioLogueado();
+
+    
     this.subscriptions.add(
       this.firebaseService.obtenerReservasPendientes().subscribe(
         (reservas) => {
-          this.reservasPendientes = reservas;
+       
+            this.reservasPendientes = reservas;
+      
         },
         (error) => {
           console.error('Error al obtener reservas pendientes:', error);
@@ -47,7 +55,8 @@ export class GestionReservasPage implements OnInit {
       )
     );
 
-    // Suscribirse a las mesas disponibles
+
+    
     this.subscriptions.add(
       this.firebaseService.obtenerMesasDisponibles().subscribe(
         (mesas) => {
@@ -72,14 +81,11 @@ export class GestionReservasPage implements OnInit {
       )
     );
 
-    // Suscribirse a las reservas confirmadas y verificar expiración cada minuto
     this.subscriptions.add(
-      interval(60000) // Check every minute
+      interval(60000) 
         .pipe(
-          startWith(0), // Emit immediately on component load
-          // Fetch all reservations (not just for a specific client) to check for expiration
-          // This assumes the supervisor needs to monitor all confirmed reservations.
-          // If you have a specific way to filter supervisor's view, adjust this query.
+          startWith(0),
+        
           switchMap(() => this.firebaseService.getCollection<Reserva>('reservas', 'estado', 'confirmada'))
         )
         .subscribe(
@@ -154,7 +160,7 @@ export class GestionReservasPage implements OnInit {
    * Cancela una reserva.
    * @param reservaId El ID de la reserva a cancelar.
    */
-  async cancelarReserva(reservaId: string): Promise<void> {
+  async cancelarReserva(reserva:any): Promise<void> {
     Swal.fire({
       title: '¿Está seguro?',
       text: 'Esta acción cancelará la reserva de forma permanente.',
@@ -175,7 +181,9 @@ export class GestionReservasPage implements OnInit {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          await this.firebaseService.cancelarReserva(reservaId);
+
+          
+          await this.firebaseService.cancelarReserva(reserva);
         } catch (error) {
           // Error handling is already in FirebaseService
         }
@@ -222,11 +230,26 @@ export class GestionReservasPage implements OnInit {
    * @param mesaId El ID de la mesa.
    * @returns El número de mesa o 'N/A' si no se encuentra.
    */
-  getMesaNumero(mesaId: string | undefined): string {
-    if (!mesaId) {
-      return 'N/A';
+ 
+
+    mostrarContenedores(contenedor: string)
+  {
+    switch(contenedor)
+    {
+      case "opciones":
+        this.mostrarOpciones = !this.mostrarOpciones;
+        break;
+     
     }
-    const mesa = this.mesasDisponibles.find(m => m.mesaId === mesaId);
-    return mesa ? mesa.numeroMesa.toString() : 'N/A';
+  }
+
+  
+  irA(path:string)
+  {
+    this.router.navigateByUrl(path);
+  }
+
+   cerrarSesion(){
+  this.firebaseService.cerrarSesion();
   }
 }

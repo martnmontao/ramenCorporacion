@@ -1,66 +1,160 @@
-/* src/app/components/gestion-reservas/gestion-reservas.component.css */
-/* Custom styles for Swal alerts to match the application's aesthetic */
-.mi-alerta {
-  background-color: #f7fafc !important; /* Light gray background */
-  border-radius: 0.75rem !important; /* Rounded corners */
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important; /* Shadow */
-  font-family: 'Inter', sans-serif !important; /* Consistent font */
+header
+{
+    height: 60px;
+    background-color: #10161e;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    border-bottom: 1px solid #F0CA91;
 }
 
-.titulo-alerta {
-  color: #2d3748 !important; /* Dark gray for title */
-  font-weight: 700 !important; /* Bold title */
+.contenedor-section
+{
+  margin: 10px 0;
+  height: 50%;
+  background-color: #10161e;
+
 }
 
-.texto-alerta {
-  color: #4a5568 !important; /* Medium gray for text */
+#principal-container
+{
+  height: 100%;
+  background-color: #10161e;
+  overflow-y: auto;
 }
 
-.btn-alerta {
-  background-color: #4299e1 !important; /* Blue button */
-  color: white !important;
-  border-radius: 0.5rem !important; /* Rounded button */
-  padding: 0.75rem 1.5rem !important;
-  font-weight: 600 !important;
-  transition: background-color 0.2s ease-in-out !important;
+.titulos
+{
+    margin: 10px 10px;
+    color: #F0CA91;
+    font-size: 35px;
+    font-family: 'Poppins', sans-serif;
+}
+#contenedor-opciones-inicio
+{
+    position: absolute;
+    top: 57px;
+    right: 0;
+    height: 200px;
+    box-shadow: 0px 18px 17px 4px rgba(0,0,0,0.75);
+    -webkit-box-shadow: 0px 18px 17px 4px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 18px 17px 4px rgba(0,0,0,0.75);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    width: 60%;
+    background-color: #10161e;
+    z-index: 9999;
+    border-radius: 0 0 10px 10px;
 }
 
-.btn-alerta:hover {
-  background-color: #3182ce !important; /* Darker blue on hover */
+select
+{
+  border-radius: 10px;
+  height: 30px;
+  border: none;
 }
 
-/* Specific style for cancel button in Swal */
-.btn-alerta-cancel {
-  background-color: #ef4444 !important; /* Red button */
-  color: white !important;
-  border-radius: 0.5rem !important;
-  padding: 0.75rem 1.5rem !important;
-  font-weight: 600 !important;
-  transition: background-color 0.2s ease-in-out !important;
+.btn-opciones-inicio
+{
+    border: none;
+
+    font-size: 22px;
+    font-family: 'Poppins', sans-serif;
+    padding: 5px;
+    background-color: #F0CA91;
+    border-radius: 10px;
+    color: #10161e;
+    height: 35%;
+    width: 90%;
+}
+#btn-mostrar-opciones
+{
+    width: 17%;
+    font-size: 43px;
+    color: #F0CA91;
+    
 }
 
-.btn-alerta-cancel:hover {
-  background-color: #dc2626 !important; /* Darker red on hover */
+.contenedor-animado {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height 0.3s ease, opacity 0.3s ease;
 }
+
+.contenedor-animado.visible {
+  max-height: 200px; 
+  opacity: 1;
+}
+.contenedor-mensaje
+{
+  color: #F0CA91;
+  text-align: center;
+  font-size: 20px;
+}
+
+button
+{
+    background-color: transparent;
+}
+
+h2, h3
+{
+  margin: 0;
+  margin-bottom: 5%;
+  text-align: center;
+  color: #F0CA91;
+  font-size: 30px;
+}
+
 
 /* Table specific styles */
 table {
   width: 100%;
   border-collapse: collapse;
+  border: 1px solid #F0CA91;
+  border-radius: 10px;
 }
+
+
 
 th, td {
-  text-align: left;
-  padding: 8px;
-  border-bottom: 1px solid #e2e8f0; /* Light gray border */
+
+
+ text-align: center;
+  margin: 10px 0;
+
+  font-size: 17px;
+  color: #F0CA91;
 }
 
+.btn-cancelar
+{
+  height: 55px;
+  width: 100px;
+  background-color: red;
+  border-radius: 10px;
+  font-size: 20px;
+}
+
+
 th {
-  background-color: #edf2f7; /* Lighter gray for header */
+ 
   font-weight: 600;
   color: #4a5568;
   text-transform: uppercase;
-  font-size: 0.75rem;
+}
+
+.btn-aceptar
+{
+  background-color: green;
+}
+tr
+{
+  padding: 20px;
+  margin: 10px 0;
 }
 
 tr:last-child td {
@@ -80,7 +174,6 @@ tr:last-child td {
   }
 
   tr {
-    border: 1px solid #ccc;
     margin-bottom: 1rem;
     border-radius: 0.5rem;
     overflow: hidden;
@@ -88,10 +181,10 @@ tr:last-child td {
 
   td {
     border: none;
-    border-bottom: 1px solid #eee;
+
     position: relative;
-    padding-left: 50%;
-    text-align: right;
+    padding-left: 35%;
+    text-align: center;
   }
 
   td:before {

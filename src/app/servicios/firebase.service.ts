@@ -521,6 +521,14 @@ export class FirebaseService {
       return collectionData(refFinal, { idField: 'id' }) as Observable<T[]>;
   }
 
+  getMesasReservadas(nombreColeccion: string,campo?: string,valor?: any)
+  {
+      const ref = collection(this.firestore, nombreColeccion);
+      const refFinal = campo && valor !== undefined? query(ref, where(campo, '==', valor)) : ref;
+
+      return collectionData(refFinal, { idField: 'id' });
+  }
+
     
     updateDocumento(nombreColeccion: string, id: string, data: any): Promise<void> 
     {
@@ -1387,16 +1395,18 @@ async agregarReserva(reserva: Omit<Reserva, 'reservaId'>): Promise<void> {
     }
   }
 
-  async cancelarReserva(reservaId: string): Promise<void> {
+  async cancelarReserva(reserva:any): Promise<void> {
     try {
-      const reservaRef = doc(this.firestore, 'reservas', reservaId);
+      const mesa = await this.obtenerMesaPorUidUsuario(reserva.clienteUid);
+      console.log("RESERVA",reserva)
+      const reservaRef = doc(this.firestore, 'reservas', reserva.id);
       const reservaSnap = await getDoc(reservaRef);
 
       if (reservaSnap.exists()) {
         const reservaData = reservaSnap.data() as Reserva;
-        // If the reservation had an assigned table and its state is 'confirmada', free it
-        if (reservaData.mesaAsignada && reservaData.estado === 'confirmada') {
-          const mesaRef = doc(this.firestore, 'mesas', reservaData.mesaAsignada);
+        if (mesa && reservaData.estado === 'confirmada') {
+          const mesaRef = doc(this.firestore, 'mesas', mesa.mesaId);
+        
           await updateDoc(mesaRef, {
             estado: 'disponible',
             currentClientId: null,

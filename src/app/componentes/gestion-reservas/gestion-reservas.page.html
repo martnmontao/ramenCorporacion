@@ -1,35 +1,41 @@
 <!-- src/app/components/gestion-reservas/gestion-reservas.component.html -->
-<div class="container mx-auto p-4 sm:p-6 lg:p-8 bg-gray-100 min-h-screen">
-  <h2 class="text-3xl font-bold text-center text-gray-800 mb-8">Gestión de Reservas</h2>
+<div id = "principal-container">
+   <header>
+       <h1 class ="titulos">RamenGB🍜</h1>
+       <button id = "btn-mostrar-opciones" (click) = "mostrarContenedores('opciones')">≋</button>
+       <div id = "contenedor-opciones-inicio" class="contenedor-animado"[class.visible]="mostrarOpciones">
+         <button (click)="irA('lista-usuarios')"class="btn-opciones-inicio" *ngIf = "user && user.perfil == 'gerencia'">ADMINISTRACIÓN</button>
+         <button (click)="cerrarSesion()"class="btn-opciones-inicio">CERRAR SESIÓN</button>
+       </div>
+  </header>
+  
 
-  <!-- Sección de Reservas Pendientes -->
-  <div class="bg-white p-6 rounded-lg shadow-xl mb-8">
-    <h3 class="text-2xl font-semibold text-gray-700 mb-4">Reservas Pendientes</h3>
-    <div *ngIf="reservasPendientes.length === 0" class="text-center text-gray-500 py-4">
+  <div class = "contenedor-section">
+    <h3>Reservas Pendientes</h3>
+    <div *ngIf="reservasPendientes.length === 0" class="contenedor-mensaje">
       No hay reservas pendientes en este momento.
     </div>
     <div *ngIf="reservasPendientes.length > 0" class="overflow-x-auto">
       <table class="min-w-full bg-white border border-gray-200 rounded-lg">
         <thead class="bg-gray-200">
           <tr>
-            <th class="py-3 px-4 text-left text-sm font-medium text-gray-600 uppercase tracking-wider rounded-tl-lg">Cliente</th>
-            <th class="py-3 px-4 text-left text-sm font-medium text-gray-600 uppercase tracking-wider">Fecha y Hora</th>
-            <th class="py-3 px-4 text-left text-sm font-medium text-gray-600 uppercase tracking-wider">Personas</th>
-            <th class="py-3 px-4 text-left text-sm font-medium text-gray-600 uppercase tracking-wider">Notas</th>
-            <th class="py-3 px-4 text-left text-sm font-medium text-gray-600 uppercase tracking-wider">Asignar Mesa</th>
-            <th class="py-3 px-4 text-left text-sm font-medium text-gray-600 uppercase tracking-wider rounded-tr-lg">Acciones</th>
+            <th >Cliente</th>
+            <th>Fecha y Hora</th>
+            <th>Personas</th>
+            <th>Notas</th>
+            <th>Asignar Mesa</th>
+            <th>Acciones</th>
           </tr>
         </thead>
         <tbody class="divide-y divide-gray-200">
-          <tr *ngFor="let reserva of reservasPendientes" class="hover:bg-gray-50 transition-colors duration-150">
-            <td class="py-3 px-4 whitespace-nowrap text-sm text-gray-800">{{ reserva.clienteNombre }}</td>
-            <td class="py-3 px-4 whitespace-nowrap text-sm text-gray-800">{{ formatDateTime(reserva.fechaHora) }}</td>
-            <td class="py-3 px-4 whitespace-nowrap text-sm text-gray-800">{{ reserva.cantidadPersonas }}</td>
-            <td class="py-3 px-4 text-sm text-gray-800 max-w-xs truncate">{{ reserva.notas || 'N/A' }}</td>
-            <td class="py-3 px-4 whitespace-nowrap text-sm">
+          <tr *ngFor="let reserva of reservasPendientes">
+            <td>{{ reserva.clienteNombre }}</td>
+            <td>{{ formatDateTime(reserva.fechaHora) }}</td>
+            <td>{{ reserva.cantidadPersonas }}</td>
+            <td>{{ reserva.notas || 'N/A' }}</td>
+            <td>
               <select
                 [(ngModel)]="selectedMesaId"
-                class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
               >
                 <option [value]="null" disabled>Seleccionar Mesa</option>
                 <option *ngFor="let mesa of mesasDisponibles" [value]="mesa.mesaId">
@@ -41,14 +47,13 @@
               <button
                 (click)="confirmarReserva(reserva)"
                 [disabled]="!selectedMesaId"
-                class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed mr-2"
-              >
+                class="btn-cancelar btn-aceptar"
+                >
                 Confirmar
               </button>
               <button
                 (click)="cancelarReserva(reserva.reservaId!)"
-                class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition-colors duration-200"
-              >
+               class = "btn-cancelar">
                 Cancelar
               </button>
             </td>
@@ -59,35 +64,34 @@
   </div>
 
   <!-- Sección de Reservas Confirmadas -->
-  <div class="bg-white p-6 rounded-lg shadow-xl">
-    <h3 class="text-2xl font-semibold text-gray-700 mb-4">Reservas Confirmadas</h3>
-    <div *ngIf="reservasConfirmadas.length === 0" class="text-center text-gray-500 py-4">
+  <div  class = "contenedor-section">
+    <h3>Reservas Confirmadas</h3>
+    <div *ngIf="reservasConfirmadas.length === 0" class="contenedor-mensaje">
       No hay reservas confirmadas en este momento.
     </div>
-    <div *ngIf="reservasConfirmadas.length > 0" class="overflow-x-auto">
-      <table class="min-w-full bg-white border border-gray-200 rounded-lg">
-        <thead class="bg-gray-200">
+    <div *ngIf="reservasConfirmadas.length > 0">
+      <table>
+        <thead>
           <tr>
-            <th class="py-3 px-4 text-left text-sm font-medium text-gray-600 uppercase tracking-wider rounded-tl-lg">Cliente</th>
-            <th class="py-3 px-4 text-left text-sm font-medium text-gray-600 uppercase tracking-wider">Fecha y Hora</th>
-            <th class="py-3 px-4 text-left text-sm font-medium text-gray-600 uppercase tracking-wider">Personas</th>
-            <th class="py-3 px-4 text-left text-sm font-medium text-gray-600 uppercase tracking-wider">Mesa Asignada</th>
-            <th class="py-3 px-4 text-left text-sm font-medium text-gray-600 uppercase tracking-wider">Hora Confirmación</th>
-            <th class="py-3 px-4 text-left text-sm font-medium text-gray-600 uppercase tracking-wider rounded-tr-lg">Acciones</th>
+            <th>Cliente</th>
+            <th>Fecha y Hora</th>
+            <th>Personas</th>
+
+            <th>Hora Confirmación</th>
+            <th>Acciones</th>
           </tr>
         </thead>
-        <tbody class="divide-y divide-gray-200">
-          <tr *ngFor="let reserva of reservasConfirmadas" class="hover:bg-gray-50 transition-colors duration-150">
-            <td class="py-3 px-4 whitespace-nowrap text-sm text-gray-800">{{ reserva.clienteNombre }}</td>
-            <td class="py-3 px-4 whitespace-nowrap text-sm text-gray-800">{{ formatDateTime(reserva.fechaHora) }}</td>
-            <td class="py-3 px-4 whitespace-nowrap text-sm text-gray-800">{{ reserva.cantidadPersonas }}</td>
-            <td class="py-3 px-4 whitespace-nowrap text-sm text-gray-800">{{ reserva.mesaAsignada ? 'Mesa ' + getMesaNumero(reserva.mesaAsignada) : 'N/A' }}</td>
-            <td class="py-3 px-4 whitespace-nowrap text-sm text-gray-800">{{ reserva.horaConfirmacion ? formatDateTime(reserva.horaConfirmacion) : 'N/A' }}</td>
-            <td class="py-3 px-4 whitespace-nowrap text-sm">
+        <tbody>
+          <tr *ngFor="let reserva of reservasConfirmadas" >
+            <td>{{ reserva.clienteNombre }}</td>
+            <td>{{ formatDateTime(reserva.fechaHora) }}</td>
+            <td>{{ reserva.cantidadPersonas }}</td>
+          
+            <td>{{ reserva.horaConfirmacion ? formatDateTime(reserva.horaConfirmacion) : 'N/A' }}</td>
+            <td>
               <button
-                (click)="cancelarReserva(reserva.reservaId!)"
-                class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition-colors duration-200"
-              >
+                (click)="cancelarReserva(reserva)"
+               class = "btn-cancelar">
                 Cancelar
               </button>
             </td>

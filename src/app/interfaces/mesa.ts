@@ -8,4 +8,4 @@ export interface Mesa {
     currentClientId: string | null;
     assignedAt: Date | null;
     fotoMesa: string; // Usar Date para timestamps
-}
+}                                     

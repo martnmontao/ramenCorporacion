@@ -180,13 +180,14 @@ button
 
 .contenedor-opciones-filtro
 {
-  height: 30vh;
- 
+  height: 250px;
+
+  margin: 3% 0;
   width: 100%;
   display: flex;
   justify-content: space-evenly;
   flex-direction: column;
-  margin-top: 3%;
+ 
   gap: 3%;
   align-items: center;
   
