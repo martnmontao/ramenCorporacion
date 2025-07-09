@@ -1,0 +1,83 @@
+<!-- src/app/components/reserva/reserva.component.html -->
+<div class="container mx-auto p-4 sm:p-6 lg:p-8 bg-gray-100 min-h-screen flex items-center justify-center">
+  <div class="bg-white p-6 rounded-lg shadow-xl w-full max-w-md">
+    <h2 class="text-3xl font-bold text-center text-gray-800 mb-6">Realizar Reserva</h2>
+
+    <!-- Display message if user is not logged in -->
+    <div *ngIf="usuarioLogueadoUid == 'null'" class="text-center text-red-600 mb-4 p-3 bg-red-100 rounded-md">
+      <p class="font-semibold">Por favor, inicie sesión para realizar una reserva.</p>
+    </div>
+
+    <form [formGroup]="reservaForm" (ngSubmit)="onSubmit()" *ngIf="usuarioLogueadoUid" class="space-y-5">
+      <!-- Fecha de la Reserva -->
+      <div>
+        <label for="fecha" class="block text-gray-700 text-sm font-medium mb-2">Fecha:</label>
+        <input
+          type="date"
+          id="fecha"
+          formControlName="fecha"
+          [min]="minDate"
+          class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200"
+          [ngClass]="{'border-red-500': reservaForm.get('fecha')?.invalid && (reservaForm.get('fecha')?.dirty || reservaForm.get('fecha')?.touched)}"
+        >
+        <div *ngIf="reservaForm.get('fecha')?.invalid && (reservaForm.get('fecha')?.dirty || reservaForm.get('fecha')?.touched)" class="text-red-500 text-xs mt-1">
+          <span *ngIf="reservaForm.get('fecha')?.errors?.['required']">La fecha es requerida.</span>
+        </div>
+      </div>
+
+      <!-- Hora de la Reserva -->
+      <div>
+        <label for="hora" class="block text-gray-700 text-sm font-medium mb-2">Hora:</label>
+        <input
+          type="time"
+          id="hora"
+          formControlName="hora"
+          class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200"
+          [ngClass]="{'border-red-500': reservaForm.get('hora')?.invalid && (reservaForm.get('hora')?.dirty || reservaForm.get('hora')?.touched)}"
+        >
+        <div *ngIf="reservaForm.get('hora')?.invalid && (reservaForm.get('hora')?.dirty || reservaForm.get('hora')?.touched)" class="text-red-500 text-xs mt-1">
+          <span *ngIf="reservaForm.get('hora')?.errors?.['required']">La hora es requerida.</span>
+        </div>
+      </div>
+
+      <!-- Cantidad de Personas -->
+      <div>
+        <label for="cantidadPersonas" class="block text-gray-700 text-sm font-medium mb-2">Cantidad de Personas:</label>
+        <input
+          type="number"
+          id="cantidadPersonas"
+          formControlName="cantidadPersonas"
+          min="1"
+          max="20"
+          class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200"
+          [ngClass]="{'border-red-500': reservaForm.get('cantidadPersonas')?.invalid && (reservaForm.get('cantidadPersonas')?.dirty || reservaForm.get('cantidadPersonas')?.touched)}"
+        >
+        <div *ngIf="reservaForm.get('cantidadPersonas')?.invalid && (reservaForm.get('cantidadPersonas')?.dirty || reservaForm.get('cantidadPersonas')?.touched)" class="text-red-500 text-xs mt-1">
+          <span *ngIf="reservaForm.get('cantidadPersonas')?.errors?.['required']">La cantidad de personas es requerida.</span>
+          <span *ngIf="reservaForm.get('cantidadPersonas')?.errors?.['min'] || reservaForm.get('cantidadPersonas')?.errors?.['max']">Debe ser entre 1 y 20 personas.</span>
+        </div>
+      </div>
+
+      <!-- Notas Adicionales -->
+      <div>
+        <label for="notas" class="block text-gray-700 text-sm font-medium mb-2">Notas Adicionales (opcional):</label>
+        <textarea
+          id="notas"
+          formControlName="notas"
+          rows="3"
+          class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200"
+        ></textarea>
+      </div>
+
+      <!-- Botón de Enviar -->
+      <button
+        type="submit"
+        [disabled]="reservaForm.invalid || !usuarioLogueadoUid"
+        class="w-full bg-blue-600 text-white font-bold py-3 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition duration-300 ease-in-out transform hover:scale-105
+                disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        Realizar Reserva
+      </button>
+    </form>
+  </div>
+</div>

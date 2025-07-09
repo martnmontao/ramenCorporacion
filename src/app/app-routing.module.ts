@@ -51,7 +51,10 @@ const routes: Routes = [
   {
     path: 'lista-pedidos',
     loadChildren: () => import('./componentes/lista-pedidos/lista-pedidos.module').then( m => m.ListaPedidosPageModule)},
-  {path: 'lista-usuarios',
+  
+  {
+
+    path: 'lista-usuarios',
     loadChildren: () => import('./componentes/lista-usuarios/lista-usuarios.module').then( m => m.ListaUsuariosPageModule)
   },
   {
@@ -93,7 +96,16 @@ const routes: Routes = [
   {
     path: 'splash-screen',
     loadChildren: () => import('./componentes/splash-screen/splash-screen.module').then( m => m.SplashScreenPageModule)
+  },
+  {
+    path: 'reservas',
+    loadChildren: () => import('./componentes/reservas/reservas.module').then( m => m.ReservasPageModule)
+  },
+  {
+    path: 'gestion-reservas',
+    loadChildren: () => import('./componentes/gestion-reservas/gestion-reservas.module').then( m => m.GestionReservasPageModule)
   }
+
 
 
   

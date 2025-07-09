@@ -4,13 +4,14 @@ import { Auth, authState, createUserWithEmailAndPassword, getAuth, onAuthStateCh
 import { Firestore, collection, addDoc, query, orderBy, limit, getDocs, where, CollectionReference, collectionData, updateDoc, doc, Timestamp, deleteDoc, onSnapshot, getDoc, arrayUnion, setDoc } from '@angular/fire/firestore';
 
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import Swal from 'sweetalert2';
 import { BehaviorSubject } from 'rxjs';
 import { Mesa } from '../interfaces/mesa';
 import { ClienteEnEspera } from '../interfaces/clienteEnEspera';
 import { Pedido } from '../interfaces/pedido';
 import { firstValueFrom } from 'rxjs';
+import { Reserva } from '../interfaces/reserva';
 
 
 @Injectable({
@@ -31,6 +32,7 @@ export class FirebaseService {
   private usuariosCollection: CollectionReference;
   private mesasCollection: CollectionReference;
   private listaEsperaCollection: CollectionReference;
+  private reservasCollection: CollectionReference;
 
   constructor(private auth: Auth, public firestore: Firestore, private router: Router) {
     onAuthStateChanged(this.auth, (user) => {
@@ -48,6 +50,7 @@ export class FirebaseService {
     this.usuariosCollection = collection(this.firestore, 'usuarios');
     this.mesasCollection = collection(this.firestore, 'mesas');
     this.listaEsperaCollection = collection(this.firestore, 'lista-espera');
+    this.reservasCollection = collection(this.firestore, 'reservas');
   }
 
   async acceder(correo: string, clave: string): Promise<void> {
@@ -657,7 +660,6 @@ obtenerClientesEnEspera(estadoFiltro?: ClienteEnEspera['estado']): Observable<Cl
       
       qRef = query(this.listaEsperaCollection, where('estado', '==', estadoFiltro), orderBy('horaLlegada', 'asc')); // Ordenar por llegada
     } 
-   
     return collectionData(qRef, { idField: 'id' }) as Observable<ClienteEnEspera[]>;
   }
   /**
@@ -946,7 +948,7 @@ obtenerClientesEnEspera(estadoFiltro?: ClienteEnEspera['estado']): Observable<Cl
   }
 
 
- async modificarEstadoPedido(campo: string, nuevoValor: any, pedido: any) {
+async modificarEstadoPedido(campo: string, nuevoValor: any, pedido: any) {
   try {
     if (!pedido.id) {
       console.error('El pedido no tiene un ID válido');
@@ -1107,6 +1109,7 @@ async getListaPedidosPorCliente(uid: string): Promise<Pedido[]> {
       }
     });
   }
+
   async obtenerNombreDeUsuario(uid: string): Promise<string | null> {
     const userDocRef = doc(this.firestore, 'usuarios', uid);
     const docSnap = await getDoc(userDocRef);
@@ -1157,7 +1160,7 @@ async getActiveTableSessionsForMozo(){
 }
 
 
-  async getClientActiveChatSessionId(mesaId: string, clientUid: string): Promise<string | null> {
+async getClientActiveChatSessionId(mesaId: string, clientUid: string): Promise<string | null> {
     const historialSesionesRef = collection(this.firestore, 'chats_mesas', mesaId, 'historial_sesiones');
     const q = query(
       historialSesionesRef,
@@ -1174,7 +1177,8 @@ async getActiveTableSessionsForMozo(){
     }
     return null;
   }
-  async obtenerNumeroMesaPorDocId(docId: string): Promise<string | null> {
+  
+async obtenerNumeroMesaPorDocId(docId: string): Promise<string | null> {
   try {
     const docRef = doc(this.firestore, `mesas/${docId}`);
     const docSnap = await getDoc(docRef);
@@ -1207,9 +1211,356 @@ async getActiveTableSessionsForMozo(){
     
   }
 
+async agregarReserva(reserva: Omit<Reserva, 'reservaId'>): Promise<void> {
+    try {
+      await addDoc(this.reservasCollection, {
+        ...reserva,
+        fechaHora: Timestamp.fromDate(reserva.fechaHora) // Convertir Date a Timestamp
+      });
+      Swal.fire({
+        icon: 'success',
+        title: '¡Reserva Solicitada!',
+        text: `Su reserva para el ${reserva.fechaHora.toLocaleDateString()} a las ${reserva.fechaHora.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} ha sido solicitada con éxito.`,
+        confirmButtonText: 'Aceptar',
+        heightAuto: false,
+        customClass: {
+          popup: 'mi-alerta',
+          confirmButton: 'btn-alerta',
+          title: 'titulo-alerta',
+          htmlContainer: 'texto-alerta'
+        }
+      });
+    } catch (error) {
+      console.error('Error al agregar reserva:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'No se pudo realizar la reserva. Inténtelo de nuevo.',
+        confirmButtonText: 'Aceptar',
+        heightAuto: false,
+        customClass: {
+          popup: 'mi-alerta',
+          confirmButton: 'btn-alerta',
+          title: 'titulo-alerta',
+          htmlContainer: 'texto-alerta'
+        }
+      });
+      throw error;
+    }
+  }
 
+  /**
+   * Obtiene las reservas para un cliente específico.
+   * @param clienteUid El UID del cliente.
+   * @returns Un Observable que emite un array de reservas.
+   */
+  obtenerReservasPorCliente(clienteUid: string): Observable<Reserva[]> {
+    const q = query(this.reservasCollection, where('clienteUid', '==', clienteUid), orderBy('fechaHora', 'asc'));
+    return collectionData(q, { idField: 'reservaId' }).pipe(
+      // Convertir Timestamp de vuelta a Date
+      // The map operator is used to transform the items emitted by an Observable.
+      // In this case, it transforms each reservation object.
+      map(reservas => reservas.map(reserva => ({
+        ...reserva,
+        fechaHora: (reserva['fechaHora'] as Timestamp).toDate(), // Convert Firestore Timestamp to JavaScript Date
+        horaConfirmacion: (reserva['horaConfirmacion'] instanceof Timestamp) ? (reserva['horaConfirmacion'] as Timestamp).toDate() : reserva['horaConfirmacion']
+      }) as Reserva))
+    );
+  }
 
+  obtenerReservasPendientes(): Observable<Reserva[]> {
+    const q = query(this.reservasCollection, where('estado', '==', 'pendiente'), orderBy('fechaHora', 'asc'));
+    return collectionData(q, { idField: 'reservaId' }).pipe(
+      map(reservas => reservas.map(reserva => ({
+        ...reserva,
+        fechaHora: (reserva['fechaHora'] as Timestamp).toDate()
+      }) as Reserva))
+    );
+  }
 
+  async confirmarReserva(reservaId: string, mesaId: string): Promise<void> {
+    const reservaRef = doc(this.firestore, 'reservas', reservaId);
+    const mesaRef = doc(this.firestore, 'mesas', mesaId);
+
+    try {
+      // Verificar si la mesa ya está ocupada o asignada a otra reserva confirmada
+      const mesaSnap = await getDoc(mesaRef);
+      if (mesaSnap.exists()) {
+        const mesaData = mesaSnap.data() as Mesa;
+        if (mesaData.estado === 'ocupada' || mesaData.estado === 'reservada' || mesaData.currentClientId) { // Check for 'reservada' state
+          Swal.fire({
+            icon: 'error',
+            title: 'Mesa No Disponible',
+            text: `La mesa ${mesaData.numeroMesa} ya está ocupada o reservada.`,
+            confirmButtonText: 'Aceptar',
+            heightAuto: false,
+            customClass: {
+              popup: 'mi-alerta',
+              confirmButton: 'btn-alerta',
+              title: 'titulo-alerta',
+              htmlContainer: 'texto-alerta'
+            }
+          });
+          return; // Exit if table is not available
+        }
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Mesa No Encontrada',
+          text: 'La mesa seleccionada no existe.',
+          confirmButtonText: 'Aceptar',
+          heightAuto: false,
+          customClass: {
+            popup: 'mi-alerta',
+            confirmButton: 'btn-alerta',
+            title: 'titulo-alerta',
+            htmlContainer: 'texto-alerta'
+          }
+        });
+        return; // Exit if table not found
+      }
+
+      // Obtener datos de la reserva para obtener el clienteUid
+      const reservaSnap = await getDoc(reservaRef);
+      if (!reservaSnap.exists()) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Reserva No Encontrada',
+          text: 'La reserva que intenta confirmar no existe.',
+          confirmButtonText: 'Aceptar',
+          heightAuto: false,
+          customClass: {
+            popup: 'mi-alerta',
+            confirmButton: 'btn-alerta',
+            title: 'titulo-alerta',
+            htmlContainer: 'texto-alerta'
+          }
+        });
+        return;
+      }
+      const reservaData = reservaSnap.data() as Reserva;
+      const clienteUid = reservaData.clienteUid;
+
+      // 1. Actualizar la reserva
+      await updateDoc(reservaRef, {
+        estado: 'confirmada',
+        mesaAsignada: mesaId,
+        horaConfirmacion: Timestamp.now() // Record the confirmation time
+      });
+
+      // 2. Actualizar el estado de la mesa a 'reservada'
+      await updateDoc(mesaRef, {
+        estado: 'reservada', // Mark as reserved
+        currentClientId: clienteUid, // Assign the client to the table (temporarily for reservation)
+        assignedAt: Timestamp.now() // Record when the table was assigned for reservation
+      });
+
+      Swal.fire({
+        icon: 'success',
+        title: '¡Reserva Confirmada!',
+        text: `Reserva confirmada y mesa ${mesaSnap.data()?.['numeroMesa']} asignada.`,
+        confirmButtonText: 'Aceptar',
+        heightAuto: false,
+        customClass: {
+          popup: 'mi-alerta',
+          confirmButton: 'btn-alerta',
+          title: 'titulo-alerta',
+          htmlContainer: 'texto-alerta'
+        }
+      });
+    } catch (error) {
+      console.error('Error al confirmar reserva:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'No se pudo confirmar la reserva. Inténtelo de nuevo.',
+        confirmButtonText: 'Aceptar',
+        heightAuto: false,
+        customClass: {
+          popup: 'mi-alerta',
+          confirmButton: 'btn-alerta',
+          title: 'titulo-alerta',
+          htmlContainer: 'texto-alerta'
+        }
+      });
+      throw error;
+    }
+  }
+
+  async cancelarReserva(reservaId: string): Promise<void> {
+    try {
+      const reservaRef = doc(this.firestore, 'reservas', reservaId);
+      const reservaSnap = await getDoc(reservaRef);
+
+      if (reservaSnap.exists()) {
+        const reservaData = reservaSnap.data() as Reserva;
+        // If the reservation had an assigned table and its state is 'confirmada', free it
+        if (reservaData.mesaAsignada && reservaData.estado === 'confirmada') {
+          const mesaRef = doc(this.firestore, 'mesas', reservaData.mesaAsignada);
+          await updateDoc(mesaRef, {
+            estado: 'disponible',
+            currentClientId: null,
+            assignedAt: null
+          });
+        }
+      }
+
+      await deleteDoc(reservaRef);
+      Swal.fire({
+        icon: 'success',
+        title: '¡Reserva Cancelada!',
+        text: `La reserva ha sido cancelada con éxito.`,
+        confirmButtonText: 'Aceptar',
+        heightAuto: false,
+        customClass: {
+          popup: 'mi-alerta',
+          confirmButton: 'btn-alerta',
+          title: 'titulo-alerta',
+          htmlContainer: 'texto-alerta'
+        }
+      });
+    } catch (error) {
+      console.error('Error al cancelar reserva:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'No se pudo cancelar la reserva. Inténtelo de nuevo.',
+        confirmButtonText: 'Aceptar',
+        heightAuto: false,
+        customClass: {
+          popup: 'mi-alerta',
+          confirmButton: 'btn-alerta',
+          title: 'titulo-alerta',
+          htmlContainer: 'texto-alerta'
+        }
+      });
+      throw error;
+    }
+  }
+
+    async expirarReserva(reservaId: string): Promise<void> {
+    const reservaRef = doc(this.firestore, 'reservas', reservaId);
+    try {
+      const reservaSnap = await getDoc(reservaRef);
+      if (reservaSnap.exists()) {
+        const reservaData = reservaSnap.data() as Reserva;
+        if (reservaData.estado === 'confirmada' && reservaData.mesaAsignada) {
+          const mesaRef = doc(this.firestore, 'mesas', reservaData.mesaAsignada);
+          await updateDoc(mesaRef, {
+            estado: 'disponible', // Set to disponible when expired
+            currentClientId: null,
+            assignedAt: null
+          });
+        }
+        await updateDoc(reservaRef, { estado: 'expirada' });
+        Swal.fire({
+          icon: 'info',
+          title: 'Reserva Expirada',
+          text: `La reserva para ${reservaData.clienteNombre} ha expirado y la mesa ha sido liberada.`,
+          confirmButtonText: 'Aceptar',
+          heightAuto: false,
+          customClass: {
+            popup: 'mi-alerta',
+            confirmButton: 'btn-alerta',
+            title: 'titulo-alerta',
+            htmlContainer: 'texto-alerta'
+          }
+        });
+      }
+    } catch (error) {
+      console.error('Error al expirar reserva:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'No se pudo expirar la reserva. Inténtelo de nuevo.',
+        confirmButtonText: 'Aceptar',
+        heightAuto: false,
+        customClass: {
+          popup: 'mi-alerta',
+          confirmButton: 'btn-alerta',
+          title: 'titulo-alerta',
+          htmlContainer: 'texto-alerta'
+        }
+      });
+      throw error;
+    }
+  }
+
+   obtenerMesasDisponibles(): Observable<Mesa[]> {
+    // Only fetch tables that are 'disponible' for general assignment (waitlist)
+    const q = query(this.mesasCollection, where('estado', '==', 'disponible'), orderBy('numeroMesa', 'asc'));
+    return collectionData(q, { idField: 'mesaId' }).pipe(
+      map(mesas => mesas.map(mesa => ({
+        ...mesa,
+        assignedAt: (mesa['assignedAt'] instanceof Timestamp) ? (mesa['assignedAt'] as Timestamp).toDate() : mesa['assignedAt']
+      }) as Mesa))
+    );
+  }
+
+  /**
+   * Obtiene una mesa por su ID.
+   * @param mesaId El ID de la mesa.
+   * @returns Una promesa que resuelve con los datos de la mesa o null si no se encuentra.
+   */
+  async getMesaById(mesaId: string): Promise<Mesa | null> {
+    try {
+      const docRef = doc(this.firestore, 'mesas', mesaId);
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        return { mesaId: docSnap.id, ...docSnap.data() } as Mesa;
+      }
+      return null;
+    } catch (error) {
+      console.error('Error al obtener mesa por ID:', error);
+      return null;
+    }
+  }
+
+  /**
+   * Marca una mesa como ocupada por un cliente que llegó (ya sea de reserva o lista de espera).
+   * @param mesaId El ID de la mesa.
+   * @param clienteUid El UID del cliente que ocupará la mesa.
+   * @returns Una promesa que resuelve cuando la mesa ha sido actualizada.
+   */
+  async ocuparMesa(mesaId: string, clienteUid: string): Promise<void> {
+    const mesaRef = doc(this.firestore, 'mesas', mesaId);
+    try {
+      await updateDoc(mesaRef, {
+        estado: 'ocupada',
+        currentClientId: clienteUid,
+        assignedAt: Timestamp.now()
+      });
+      Swal.fire({
+        icon: 'success',
+        title: 'Mesa Ocupada',
+        text: `La mesa ha sido marcada como ocupada.`,
+        confirmButtonText: 'Aceptar',
+        heightAuto: false,
+        customClass: {
+          popup: 'mi-alerta',
+          confirmButton: 'btn-alerta',
+          title: 'titulo-alerta',
+          htmlContainer: 'texto-alerta'
+        }
+      });
+    } catch (error) {
+      console.error('Error al ocupar mesa:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'No se pudo ocupar la mesa. Inténtelo de nuevo.',
+        confirmButtonText: 'Aceptar',
+        heightAuto: false,
+        customClass: {
+          popup: 'mi-alerta',
+          confirmButton: 'btn-alerta',
+          title: 'titulo-alerta',
+          htmlContainer: 'texto-alerta'
+        }
+      });
+      throw error;
+    }
+  }
 }
 
 
