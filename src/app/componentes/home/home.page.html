@@ -7,7 +7,7 @@
       <h1 class ="titulos">RamenGB🍜</h1>
       <button id = "btn-mostrar-opciones" (click) = "mostrarContenedores('opciones')">≋</button>
       <div id = "contenedor-opciones-inicio" class="contenedor-animado"[class.visible]="mostrarOpciones">
-        <button (click)="irA('lista-usuarios')"class="btn-opciones-inicio" *ngIf = "user && user.perfil == 'gerencia'">ADMINISTRACIÓN</button>
+
         <button (click)="cerrarSesion()"class="btn-opciones-inicio">CERRAR SESIÓN</button>
       </div>
     </header>
@@ -22,6 +22,8 @@
             <button class = "btn-opciones-cliente" (click)="irA('alta-mesa')">dar de alta mesa</button>
             <button class = "btn-opciones-cliente" (click)="irConQR()">ESCANEAR QR</button>
           -->
+            <ion-button (click)="irA('lista-usuarios')"class="btn-opciones-usuario" *ngIf = "user && user.perfil == 'gerencia'">ADMINISTRACIÓN</ion-button>
+
             <ion-button class = "btn-opciones-usuario" (click)="irConQR()" *ngIf = "user?.perfil == 'cliente'">ESCANEAR QR</ion-button>
             <ion-button class = "btn-opciones-usuario" (click)="irA('productos')" *ngIf = "user?.tipo == 'bartender' || user?.tipo == 'cocinero'">PRODUCTOS</ion-button>
             <ion-button class = "btn-opciones-usuario" (click)="irA('lista-espera')" *ngIf = "user?.tipo == 'maitre'">CLIENTES EN ESPERA</ion-button>

@@ -1,5 +1,5 @@
-<ion-content [fullscreen]="true">
- <div id = "contenedor-principal">
+<ion-content [fullscreen]="true" *ngIf = "!qrService.scan">
+ <div id = "contenedor-principal" *ngIf = "!qrService.scan">
     <header>
     <h1 class ="titulos">RamenGB🍜</h1>
     <button id = "btn-mostrar-opciones" (click) = "mostrarContenedores('opciones')">≋</button>
@@ -43,11 +43,12 @@
                     </div>
                   </div>
                   <button class ="btn-tomar-pedido" *ngIf = "user && user.tipo == 'cocinero' || user.tipo == 'bartender'" (click) = "prepararPedido(pedido)">PREPARAR PEDIDO</button>
-                  <button class="btn-tomar-pedido" (click) = "tomarPedido(pedido)" *ngIf = "user && user.tipo == 'mozo' && pedido.estadoPedido == 'Pendiente'">TOMAR PEDIDO</button>
-                  <button class="btn-tomar-pedido" (click) = "terminarPedido(pedido)" *ngIf = "user && user.tipo == 'cocinero' || user.tipo == 'bartender'">TERMINAR PEDIDO</button>
+                  <button class="btn-tomar-pedido" (click) = "tomarPedido(pedido)" *ngIf = "user && user.tipo == 'mozo' && pedido.estadoPedido == 'Pendiente' && pedido.estadoPedido != 'Para entregar'">TOMAR PEDIDO</button>
+                  <button class="btn-tomar-pedido" (click) = "terminarPedido(pedido)" *ngIf = "user && user.tipo == 'cocinero' || user.tipo == 'bartender' && pedido.estadoPedido != 'Para entregar'">TERMINAR PEDIDO</button>
                    <button class="btn-tomar-pedido" (click) = "entregarPedido(pedido)" *ngIf = "user && user.tipo == 'mozo' && pedido.estadoPedido == 'Para entregar'">ENTREGAR PEDIDO</button>
                    <button class="btn-tomar-pedido" (click) = "confirmarEntregaDePedido(pedido)" *ngIf = "user && user.perfil == 'cliente' && pedido.estadoPedido == 'Esperando cliente'">CONFIRMAR RECEPCIÓN</button>
                    <button class="btn-tomar-pedido" (click) = "confirmarPagoCliente(pedido)" *ngIf = "user && user.tipo == 'mozo' && pedido.estadoPedido == 'Esperando confirmación de pago'">CONFIRMAR PAGO</button>
+                   <button class="btn-tomar-pedido" *ngIf = "user && user.perfil == 'cliente' && pedido.estadoPedido == 'Entregado'" (click) = "darPropina(pedido)">DEJAR PROPINA</button>
 
                    <button class="btn-tomar-pedido" *ngIf = "user && user.perfil == 'cliente' && pedido.estadoPedido == 'Entregado'" (click) = "mostrarContenedores('cuenta', pedido)">PAGAR CUENTA</button>
 
@@ -89,8 +90,6 @@
 
           <div class="boton-pagar">
             <button (click)="pagarCuenta()">Pagar</button>
-            <button (click)="mostrarContenedores('cuenta')">Cancelar</button>
-
           </div>
 
           <p *ngIf="mensajeConfirmacion" class="mensaje">{{ mensajeConfirmacion }}</p>

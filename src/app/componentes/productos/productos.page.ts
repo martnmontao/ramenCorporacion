@@ -77,9 +77,17 @@ export class ProductosPage implements OnInit {
     {
       case "formAgregarProductos":
         this.mostrarFormAgregarProducto = !this.mostrarFormAgregarProducto;
+        this.mostrarFormEditarProducto = false;
+        this.productoEditandoId = "";
+        this.descripcionProducto = "";
+        this.nombreProducto = "";
+        this.precioProducto = 0;
+        this.tiempoPreparacionProducto = 0;
+        this.tipoProducto = "";
         break;
       case "formEditarProductos":
         this.mostrarFormEditarProducto = !this.mostrarFormEditarProducto;
+        this.mostrarFormAgregarProducto = false;
         if (!producto) 
         {
           console.error('No existe id para este producto, no se puede actualizar.');
@@ -123,6 +131,20 @@ export class ProductosPage implements OnInit {
         this.descripcionProducto = "";
         this.precioProducto = 0;
         this.tiempoPreparacionProducto = 0;
+
+        Swal.fire({
+                  icon: 'success', 
+                  title: 'Producto agregado',
+                  text: "Se ha agregado. Podrá actualizarlo en cualquier momento.",
+                  confirmButtonText: 'Aceptar',
+                  heightAuto: false,
+        customClass: {
+          popup: 'mi-alerta',
+          confirmButton: 'btn-alerta',
+          title: 'titulo-alerta',
+          htmlContainer: 'texto-alerta'
+        }
+                });
       }
       )
     }
@@ -183,7 +205,19 @@ export class ProductosPage implements OnInit {
   
   this.firebaseService.updateDocumento('productos', this.productoEditandoId, data)
     .then(() => {
-      console.log('Producto actualizado correctamente');
+      Swal.fire({
+                  icon: 'success', 
+                  title: 'Producto modificado',
+                  text: "Se ha modificado. Podrá actualizarlo en cualquier momento.",
+                  confirmButtonText: 'Aceptar',
+                  heightAuto: false,
+        customClass: {
+          popup: 'mi-alerta',
+          confirmButton: 'btn-alerta',
+          title: 'titulo-alerta',
+          htmlContainer: 'texto-alerta'
+        }
+                });
     })
     .catch(error => {
       console.error(error);
@@ -256,7 +290,13 @@ export class ProductosPage implements OnInit {
                   title: 'Pedido tomado',
                   text: "Se ha realizado el pedido, espere a ser tomado.",
                   confirmButtonText: 'Aceptar',
-                  heightAuto: false 
+                  heightAuto: false,
+        customClass: {
+          popup: 'mi-alerta',
+          confirmButton: 'btn-alerta',
+          title: 'titulo-alerta',
+          htmlContainer: 'texto-alerta'
+        }
                 });
     })
   }

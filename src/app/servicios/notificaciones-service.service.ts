@@ -6,13 +6,12 @@ import {
   Token,
   ActionPerformed,
 } from '@capacitor/push-notifications';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+
 @Injectable({ providedIn: 'root' })
 export class NotificacionesServiceService {
   private token: string | null = null;
-  private backendURL = 'http://localhost:4000';
-  constructor(private platform: Platform, private http: HttpClient) {
+
+  constructor(private platform: Platform) {
     if (this.platform.is('capacitor')) this.initPush();
   }
 
@@ -25,7 +24,7 @@ export class NotificacionesServiceService {
 
     PushNotifications.addListener('registration', (token: Token) => {
       this.token = token.value;
-      alert('Token guardado: ' + this.token);
+      //alert('Token guardado: ' + this.token);
     });
 
     PushNotifications.addListener('registrationError', error => {
@@ -46,11 +45,5 @@ export class NotificacionesServiceService {
   }
 
   
-  enviarCorreo(nombreUsuario: string, mail: string, aceptacion: boolean): Observable<{ seEnvio: boolean }> {
-    return this.http.post<{ seEnvio: boolean }>(`${this.backendURL}/send-mail`, {
-      nombreUsuario,
-      mail,
-      aceptacion
-    });
-  }
+
 }

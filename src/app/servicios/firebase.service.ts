@@ -1192,6 +1192,20 @@ async getActiveTableSessionsForMozo(){
   }
 }
 
+ 
+  async aplicarPropinaPedido(pedido:any, propina: any): Promise<void> {
+
+
+   
+      const pedidoRef = doc(this.firestore, 'pedidos', pedido.id);
+     
+      const importeConPropina = Math.round(pedido.importeTotal + (pedido.importeTotal * propina ));
+
+      await updateDoc(pedidoRef, {
+        importeTotal: importeConPropina
+      });
+    
+  }
 
 
 

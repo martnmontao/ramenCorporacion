@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FirebaseService } from 'src/app/servicios/firebase.service';
+import { QrService } from 'src/app/servicios/qr.service';
 import Swal from 'sweetalert2';
 @Component({
   selector: 'app-lista-pedidos',
@@ -19,7 +20,7 @@ mostrarOpciones = false;
   codigoSeguridad: string = '';
   mensajeConfirmacion: string = '';
   pedido: any;
-  constructor(private firebaseService: FirebaseService, private router: Router) { 
+  constructor(private firebaseService: FirebaseService, private router: Router, public qrService: QrService) { 
   }
   
   async ngOnInit() 
@@ -131,12 +132,12 @@ async pagarCuenta() {
       text: 'Debés seleccionar un método de pago.',
       confirmButtonText: 'Aceptar',
       heightAuto: false,
-      customClass: {
-        popup: 'mi-popup',
-        title: 'mi-titulo',
-        confirmButton: 'mi-boton',
-        htmlContainer: 'mi-texto'
-      }
+        customClass: {
+          popup: 'mi-alerta',
+          confirmButton: 'btn-alerta',
+          title: 'titulo-alerta',
+          htmlContainer: 'texto-alerta'
+        }
     });
     return;
   }
@@ -150,10 +151,10 @@ async pagarCuenta() {
         confirmButtonText: 'Aceptar',
         heightAuto: false,
         customClass: {
-          popup: 'mi-popup',
-          title: 'mi-titulo',
-          confirmButton: 'mi-boton',
-          htmlContainer: 'mi-texto'
+          popup: 'mi-alerta',
+          confirmButton: 'btn-alerta',
+          title: 'titulo-alerta',
+          htmlContainer: 'texto-alerta'
         }
       });
       return;
@@ -167,10 +168,10 @@ async pagarCuenta() {
         confirmButtonText: 'Aceptar',
         heightAuto: false,
         customClass: {
-          popup: 'mi-popup',
-          title: 'mi-titulo',
-          confirmButton: 'mi-boton',
-          htmlContainer: 'mi-texto'
+          popup: 'mi-alerta',
+          confirmButton: 'btn-alerta',
+          title: 'titulo-alerta',
+          htmlContainer: 'texto-alerta'
         }
       });
       return;
@@ -185,10 +186,10 @@ async pagarCuenta() {
         confirmButtonText: 'Aceptar',
         heightAuto: false,
         customClass: {
-          popup: 'mi-popup',
-          title: 'mi-titulo',
-          confirmButton: 'mi-boton',
-          htmlContainer: 'mi-texto'
+          popup: 'mi-alerta',
+          confirmButton: 'btn-alerta',
+          title: 'titulo-alerta',
+          htmlContainer: 'texto-alerta'
         }
       });
       return;
@@ -202,10 +203,10 @@ async pagarCuenta() {
         confirmButtonText: 'Aceptar',
         heightAuto: false,
         customClass: {
-          popup: 'mi-popup',
-          title: 'mi-titulo',
-          confirmButton: 'mi-boton',
-          htmlContainer: 'mi-texto'
+          popup: 'mi-alerta',
+          confirmButton: 'btn-alerta',
+          title: 'titulo-alerta',
+          htmlContainer: 'texto-alerta'
         }
       });
       return;
@@ -222,12 +223,12 @@ async pagarCuenta() {
       text: '✅ Se ha válido correctamente. Esperando confirmación del mozo.',
       confirmButtonText: 'Aceptar',
       heightAuto: false,
-      customClass: {
-        popup: 'mi-popup',
-        title: 'mi-titulo',
-        confirmButton: 'mi-boton',
-        htmlContainer: 'mi-texto'
-      }
+        customClass: {
+          popup: 'mi-alerta',
+          confirmButton: 'btn-alerta',
+          title: 'titulo-alerta',
+          htmlContainer: 'texto-alerta'
+        }
     });
 
 
@@ -239,16 +240,17 @@ async pagarCuenta() {
       text: '💵 Seleccionaste pagar en caja. Acercate a la caja para pagar.',
       confirmButtonText: 'Aceptar',
       heightAuto: false,
-      customClass: {
-        popup: 'mi-popup',
-        title: 'mi-titulo',
-        confirmButton: 'mi-boton',
-        htmlContainer: 'mi-texto'
-      }
+        customClass: {
+          popup: 'mi-alerta',
+          confirmButton: 'btn-alerta',
+          title: 'titulo-alerta',
+          htmlContainer: 'texto-alerta'
+        }
     });
 
     await this.firebaseService.modificarEstadoPedido('estadoPedido','Esperando confirmación de pago',this.pedido);
     this.listaPedidos = await this.firebaseService.getListaPedidosPorCliente(this.user.uid);
+    this.mostrarPagoCuenta = false;
   }
 
   // Opcional: limpiar datos después de pagar
@@ -266,11 +268,15 @@ async confirmarPagoCliente(pedido:any)
     this.listaPedidos = await this.firebaseService.getListaPedidos();
 
     await this.firebaseService.liberarMesa(pedido.clienteUid);
+
 }
 
-async darPropina()
+async darPropina(pedido: any)
 {
-  
+  await this.qrService.startScanPropina(pedido);
+  this.listaPedidos = await this.firebaseService.getListaPedidosPorCliente(this.user.uid);
+
+
 }
 
 

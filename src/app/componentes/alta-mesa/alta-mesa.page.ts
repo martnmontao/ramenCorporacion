@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Mesa } from 'src/app/interfaces/mesa';
 import { FirebaseService } from 'src/app/servicios/firebase.service';
+import { Camera, CameraResultType, CameraSource } from '@capacitor/camera'; 
 import Swal from 'sweetalert2';
 
 @Component({
@@ -16,7 +17,7 @@ export class AltaMesaPage implements OnInit {
   mostrarOpciones = false;
   user: any;
   tiposMesa: string[] = ['estandar', 'VIP', 'apta-movilidad-reducida'];
-
+  fotoMesa:string = "";
   constructor(
     private fb: FormBuilder,
     private firebaseService: FirebaseService,
@@ -50,7 +51,8 @@ export class AltaMesaPage implements OnInit {
         estado: 'disponible', // Por defecto, una mesa recién creada está disponible
         qrCodeUrl: datosFormulario.qrCodeUrl || null,
         currentClientId: null, // No hay cliente asignado al crearla
-        assignedAt: null // No está asignada al crearla
+        assignedAt: null,
+        fotoMesa: this.fotoMesa // No está asignada al crearla
       };
 
       try {
@@ -62,6 +64,19 @@ export class AltaMesaPage implements OnInit {
           tipo: 'estandar', // Vuelve al valor por defecto
           qrCodeUrl: ''
         });
+         Swal.fire({
+        icon: 'success',
+        title: 'Mesa creada',
+        text: 'Se ha creado la mesa con éxito.',
+        confirmButtonText: 'Aceptar',
+        heightAuto: false,
+        customClass: {
+          popup: 'mi-alerta',
+          confirmButton: 'btn-alerta',
+          title: 'titulo-alerta',
+          htmlContainer: 'texto-alerta'
+        }
+      });
         // Opcional: Navegar a otra página si la lógica lo requiere, por ejemplo, a una lista de mesas
         // this.router.navigate(['/listado-mesas']);
       } catch (error) {
@@ -77,15 +92,28 @@ export class AltaMesaPage implements OnInit {
         confirmButtonText: 'Aceptar',
         heightAuto: false,
         customClass: {
-            popup: 'mi-popup',
-            title: 'mi-titulo',
-            confirmButton: 'mi-boton',
-            htmlContainer: 'mi-texto'
-          }
+          popup: 'mi-alerta',
+          confirmButton: 'btn-alerta',
+          title: 'titulo-alerta',
+          htmlContainer: 'texto-alerta'
+        }
       });
       // Marcar los campos para que se muestren los mensajes de error de validación
       this.mesaForm.markAllAsTouched();
     }
+  }
+   async tomarFoto() 
+   {
+    const image = await Camera.getPhoto({
+      quality: 10,
+      allowEditing: false,
+      resultType: CameraResultType.Base64,
+      source: CameraSource.Camera,
+    });
+
+    this.fotoMesa = "data:image/jpeg;base64," + image.base64String;
+    
+
   }
 
   // Getter para un acceso fácil a los controles del formulario en la plantilla

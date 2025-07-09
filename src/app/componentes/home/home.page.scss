@@ -17,6 +17,8 @@ header{
 section
 {
     height: 100%;
+
+    
     
 }
 
@@ -88,10 +90,10 @@ button
 
 .btn-opciones-usuario
 {
-    --background: #10161e;
-    color: #F0CA91;
-    height: 10%;
-    width: 70%;
+    --background: #F0CA91;
+    color: #10161e;
+    height: 70px;
+    width: 90%;
     border-radius: 10px;
     font-size: 25px;
     
@@ -99,13 +101,16 @@ button
 
 #contenedor-opciones-cliente
 {
-    
-    height: 100%;
+    background-color: #10161e;
+    height: 80%;
+    width: 90%;
     display: flex;
     align-items: center;
+    justify-content: space-around;
     flex-direction: column;
     gap: 5%;
-    margin-top: 20%;
+    margin: 5px auto;
+    border-radius: 10px;
 
 }
 

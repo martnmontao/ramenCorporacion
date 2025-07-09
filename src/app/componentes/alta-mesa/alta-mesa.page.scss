@@ -90,7 +90,7 @@ button
 
 form
 {
-    height: 650px;
+    height: 90%;
     margin: 10px;
     width: 95%;
     display: flex;
@@ -161,6 +161,17 @@ input:focus
     height: 75px;
     font-size: 25px;
     border-radius: 10px;
+}
+
+#btn-tomar-foto
+{
+    width: 70%;
+    height: 55px;
+    font-size: 20px;
+    background-color: #F0CA91;
+    border-radius: 10px;
+    color: #0A1924;
+    margin-bottom: 10%;
 }
 
 select:focus

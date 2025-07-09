@@ -27,7 +27,29 @@ export class QrService {
   private qrContentScannedSubject = new BehaviorSubject<string | null>(null);
   // NUEVA FUNCIÓN: Observable para que otros componentes puedan suscribirse a los resultados de QR.
   qrContentScanned$ = this.qrContentScannedSubject.asObservable();
+  propinas = [
+    {
+      valor:"excelente",
+      propina: 0.20
+    },
+    {
+      valor:"muy bueno",
+      propina: 0.15
+    },
+    {
+      valor:"bueno",
+      propina: 0.10
+    },
+    {
+      valor:"regular",
+      propina: 0.05
+    },
+    {
+      valor: "malo",
+      propina: 0
+    }
 
+  ];
   constructor(private router: Router, private firebaseService: FirebaseService) { }
 
   async CheckPermission()
@@ -219,10 +241,76 @@ async startScanMesa(usuarioUid: string): Promise<boolean | void> {
           title: 'Error',
           text: 'El código QR escaneado no le pertenece a su mesa.',
           confirmButtonText: 'Aceptar',
-          heightAuto: false
+          heightAuto: false,
+  customClass: {
+    popup: 'mi-alerta',
+    confirmButton: 'btn-alerta',
+    title: 'titulo-alerta',
+    htmlContainer: 'texto-alerta'
+  }
         });
         return false;
       }
+    }
+  } catch (e) {
+    console.error('Error durante escaneo y emisión de resultado', e);
+    this.scan = false;
+    return false;
+  }
+}
+
+
+async startScanPropina(pedido: any): Promise<boolean | void>
+{
+  if(this.scan) return;
+
+  this.scan = true;
+  try {
+    const permission = await this.CheckPermission();
+    if (!permission) {
+      this.scan = false;
+      this.scanResult = 'Error. No hay permisos';
+      return false;
+    }
+
+    await BarcodeScanner.hideBackground();
+    document.querySelector('body')?.classList.add('scanner-active');
+
+    const result = await BarcodeScanner.startScan();
+
+    BarcodeScanner.showBackground();
+    document.querySelector('body')?.classList.remove('scanner-active');
+    this.scan = false;
+
+    if (result?.hasContent) {
+      this.scanResult = result.content;  
+
+      this.propinas.forEach(propina => 
+      {
+        if(propina.valor == this.scanResult)
+        {
+          this.firebaseService.aplicarPropinaPedido(pedido, propina.propina).then(respusta => 
+          {
+            Swal.fire({
+            icon: 'success',
+            title: '¡Propina recibida!',
+            text: '¡Muchas gracias por su propina!¡Vuelva pronto!',
+            confirmButtonText: 'Aceptar',
+            heightAuto: false,
+          customClass: {
+            popup: 'mi-alerta',
+            confirmButton: 'btn-alerta',
+            title: 'titulo-alerta',
+            htmlContainer: 'texto-alerta'
+          }
+        });
+          return true;
+          }
+          )
+        }
+      }
+      )
+
     }
   } catch (e) {
     console.error('Error durante escaneo y emisión de resultado', e);

@@ -64,7 +64,13 @@ export class HomeClientePage implements OnInit {
         title: 'Encuesta ya completada',
         text: 'Ya has respondido esta encuesta. ¡Gracias por participar!',
         confirmButtonText: 'Aceptar',
-        heightAuto: false
+        heightAuto: false,
+        customClass: {
+          popup: 'mi-alerta',
+          confirmButton: 'btn-alerta',
+          title: 'titulo-alerta',
+          htmlContainer: 'texto-alerta'
+        }
       });
       return;
     }

@@ -63,7 +63,13 @@ export class ChatMozoPage implements OnInit {
             title: 'Acceso Denegado',
             text: 'Tu perfil no tiene acceso a esta función.',
             confirmButtonText: 'Aceptar',
-            heightAuto: false
+            heightAuto: false,
+        customClass: {
+          popup: 'mi-alerta',
+          confirmButton: 'btn-alerta',
+          title: 'titulo-alerta',
+          htmlContainer: 'texto-alerta'
+        }
           });
           this.router.navigateByUrl('/home'); 
           return;
@@ -75,7 +81,13 @@ export class ChatMozoPage implements OnInit {
           title: 'Error de Perfil',
           text: 'No se pudo cargar tu perfil. Por favor, intenta de nuevo.',
           confirmButtonText: 'Aceptar',
-          heightAuto: false
+          heightAuto: false,
+        customClass: {
+          popup: 'mi-alerta',
+          confirmButton: 'btn-alerta',
+          title: 'titulo-alerta',
+          htmlContainer: 'texto-alerta'
+        }
         });
         this.router.navigateByUrl('/login');
         return;

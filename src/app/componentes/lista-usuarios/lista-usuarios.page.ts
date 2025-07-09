@@ -72,7 +72,13 @@ export class ListaUsuariosPage implements OnInit {
         title: 'Error de datos',
         text: 'No se pudo obtener la información completa del usuario para autorizar.',
         confirmButtonText: 'Aceptar',
-        heightAuto: false
+        heightAuto: false,
+        customClass: {
+          popup: 'mi-alerta',
+          confirmButton: 'btn-alerta',
+          title: 'titulo-alerta',
+          htmlContainer: 'texto-alerta'
+        }
       });
       return;
     }
@@ -85,7 +91,13 @@ export class ListaUsuariosPage implements OnInit {
       showCancelButton: true,
       confirmButtonText: 'Sí, autorizar',
       cancelButtonText: 'No, cancelar',
-      heightAuto: false
+      heightAuto: false,
+        customClass: {
+          popup: 'mi-alerta',
+          confirmButton: 'btn-alerta',
+          title: 'titulo-alerta',
+          htmlContainer: 'texto-alerta'
+        }
     });
 
     if (result.isConfirmed) 
@@ -121,7 +133,13 @@ export class ListaUsuariosPage implements OnInit {
         title: 'Error de datos',
         text: 'No se pudo obtener la información completa del usuario para autorizar.',
         confirmButtonText: 'Aceptar',
-        heightAuto: false
+        heightAuto: false,
+        customClass: {
+          popup: 'mi-alerta',
+          confirmButton: 'btn-alerta',
+          title: 'titulo-alerta',
+          htmlContainer: 'texto-alerta'
+        }
       });
       return;
     }
@@ -134,7 +152,13 @@ export class ListaUsuariosPage implements OnInit {
       showCancelButton: true,
       confirmButtonText: 'Sí, rechazar',
       cancelButtonText: 'No, cancelar',
-      heightAuto: false
+      heightAuto: false,
+        customClass: {
+          popup: 'mi-alerta',
+          confirmButton: 'btn-alerta',
+          title: 'titulo-alerta',
+          htmlContainer: 'texto-alerta'
+        }
     });
 
     if (result.isConfirmed) 
@@ -215,21 +239,6 @@ export class ListaUsuariosPage implements OnInit {
 }
 
 
-async enviarEmail() {
-this.notificacionesService.enviarCorreo('martin', 'martinmontano455@gmail.com', false)
-  .subscribe({
-    next: (res) => {
-      if (res.seEnvio) {
-        alert('📧 Correo enviado correctamente.');
-      } else {
-        alert('⚠️ El correo no se envió.');
-      }
-    },
-    error: (err) => {
-      console.error('❌ Error al enviar el correo:', err);
-      alert('❌ Falló el envío del correo');
-    }
-  });
-}
+
 
 }

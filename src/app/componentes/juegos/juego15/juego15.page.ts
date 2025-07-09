@@ -205,6 +205,10 @@ export class Juego15Page implements OnInit {
 
   
   cerrarSesion(){
+  
+  
+  this.juegoTerminado = true;
+
   this.firebase.cerrarSesion();
   }
 

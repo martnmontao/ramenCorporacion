@@ -64,13 +64,28 @@
 
     <form id = "form-agregar-productos" *ngIf = "mostrarFormAgregarProducto">
       <div class = "contenedor-inputs">
+        <label class = "lbl-inputs">
+          Nombre: <br>
         <input class = "input-agregar-producto inputs-cortos" [(ngModel)] = "nombreProducto" type="text" placeholder="Nombre" name = "nombreProducto">
-        <input class = "input-agregar-producto inputs-cortos" type="number" [(ngModel)] = "precioProducto" placeholder="Precio" name = "precioProducto">
+          </label>
+        <label class = "lbl-inputs">
+          Precio:<br>
+          <input class = "input-agregar-producto inputs-cortos" type="number" [(ngModel)] = "precioProducto" placeholder="Precio" name = "precioProducto">
+        </label>
+          
       </div>
       <div class = "contenedor-inputs">
-        <input class = "input-agregar-producto  inputs-cortos" type="number" [(ngModel)] = "tiempoPreparacionProducto" placeholder="Tiempo estimado" name = "tiempoPreparacionProducto">
-        <input class = "input-agregar-producto  inputs-cortos" type="text" [(ngModel)] = "tipoProducto" placeholder="Tipo" name = "tipoProducto">
+        <label class = "lbl-inputs">
+          Tiempo estimado:<br>
+          <input class = "input-agregar-producto  inputs-cortos" type="number" [(ngModel)] = "tiempoPreparacionProducto" placeholder="Tiempo estimado" name = "tiempoPreparacionProducto">
+        </label>
+        <label class = "lbl-inputs">
+          Tipo:<br>
+          <input class = "input-agregar-producto  inputs-cortos" type="text" [(ngModel)] = "tipoProducto" placeholder="Tipo" name = "tipoProducto">
+
+        </label>
       </div>
+   
       <input class = "input-agregar-producto" type="text" [(ngModel)] = "descripcionProducto" placeholder="Descripción" name = "descripcionProducto">
       <button type = "button" class = "btn-agregar-producto btn-tomar-foto" (click) = "tomarFoto()">Tomar foto</button>
       <div id = "contenedor-botones-agregar-producto">
@@ -82,12 +97,29 @@
 
     <form id = "form-editar-productos" *ngIf = "mostrarFormEditarProducto">
       <div class = "contenedor-inputs">
-        <input class = "input-agregar-producto inputs-cortos" [(ngModel)] = "nombreProducto" type="text" placeholder="Nombre" name = "nombreProducto">
-        <input class = "input-agregar-producto inputs-cortos" type="number" [(ngModel)] = "precioProducto" placeholder="Precio" name = "precioProducto">
+        <label class = "lbl-inputs">
+         Nombre: <br>
+          <input class = "input-agregar-producto inputs-cortos" [(ngModel)] = "nombreProducto" type="text" placeholder="Nombre" name = "nombreProducto">
+        </label>
+        <label class = "lbl-inputs">
+          Precio:<br>
+        
+          <input class = "input-agregar-producto inputs-cortos" type="number" [(ngModel)] = "precioProducto" placeholder="Precio" name = "precioProducto">
+        </label>
+          
       </div>
       <div class = "contenedor-inputs">
-        <input class = "input-agregar-producto  inputs-cortos" type="text" [(ngModel)] = "tiempoPreparacionProducto" placeholder="Tiempo estimado" name = "tiempoPreparacionProducto">
+        <label class = "lbl-inputs">
+          Tiempo estimado:<br>
+          <input class = "input-agregar-producto  inputs-cortos" type="text" [(ngModel)] = "tiempoPreparacionProducto" placeholder="Tiempo estimado" name = "tiempoPreparacionProducto">
+        </label>
+        
+        <label class = "lbl-inputs">
+          Tipo:<br>
+      
         <input class = "input-agregar-producto  inputs-cortos" type="text" [(ngModel)] = "tipoProducto" placeholder="Tipo" name = "tipoProducto">
+        </label>
+          
       </div>
       <input class = "input-agregar-producto" type="text" [(ngModel)] = "descripcionProducto" placeholder="Descripción" name = "descripcionProducto">
       <div id = "contenedor-botones-agregar-producto">
@@ -127,7 +159,7 @@
       <!-- *ngIf = "user && user.perfil == 'cliente'"-->
     </section>
 
-    <footer>
+    <footer *ngIf = "user && user.perfil == 'cliente'">
       <p id = "p-importe-total-footer">
         ${{importeTotalPedido}}
       </p>

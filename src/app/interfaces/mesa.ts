@@ -6,5 +6,6 @@ export interface Mesa {
     estado: 'disponible' | 'ocupada' ; // O los estados que definas
     qrCodeUrl: string;
     currentClientId: string | null;
-    assignedAt: Date | null; // Usar Date para timestamps
+    assignedAt: Date | null;
+    fotoMesa: string; // Usar Date para timestamps
 }

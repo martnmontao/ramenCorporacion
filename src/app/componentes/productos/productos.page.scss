@@ -140,20 +140,26 @@ section
 #form-agregar-productos
 {
     background-color:#0A1923 ;
-    height: 450px;
+    height: 95%;
     width: 90%;
     display: flex;
     flex-direction: column;
     align-items: center;
-    
+    gap: 3%;
     border-radius: 10px;
     border: 1px solid #F0CA91;
     overflow-y: hidden;
- 
+    padding-top: 20px;
     position: absolute;
-    top: 40%;          
+    top: 50%;          
     left: 50%;          
     transform: translate(-50%, -50%);
+}
+
+.lbl-inputs
+{
+    width: 45%;
+    color: #F0CA91;
 }
 
 .input-agregar-producto
@@ -166,7 +172,10 @@ section
     padding-left: 5px;
     margin: 3% 0;
 }
-
+label
+{
+    color: #F0CA91;
+}
 input
 {
     outline: none;
@@ -177,8 +186,8 @@ input
     height: 65px;
     width: 45%;
     font-size: 25px;
-    background-color: #0A1924;
-    color: #E5DCCD;
+    background-color: #F0CA91;
+    color: #0A1923;
     border-radius: 10px;
   
 
@@ -200,6 +209,7 @@ input
     width: 95%;
     height: 20%;
     margin-bottom: 1%;
+    margin-top: -3%;
     display: flex;
     justify-content: space-evenly;
     flex-wrap: wrap;
@@ -208,7 +218,7 @@ input
 
 .inputs-cortos
 {
-    width: 46%;
+    width:100%;
 }
 
 
@@ -252,7 +262,7 @@ p
 .img-producto
 {
     height: 120px;
-    width: 120px;
+    width: 30%;
     object-fit: cover;
     border-radius: 10px;
 }
@@ -296,28 +306,34 @@ p
 {
     width: 90%;
     margin-bottom: 7%;
+    background-color: #F0CA91;
+    color: #0A1923;
 }
 
 .btn-filtrar-productos.activo {
     border: 2px solid #F0CA91;
  
 }
+input
+{
+    color: #F0CA91;
+}
 
 #form-editar-productos
 {
     background-color:#0A1923 ;
-    height: 350px;
+    height: 70%;
     width: 90%;
     display: flex;
     flex-direction: column;
     align-items: center;
-    
+    justify-content: center;
     border-radius: 10px;
     border: 1px solid #F0CA91;
     overflow-y: hidden;
  
     position: absolute;
-    top: 60%;          
+    top: 50%;          
     left: 50%;
     gap: 3%;          
     transform: translate(-50%, -50%);

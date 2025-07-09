@@ -66,7 +66,13 @@ mesasDisponibles$: Observable<Mesa[]>;
         title: 'Asignación incompleta',
         text: 'Por favor, selecciona un cliente y una mesa disponible.',
         confirmButtonText: 'Aceptar',
-        heightAuto: false
+        heightAuto: false,
+        customClass: {
+          popup: 'mi-alerta',
+          confirmButton: 'btn-alerta',
+          title: 'titulo-alerta',
+          htmlContainer: 'texto-alerta'
+        }
       });
       return;
     }
@@ -79,7 +85,13 @@ mesasDisponibles$: Observable<Mesa[]>;
       showCancelButton: true,
       confirmButtonText: 'Sí, asignar',
       cancelButtonText: 'Cancelar',
-      heightAuto: false
+      heightAuto: false,
+        customClass: {
+          popup: 'mi-alerta',
+          confirmButton: 'btn-alerta',
+          title: 'titulo-alerta',
+          htmlContainer: 'texto-alerta'
+        }
     });
 
     if (confirmacion.isConfirmed) {
@@ -106,7 +118,13 @@ mesasDisponibles$: Observable<Mesa[]>;
           title: '¡Mesa Asignada!',
           text: `${this.selectedClient.nombre} ha sido asignado a la mesa ${this.selectedMesa.numeroMesa}.`,
           confirmButtonText: 'OK',
-          heightAuto: false
+          heightAuto: false,
+        customClass: {
+          popup: 'mi-alerta',
+          confirmButton: 'btn-alerta',
+          title: 'titulo-alerta',
+          htmlContainer: 'texto-alerta'
+        }
         });
 
         // Resetear selecciones
@@ -120,7 +138,13 @@ mesasDisponibles$: Observable<Mesa[]>;
           title: 'Error de Asignación',
           text: 'Hubo un problema al asignar la mesa. Inténtelo de nuevo.',
           confirmButtonText: 'Aceptar',
-          heightAuto: false
+          heightAuto: false,
+        customClass: {
+          popup: 'mi-alerta',
+          confirmButton: 'btn-alerta',
+          title: 'titulo-alerta',
+          htmlContainer: 'texto-alerta'
+        }
         });
       }
     }

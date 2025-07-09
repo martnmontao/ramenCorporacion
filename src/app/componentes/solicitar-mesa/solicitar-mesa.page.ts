@@ -84,12 +84,12 @@ solicitudMesaForm: FormGroup;
             text: 'Hemos recibido tu solicitud. Te notificaremos cuando tu mesa esté lista. ¡Gracias!',
             confirmButtonText: 'Entendido',
             heightAuto: false,
-            customClass: {
-              popup: 'mi-popup',
-              title: 'mi-titulo',
-              confirmButton: 'mi-boton',
-              htmlContainer: 'mi-texto'
-            }
+        customClass: {
+          popup: 'mi-alerta',
+          confirmButton: 'btn-alerta',
+          title: 'titulo-alerta',
+          htmlContainer: 'texto-alerta'
+        }
           });
 
         } catch (error) {
@@ -100,12 +100,12 @@ solicitudMesaForm: FormGroup;
             text: 'No pudimos procesar tu solicitud en este momento. Por favor, inténtalo de nuevo.',
             confirmButtonText: 'Aceptar',
             heightAuto: false,
-            customClass: {
-              popup: 'mi-popup',
-              title: 'mi-titulo',
-              confirmButton: 'mi-boton',
-              htmlContainer: 'mi-texto'
-            }
+        customClass: {
+          popup: 'mi-alerta',
+          confirmButton: 'btn-alerta',
+          title: 'titulo-alerta',
+          htmlContainer: 'texto-alerta'
+        }
           });
           this.solicitudEnviada = false;
         }
@@ -116,12 +116,12 @@ solicitudMesaForm: FormGroup;
           text: 'Por favor, completa todos los campos requeridos correctamente.',
           confirmButtonText: 'Aceptar',
           heightAuto: false,
-          customClass: {
-              popup: 'mi-popup',
-              title: 'mi-titulo',
-              confirmButton: 'mi-boton',
-              htmlContainer: 'mi-texto'
-            }
+        customClass: {
+          popup: 'mi-alerta',
+          confirmButton: 'btn-alerta',
+          title: 'titulo-alerta',
+          htmlContainer: 'texto-alerta'
+        }
         });
         this.solicitudMesaForm.markAllAsTouched();
       }
