@@ -94,14 +94,41 @@ QR de la mesa). -- Quiroga María Emilia (Beta)
 ❏ El cliente, escaneando el QR de la lista de espera, podrá visualizar los resultados de las 
 encuestas en distintos tipos de gráficos (torta, barra, lineal, etc.). -- Quiroga María Emilia (Beta)
 
--CODIGO INGRESO LISTA DE ESPERA
+❏ 14- Alta de un nuevo plato, (con tres fotos) lo ingresa el Cocinero (celular 2). Jazmín Mereles (Beta)
+  Se verifica la existencia en la carta por parte de un cliente (celular 1).  
+❏ 15- Alta de nueva bebida, (con tres fotos) la ingresa el Bar Tender (celular 3).  Jazmín Mereles (Beta)
+   Se verifica la existencia en la carta por parte de un cliente (celular 1).
+❏ 16- Alta de nueva mesa, (con foto) lo ingresa el supervisor o dueño (celular 2).
+   Se verifica la existencia de la nueva mesa. Jazmín Mereles (Beta)
+
+❏ 17- Hacer una reserva agendada por parte de un cliente (celular 1). Emilia Quiroga (Beta)
+  Verificar que sólo la puede realizar un cliente registrado.
+  Verificar que la reserva sea en un tiempo futuro. (el DeLorean está sin nafta.)
+❏ 18- El dueño o supervisor confirmará la reserva. (celular 2). EmiliaQuiroga (Beta)
+   Verificar que el pedido de reserva se visualice en el listado correspondiente. (push
+  notification *A)
+   Al tener la reserva confirmada, verificar que no se le pueda asignar a otro cliente (celular 3) y
+  que pasado el tiempo de espera máximo se libere dicha mesa.
+   Verificar que el cliente, siempre y cuando esté en el lapso válido, podrá escanear el código
+  QR de la mesa sin necesidad de escanear el de la lista de espera previamente.
+
+
+
+Estilos - PUSH NOTIFICATION - Martín Montaño (Alfa)
+
+-CÓDIGO INGRESO LISTA DE ESPERA
 ![home-cliente](https://github.com/user-attachments/assets/1db3426d-0c4d-41e9-a096-3f59998a58ad)
 
--CODIGOS DE MESAS
+-CÓDIGOS DE MESAS
 ![mesa1](https://github.com/user-attachments/assets/87d20e82-9256-4a62-b185-3a75a39c99c3)
 ![mesa2](https://github.com/user-attachments/assets/091c8693-37a6-4bd5-8db7-ee1481d76cd9)
 ![mesa3](https://github.com/user-attachments/assets/4854eb6a-6c69-4704-a90a-a3367f522fc5)
 ![mesa4](https://github.com/user-attachments/assets/bc4efa3d-be9b-4f81-aa9d-31cdd3a7c987)
 
+-CÓDIGOS PROPINAS
 
-
+EXCELENTE:![propinaExcelente](https://github.com/user-attachments/assets/c4be36a1-0f20-4d85-93a7-80bca2d16575)
+MUY BUENO:![propinaMuyBueno](https://github.com/user-attachments/assets/41480f99-46cb-414e-b0aa-d9e19c4024de)
+BUENO:![propinaBueno](https://github.com/user-attachments/assets/ab438fc7-087b-48eb-b086-6099a9844022)
+REGULAR: ![propinaRegular](https://github.com/user-attachments/assets/4cbcf623-f11c-420a-84eb-cee75e1f7db0)
+MALO: ![propinaMalo](https://github.com/user-attachments/assets/d7452d50-4459-486b-9931-b3025fee0ace)
