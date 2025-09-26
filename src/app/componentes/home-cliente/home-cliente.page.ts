@@ -147,7 +147,6 @@ export class HomeClientePage implements OnInit {
 
   async verificarPedidoCliente()
   {
-   
     const pedido = await this.firebaseService.obtenerPedidoPorUidUsuario(this.user.uid);
     const estadoPedido = pedido.estadoPedido;
     if(pedido != null)

@@ -32,9 +32,9 @@ export class Juego15Page implements OnInit {
 
   async ngOnInit() {
     this.user = await this.firebase.obtenerUsuarioLogueado();
-   
+
     const pedido = await this.firebase.obtenerPedidoPorUidUsuario(this.user.uid);
-    const yaTieneDescuento = await this.firebase.verificarDescuentoJugado(pedido);
+    const yaTieneDescuento = await this.firebase.verificarJuegoJugado(pedido,'juego15');
     if (yaTieneDescuento) {
       await Swal.fire({
         icon: 'info',
@@ -68,7 +68,6 @@ export class Juego15Page implements OnInit {
       case "opciones":
         this.mostrarOpciones = !this.mostrarOpciones;
         break;
-     
     }
   }
 
@@ -112,7 +111,7 @@ export class Juego15Page implements OnInit {
         this.router.navigate(['/juegos-vista']);
         const pedido = await this.firebase.obtenerPedidoPorUidUsuario(this.user.uid);
 
-        await this.firebase.guardarDescuento(pedido, 0);
+        await this.firebase.guardarDescuento(pedido, 'juego15',0);
 
       });
   }
@@ -182,21 +181,18 @@ export class Juego15Page implements OnInit {
           htmlContainer: 'texto-alerta'
         }
       }).then(async()=>{
-       
-         const pedido = await this.firebase.obtenerPedidoPorUidUsuario(this.user.uid);
+        const pedido = await this.firebase.obtenerPedidoPorUidUsuario(this.user.uid);
       
         if(pedido)
         {
-          await this.firebase.guardarDescuento(pedido, 15);
-         
-
+          await this.firebase.guardarDescuento(pedido, 'juego15',15);
         }
         this.router.navigate(['/juegos-vista']);
       });
     }
   }
 
-   irA(path:string)
+  irA(path:string)
   {
     this.mostrarOpciones = false;
     this.juegoTerminado = true;

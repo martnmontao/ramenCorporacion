@@ -23,9 +23,9 @@
 
             <ion-button (click)="irA('lista-usuarios')" class="btn-opciones-usuario" *ngIf = "user && user.perfil == 'gerencia'">ADMINISTRACIÓN</ion-button>
           
-            <ion-button class = "btn-opciones-usuario" (click)="irA('gestion-reservas')" *ngIf = "user?.tipo == 'dueño'">LISTA DE RESERVAS</ion-button>
+            <!-- <ion-button class = "btn-opciones-usuario" (click)="irA('gestion-reservas')" *ngIf = "user?.tipo == 'dueño'">LISTA DE RESERVAS</ion-button> -->
             <ion-button class = "btn-opciones-usuario" (click)="irConQR()" *ngIf = "user?.perfil == 'cliente'">ESCANEAR QR</ion-button>
-            <ion-button class = "btn-opciones-usuario" (click)="irA('reservas')" *ngIf = "user?.perfil == 'cliente'">RESERVAR</ion-button>
+            <!-- <ion-button class = "btn-opciones-usuario" (click)="irA('reservas')" *ngIf = "user?.perfil == 'cliente'">RESERVAR</ion-button> -->
             <ion-button class = "btn-opciones-usuario" (click)="irA('productos')" *ngIf = "user?.tipo == 'bartender' || user?.tipo == 'cocinero'">PRODUCTOS</ion-button>
             <ion-button class = "btn-opciones-usuario" (click)="irA('lista-espera')" *ngIf = "user?.tipo == 'maitre'">CLIENTES EN ESPERA</ion-button>
             <ion-button class = "btn-opciones-usuario" (click)="irA('lista-pedidos')" *ngIf = "user?.perfil == 'empleado' && user?.tipo == 'mozo' || user?.tipo == 'bartender' || user?.tipo == 'cocinero'">PEDIDOS</ion-button>

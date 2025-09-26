@@ -158,40 +158,75 @@ export class FirebaseService {
     return this.auth.currentUser;
   }
   
-  async aplicarDescuentoAlPedido(pedido:any): Promise<void> {
+  // async aplicarDescuentoAlPedido(pedido:any): Promise<void> {
 
-    if (pedido) {
-      const pedidoRef = doc(this.firestore, 'pedidos', pedido.id);
-     
-     
+  //   if (pedido) {
+  //     const pedidoRef = doc(this.firestore, 'pedidos', pedido.id);
+  //     const importeConDescuento = Math.round(pedido.importeTotal - (pedido.importeTotal * (pedido.descuento / 100)));
+  //     console.log(importeConDescuento);
+  //     await updateDoc(pedidoRef, {
+  //       importeTotal: importeConDescuento // redondeo a 2 decimales
+  //     });
+  //   }
+  // }
+  
+  // async guardarDescuento(pedido: any, porcentaje: number) {
+    
+  //   const pedidoRef = doc(this.firestore, 'pedidos', pedido.id); 
+  //   await setDoc(pedidoRef, { descuento: porcentaje, importeTotal: Math.round(pedido.importeTotal - (pedido.importeTotal * (porcentaje / 100))) }, { merge: true });
+  // }
 
-      const importeConDescuento = Math.round(pedido.importeTotal - (pedido.importeTotal * (pedido.descuento / 100)));
-      console.log(importeConDescuento);
-      await updateDoc(pedidoRef, {
-        importeTotal: importeConDescuento // redondeo a 2 decimales
-      });
-    }
-  }
-
-
-  async verificarDescuentoJugado(pedido:any): Promise<boolean> {
+  async verificarJuegoJugado(pedido:any, juego: string): Promise<boolean> {
     const pedidoRef = doc(this.firestore, 'pedidos', pedido.id);
     const pedidoSnap = await getDoc(pedidoRef);
     
     if (pedidoSnap.exists()) {
-      const descuento = pedidoSnap.data()['descuento'];
-      return descuento  == 0 || descuento > 1;
+      const descuentos = pedidoSnap.data()['descuentos'];
+      return descuentos.hasOwnProperty(juego);
     }
 
     return false;
   }
 
+  async guardarDescuento(pedido: any, juego: string, porcentaje: number) {
+  const pedidoRef = doc(this.firestore, 'pedidos', pedido.id);
 
-  async guardarDescuento(pedido: any, porcentaje: number) {
-    
-    const pedidoRef = doc(this.firestore, 'pedidos', pedido.id); 
-    await setDoc(pedidoRef, { descuento: porcentaje, importeTotal: Math.round(pedido.importeTotal - (pedido.importeTotal * (porcentaje / 100))) }, { merge: true });
+  // Traigo el documento actual
+  const pedidoSnap = await getDoc(pedidoRef);
+  const data = pedidoSnap.exists() ? pedidoSnap.data() : {};
+
+  const descuentos = data['descuentos'] || {};
+
+  // Agrego este juego
+  descuentos[juego] = porcentaje;
+
+  // Calculo el descuento total acumulado
+  const descuentoTotal = this.calcularDescuentoTotal(descuentos);
+
+  // Aplico el descuento acumulado sobre el importe original del pedido
+  const importeOriginal = pedido.importeOriginal ?? pedido.importeTotal;
+  const importeConDescuento = Math.round(
+    importeOriginal - (importeOriginal * (descuentoTotal / 100))
+  );
+
+  await setDoc(
+    pedidoRef,
+    {
+      descuentos: descuentos,
+      importeOriginal: importeOriginal, // lo guardamos para referencia
+      importeTotal: importeConDescuento
+    },
+    { merge: true }
+  );
+}
+
+
+  private calcularDescuentoTotal(descuentos: { [key: string]: number }): number {
+    if (!descuentos) return 0;
+    return Object.values(descuentos).reduce((acc, val) => acc + val, 0);
   }
+
+
 
   async guardarEncuesta(datosEncuesta: any):Promise<void>{
     //const usuario = this.getUsuarioActual();

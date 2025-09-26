@@ -25,7 +25,7 @@ export class JuegosVistaPage implements OnInit {
     }
   }
 
-     irA(path:string)
+    irA(path:string)
   {
     this.mostrarOpciones = false;
 

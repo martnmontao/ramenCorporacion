@@ -14,33 +14,26 @@
     <section *ngIf = "!isLoading">
     
         <div id = "contenedor-opciones-cliente">
-          <!--
-            <button class = "btn-opciones-cliente" (click)="irA('alta-mesa')">dar de alta mesa</button>
-            <button class = "btn-opciones-cliente" (click)="irConQR()">ESCANEAR QR</button>
-          -->
+          
+            <!-- <button class = "btn-opciones-cliente" (click)="irA('alta-mesa')">dar de alta mesa</button> -->
+            <!-- <button class = "btn-opciones-cliente" (click)="irConQR()">ESCANEAR QR</button> -->
+
           <h2 *ngIf = "verificarCliente">Mesa asignada: {{numeroMesa}}</h2>
           <div class = "contenedor-estadisticas" *ngIf = "verificarCliente">
 
             <button class = "btn-qr" *ngIf = "verificarCliente" (click)="scanearCodigoMesa()" ><img src = "../../../assets/imagenes/qrBOTON.png"></button>
-            <button class = "btn-qr" (click) = "irA('juegos-vista')" *ngIf = "verificarQr &&  pedidoTerminado">🎲</button>
+            <button class = "btn-qr" (click) = "irA('juegos-vista')" *ngIf = "verificarQr && pedidoTerminado">🎲</button>
             <button class = "btn-qr" *ngIf = "verificarCliente" (click) = "irA('chat-mozo')">💬</button>
           </div>          
           <div class = "otro-contenedor">
             <button class = "btn-opciones-cliente" (click)="irA('solicitar-mesa')" *ngIf = "!verificarCliente">SOLICITAR MESA</button>
             <button class = "btn-opciones-cliente" (click)="irA('lista-pedidos')" *ngIf = "verificarQr && verificarPedido">VER PEDIDO</button><!--POR QR *ngIf = "verificarQr && verificarPedido"-->
-            <button class = "btn-opciones-cliente" (click)="irA('productos')" *ngIf = "verificarQr">MENÚ</button><!--POR QR-->
-            
-            
-            
+            <button class = "btn-opciones-cliente" (click)="irA('productos')" *ngIf = "verificarQr">MENÚ</button>POR QR
+          
             <button class = "btn-opciones-cliente" (click)="accederEncuesta()">ENCUESTA</button>
-            <button class = "btn-opciones-cliente" (click)="verEstadisticasCliente()" *ngIf = "verificarQr">ESTADÍSTICAS</button>
+            <button class = "btn-opciones-cliente" (click)="verEstadisticasCliente()" *ngIf = "verificarQr">ESTADÍSTICAS</button> 
           
           </div>
-          
-          
-          
-
-        
 
         </div>
     </section>

@@ -5,11 +5,11 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 const routes: Routes = [
 
   
-  {
-    path: '',
-    redirectTo: 'login',
-    pathMatch: 'full' // Esto es obligatorio cuando se usa redirectTo
-  },
+  // {
+  //   path: '',
+  //   redirectTo: 'login',
+  //   pathMatch: 'full' // Esto es obligatorio cuando se usa redirectTo
+  // },
   {
     path: 'login',
     loadChildren: () => import('./componentes/login/login.module').then( m => m.LoginPageModule)

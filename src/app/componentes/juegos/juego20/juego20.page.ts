@@ -23,7 +23,7 @@ export class Juego20Page implements OnInit{
     this.user = await this.firebase.obtenerUsuarioLogueado();
 
     const pedido = await this.firebase.obtenerPedidoPorUidUsuario(this.user.uid);
-    const yaTieneDescuento = await this.firebase.verificarDescuentoJugado(pedido);
+    const yaTieneDescuento = await this.firebase.verificarJuegoJugado(pedido,'juego20');
     if (yaTieneDescuento) {
       await Swal.fire({
         icon: 'info',
@@ -69,7 +69,7 @@ export class Juego20Page implements OnInit{
       }).then(async()=>{
         const pedido = await this.firebase.obtenerPedidoPorUidUsuario(this.user.uid);
 
-        await this.firebase.guardarDescuento(pedido, 0);
+        await this.firebase.guardarDescuento(pedido, 'juego20',0);
         this.router.navigate(['/juegos-vista']);
       });
       
@@ -89,7 +89,7 @@ export class Juego20Page implements OnInit{
         const pedido = await this.firebase.obtenerPedidoPorUidUsuario(this.user.uid);
         if(pedido)
         {
-          await this.firebase.guardarDescuento(pedido, 20);
+          await this.firebase.guardarDescuento(pedido, 'juego20',20);
         }
         this.router.navigate(['/juegos-vista']);
       });
@@ -110,7 +110,7 @@ export class Juego20Page implements OnInit{
         }).then(async()=>{
           const pedido = await this.firebase.obtenerPedidoPorUidUsuario(this.user.uid);
 
-          await this.firebase.guardarDescuento(pedido, 0);
+          await this.firebase.guardarDescuento(pedido, 'juego20',0);
           this.router.navigate(['/juegos-vista']);
         });
 
@@ -140,7 +140,6 @@ export class Juego20Page implements OnInit{
       case "opciones":
         this.mostrarOpciones = !this.mostrarOpciones;
         break;
-     
     }
   }
 }

@@ -23,7 +23,7 @@ export class Juego10Page implements OnInit {
   async ngOnInit() {
     this.user = await this.firebase.obtenerUsuarioLogueado();
     const pedido = await this.firebase.obtenerPedidoPorUidUsuario(this.user.uid);
-    const yaTieneDescuento = await this.firebase.verificarDescuentoJugado(pedido);
+    const yaTieneDescuento = await this.firebase.verificarJuegoJugado(pedido, 'juego10');
     if (yaTieneDescuento) {
       await Swal.fire({
         icon: 'info',
@@ -49,7 +49,7 @@ export class Juego10Page implements OnInit {
 
     }
   }
-   irA(path:string)
+    irA(path:string)
   {
     this.mostrarOpciones = false;
 
@@ -69,13 +69,11 @@ export class Juego10Page implements OnInit {
       case "opciones":
         this.mostrarOpciones = !this.mostrarOpciones;
         break;
-     
     }
   }
 
 
   reiniciarJuego(){
-   
     this.seleccion = null;
     this.juegoTerminado = false;
   }
@@ -103,7 +101,7 @@ export class Juego10Page implements OnInit {
         const pedido = await this.firebase.obtenerPedidoPorUidUsuario(this.user.uid);
         if(pedido)
         {
-          await this.firebase.guardarDescuento(pedido, 10);
+          await this.firebase.guardarDescuento(pedido,'juego10', 10);
 
         }
         this.router.navigate(['/juegos-vista']);
@@ -125,7 +123,7 @@ export class Juego10Page implements OnInit {
       }).then(async()=>{
         const pedido = await this.firebase.obtenerPedidoPorUidUsuario(this.user.uid);
 
-        await this.firebase.guardarDescuento(pedido, 0);
+        await this.firebase.guardarDescuento(pedido, 'juego10',0);
         this.router.navigate(['/juegos-vista']);
         return;
       });
